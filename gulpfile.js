@@ -15,6 +15,7 @@ require('laravel-elixir-livereload');
 
 elixir(function(mix) {
     mix.sass('app.scss');
+    //mix.webpack('main.js');
     mix.browserify('main.js');
-    //mix.browserify('main.js')
+    mix.version(['public/js/main.js']);
 });
