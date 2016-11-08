@@ -51,7 +51,7 @@ class AuthController extends Controller
         if($validator->fails()){
             $this->clearCaptcha();//验证失败的话清除验证码的session
             return Response::json(['error' => ['message'=>$validator->getMessageBag()->toArray(), 'type'=>'Auth', 'code'=>401]]);
-        }else if(){
+        }else{
 
         }
         
