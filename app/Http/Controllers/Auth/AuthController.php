@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
-use Validator;
+use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -24,49 +27,51 @@ class AuthController extends Controller
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
     /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/';
-
-    /**
      * Create a new authentication controller instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware($this->guestMiddleware(), ['except' => 'logout']);
+    public function __construct(){
+
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
-        ]);
+    public function postLogin(){
+        $input = array(
+            'username' => Input::get('username'),//用户名
+            'password' => Input::get('password'),//密码
+            'captcha'  => Input::get('captcha')//验证码
+        );
+        $rules = array (
+            'username' => 'required',
+            'password' => 'required',
+            'captcha' => 'required|captcha'
+        );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()){
+            $this->clearCaptcha();//验证失败的话清除验证码的session
+            return Response::json(['error' => ['message'=>$validator->getMessageBag()->toArray(), 'type'=>'Auth', 'code'=>401]]);
+        }else if(){
+
+        }
+        
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return User
-     */
-    protected function create(array $data)
+    public function getLogout(){
+
+    }
+
+    public function getCaptcha(){
+        echo captcha_img();
+    }
+
+    private function setLoginAtSession($uid)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        Session::put('login.session'.$uid, time());
+    }
+
+    private function clearCaptcha()
+    {
+        Session::forget('captcha');
     }
 }

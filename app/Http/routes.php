@@ -11,9 +11,19 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index');
+
+Route::get('captcha.json', 'Auth\AuthController@getCaptcha');
+
+//用户验证
+Route::group(['prefix' => 'auth'], function(){
+    $Auth = 'Auth\AuthController@';
+
+    Route::post('login.json', $Auth . 'postLogin');//登录
+    Route::get('logout.json', $Auth . 'getLogout');//登出
+    Route::get('resetpwd', 'Auth\PasswordController@resetPwd');//重设密码
 });
-Route::get('example', function () {
-	return view('example');
+
+Route::group(['prefix' => 'goods'], function(){
+    Route::post('add.json', 'Goods\GoodsController@addGoods');//添加商品
 });
