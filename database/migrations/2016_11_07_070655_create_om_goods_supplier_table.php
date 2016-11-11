@@ -26,6 +26,7 @@ class CreateOmGoodsSupplierTable extends Migration
             $table->decimal('nw',10,2)->comment('净重')->default(0);
             $table->string('mfrs_name',50)->comment('生产商名称')->default('');
             $table->tinyInteger('sort')->comment('排序，数值越大越靠前')->default(0);
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
             $table->index('goods_id');
             $table->index('supplier_id');

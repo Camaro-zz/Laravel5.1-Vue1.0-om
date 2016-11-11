@@ -18,6 +18,7 @@ class CreateOmGoodsMfrsTable extends Migration
             $table->string('mfrs_sn',50)->comment('原厂编号')->default('');
             $table->string('mfrs_name',50)->comment('生产商名称')->default('');
             $table->tinyInteger('sort')->comment('排序，数值越大越靠前')->default(0);
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
             $table->index('goods_id');
             $table->comment = '生产商与产品关联表';

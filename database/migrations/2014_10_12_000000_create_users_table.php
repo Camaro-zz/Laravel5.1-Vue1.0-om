@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->tinyInteger('is_admin')->comment('是否为管理员,1是0否')->default(0);
             $table->rememberToken();
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
             $table->comment = '用户表';
         });

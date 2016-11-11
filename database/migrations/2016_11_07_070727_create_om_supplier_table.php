@@ -24,6 +24,7 @@ class CreateOmSupplierTable extends Migration
             $table->string('address')->comment('地址')->default('');
             $table->tinyInteger('sort')->comment('排序，数值越大越靠前')->default(0);
             $table->text('mark')->comment('备注');
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
             $table->index('supplier_sn');
             $table->comment = '供应商表';

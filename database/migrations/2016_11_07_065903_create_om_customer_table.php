@@ -24,6 +24,7 @@ class CreateOmCustomerTable extends Migration
             $table->string('mobile',20)->comment('手机')->default('');
             $table->text('mark')->comment('备注');
             $table->tinyInteger('sort')->comment('排序，数值越大越靠前')->default(0);
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
             $table->index('customer_sn');
             $table->comment = '客户表';

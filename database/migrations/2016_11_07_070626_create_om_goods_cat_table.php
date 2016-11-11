@@ -18,6 +18,7 @@ class CreateOmGoodsCatTable extends Migration
             $table->string('name',50)->comment('类目名称')->default('');
             $table->timestamps();
             $table->index('parent_id');
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->comment = '产品类目表';
         });
     }

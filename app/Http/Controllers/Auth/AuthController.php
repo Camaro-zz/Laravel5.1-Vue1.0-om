@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\Users;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -52,13 +53,59 @@ class AuthController extends Controller
             $this->clearCaptcha();//验证失败的话清除验证码的session
             return Response::json(['error' => ['message'=>$validator->getMessageBag()->toArray(), 'type'=>'Auth', 'code'=>401]]);
         }else{
+            //认证凭证
+            $credentials = [
+                'username' => Input::get('username'),
+                'password' => Input::get('password')
+            ];
+
+
+            if (Auth::validate($credentials)) {
+                Auth::login(Auth::getLastAttempted());
+                //event(new UserLogin(Auth::user()));//处理用户登录事件
+
+                //在session中存入登录时间
+                $this->setLoginAtSession(Auth::user()->id);
+                return Response::json(['success'=>true], 200);
+            } else {
+                //判断登录密码用md5是否能验证成功
+                $valid = $this->validateMd5Password($input['username'], $input['password']);
+                if($valid) {
+                    if($password = $this->updateBcryptPassword($input['username'], $input['password'])) {
+                        if (Auth::validate($credentials)) {
+                            Auth::login(Auth::getLastAttempted());
+                            //event(new UserLogin(Auth::user()));
+
+                            //在session中存入登录时间
+                            $this->setLoginAtSession(Auth::user()->id);
+
+                            return Response::json(['success'=>true], 200);
+                        }
+                    }
+                    $this->clearCaptcha();
+                    return Response::json(['error'=>['message'=>['login'=>['“登录失败，请重新登录！']], 'type'=>'Auth', 'code'=>401]]);
+                } else {
+                    $this->clearCaptcha();
+                    return Response::json(['error'=>['message'=>['login'=>['“用户名”或“密码”错误，请重新登录！']], 'type'=>'Auth', 'code'=>401]]);
+                }
+            }
 
         }
         
     }
 
     public function getLogout(){
+        /*if(Auth::user()) {
+            event(new UserLogout(Auth::user()));
+        }*/
+        Auth::logout();
 
+
+        if(isset($_GET['runUrl'])){
+            return redirect()->guest('auth/login');
+        }
+
+        return Response::json(['success'=>true], 200);
     }
 
     public function getCaptcha(){
@@ -73,5 +120,23 @@ class AuthController extends Controller
     private function clearCaptcha()
     {
         Session::forget('captcha');
+    }
+
+    public function validateMd5Password($un, $pwd)
+    {
+        //DB::connection()->enableQueryLog();
+        $count = Users::where('username', $un)->where('password', md5($pwd))->count();
+        //$queries = DB::getQueryLog();
+        //dd($queries);
+        return $count > 0 ? true : false;
+    }
+
+    public function updateBcryptPassword($un, $pwd)
+    {
+        $res = Users::where('username', $un)->update(['password'=>bcrypt($pwd)]);
+        if($res) {
+            return bcrypt($pwd);
+        }
+        return false;
     }
 }

@@ -29,4 +29,12 @@ class PasswordController extends Controller
     {
         $this->middleware('guest');
     }
+
+    public function resetPwd(){//忘记密码
+
+    }
+
+    public function setPwd(){//重设密码
+
+    }
 }

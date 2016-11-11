@@ -20,6 +20,7 @@ class CreateOmGoodsTable extends Migration
             $table->string('cn_name',50)->comment('中文品名')->default('');
             $table->text('car_types')->comment('适用车型');
             $table->text('mark')->comment('备注');
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
             $table->index('cat_id');
             $table->index('product_sn');

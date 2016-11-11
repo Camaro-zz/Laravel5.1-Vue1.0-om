@@ -19,6 +19,7 @@ class CreateOmOrderTable extends Migration
             $table->decimal('price',10,2)->comment('合同金额')->default(0);
             $table->string('manager',50)->comment('负责人')->default('');
             $table->text('mark')->comment('备注');
+            $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamp('buy_at')->comment('下单时间')->default('0-0-0-0');
             $table->timestamp('order_at')->comment('交货时间')->default('0-0-0-0');
             $table->timestamps();

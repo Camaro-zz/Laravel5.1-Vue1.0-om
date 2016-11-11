@@ -10,7 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
+$authApiMiddleware = 'auth.api';
 Route::get('/', 'HomeController@index');
 
 Route::get('captcha.json', 'Auth\AuthController@getCaptcha');
@@ -22,6 +22,10 @@ Route::group(['prefix' => 'auth'], function(){
     Route::post('login.json', $Auth . 'postLogin');//登录
     Route::get('logout.json', $Auth . 'getLogout');//登出
     Route::get('resetpwd', 'Auth\PasswordController@resetPwd');//重设密码
+});
+
+Route::group(['middleware'=>$authApiMiddleware],function(){
+    Route::put('pass.json', ['as' => 'userPass', 'uses' => 'Users\UsersController@putPassword']);
 });
 
 Route::group(['prefix' => 'goods'], function(){
