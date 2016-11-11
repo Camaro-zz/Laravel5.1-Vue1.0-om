@@ -14,6 +14,7 @@ class CreateOmOrderGoodsTable extends Migration
     {
         Schema::create('om_order_goods', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('uid')->comment('添加人id')->default(0);
             $table->integer('customer_id')->comment('客户id')->default(0);
             $table->integer('order_id')->comment('订单id')->default(0);
             $table->integer('goods_id')->comment('产品id')->default(0);

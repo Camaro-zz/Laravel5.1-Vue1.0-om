@@ -14,6 +14,7 @@ class CreateOmGoodsSupplierTable extends Migration
     {
         Schema::create('om_goods_supplier', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('uid')->comment('添加人id')->default(0);
             $table->integer('goods_id')->comment('产品id')->default(0);
             $table->integer('supplier_id')->comment('供应商id')->default(0);
             $table->decimal('price',10,2)->comment('采购价')->default(0);

@@ -14,6 +14,7 @@ class CreateOmSupplierTable extends Migration
     {
         Schema::create('om_supplier', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('uid')->comment('添加人id')->default(0);
             $table->string('supplier_sn')->comment('供应商编号')->default('');
             $table->string('name')->comment('供应商名称')->default('');
             $table->string('contacts')->comment('联系人')->default('');

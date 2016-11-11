@@ -14,6 +14,7 @@ class CreateOmGoodsImgTable extends Migration
     {
         Schema::create('om_goods_img', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('uid')->comment('添加人id')->default(0);
             $table->integer('goods_id')->comment('产品id')->default(0);
             $table->string('img',100)->comment('图片地址')->default('');
             $table->tinyInteger('sort')->comment('排序，数值越高越靠前')->default(0);

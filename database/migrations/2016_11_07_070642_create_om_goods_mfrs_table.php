@@ -14,6 +14,7 @@ class CreateOmGoodsMfrsTable extends Migration
     {
         Schema::create('om_goods_mfrs', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('uid')->comment('添加人id')->default(0);
             $table->integer('goods_id')->comment('产品id')->default(0);
             $table->string('mfrs_sn',50)->comment('原厂编号')->default('');
             $table->string('mfrs_name',50)->comment('生产商名称')->default('');

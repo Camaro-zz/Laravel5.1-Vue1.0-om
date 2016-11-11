@@ -14,6 +14,7 @@ class CreateOmGoodsCatTable extends Migration
     {
         Schema::create('om_goods_cat', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('uid')->comment('添加人id')->default(0);
             $table->integer('parent_id')->comment('上级类目id')->default(0);
             $table->string('name',50)->comment('类目名称')->default('');
             $table->timestamps();

@@ -14,6 +14,7 @@ class CreateOmOrderTable extends Migration
     {
         Schema::create('om_order', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('uid')->comment('添加人id')->default(0);
             $table->integer('customer_id')->comment('客户id')->default(0);
             $table->string('contract_sn',50)->comment('合同编号')->default('');
             $table->decimal('price',10,2)->comment('合同金额')->default(0);
