@@ -30,6 +30,7 @@ Route::group(['middleware'=>$authApiMiddleware],function(){
     Route::get('suppliers.json', 'Supplier\SupplierController@getSuppliers');//供应商列表
 
     Route::get('goods.json', 'Goods\GoodsController@getGoodses');//供应商详情
+    Route::get('cats.json', 'Goods\GoodsCatController@getCats');//获取商品类目列表
 });
 
 //商品模块
@@ -40,6 +41,9 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::delete('batch.json', 'Goods\GoodsController@deleteGoodses');//商品删除
 
     Route::post('cat/add.json', 'Goods\GoodsCatController@postCat');//添加商品类目
+    Route::put('cat/{id}.json', 'Goods\GoodsCatController@putCat');//编辑商品类目
+    Route::get('cat/{id}.json', 'Goods\GoodsCatController@getCat');//获取商品类目详情
+    Route::delete('cat/batch.json', 'Goods\GoodsCatController@deleteCats');//删除类目
 });
 
 //供应商模块
