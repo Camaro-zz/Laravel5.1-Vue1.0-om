@@ -21,6 +21,18 @@ class GoodsController extends Controller
         return Response::json($data,200);
     }
 
+    //添加供应商商品
+    public function postSupplierGoods(Request $request, $id){
+        $data = $this->goodsService->addSupplierGoods($id, $request->all());
+        return Response::json($data,200);
+    }
+
+    //编辑供应商商品
+    public function putSupplierGoods(Request $request, $id){
+        $data = $this->goodsService->editSupplierGoods($id, $request->all());
+        return Response::json($data,200);
+    }
+
     //编辑商品
     public function putGoods($id, Request $request){
         $data = $this->goodsService->editGoods($id, $request->all());

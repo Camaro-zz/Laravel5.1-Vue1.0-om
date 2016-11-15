@@ -36,6 +36,8 @@ Route::group(['middleware'=>$authApiMiddleware],function(){
 //商品模块
 Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::post('add.json', 'Goods\GoodsController@postGoods');//添加商品
+    Route::post('supplier/{id}.json', 'Goods\GoodsController@postSupplierGoods');//添加供应商商品
+    Route::put('supplier/{id}.json', 'Goods\GoodsController@putSupplierGoods');//添加供应商商品
     Route::put('{id}.json', 'Goods\GoodsController@putGoods');//编辑商品
     Route::get('{id}.json', 'Goods\GoodsController@getGoods');//商品详情
     Route::delete('batch.json', 'Goods\GoodsController@deleteGoodses');//商品删除

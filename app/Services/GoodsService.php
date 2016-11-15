@@ -8,25 +8,135 @@ use App\Models\OmGoodsImg;
 use App\Models\OmGoodsMfrs;
 use App\Models\OmGoodsSupplier;
 use App\Models\OmSupplier;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class GoodsService extends BaseService {
 
-    public function __construct(OmGoods $omGoods,OmGoodsCat $omGoodsCat, OmSupplier $omSupplier, OmGoodsSupplier $omGoodsSupplier, OmGoodsImg $omGoodsImg, OmGoodsMfrs $omGoodsMfrs){
+    public function __construct(){
+        $this->uid = Auth::user()->id;
     }
 
     /**
      * 添加商品
      */
     public function addGoods($data){
+        $data = array(
+            'cat_id' => 1,
+            'product_sn' => '12121',
+            'en_name' => 'weq',
+            'cn_name' => '撒打算',
+            'car_types' => 'sadsadasdsds',
+            'mark' => 'asdads'
+        );
+        $v = $this->goodsValidator($data);
+        if(!$v['status']){
+            return $v;
+        }
+        $data['uid'] = $this->uid;
+        $goods = OmGoods::create($data);
+        if($goods->id){
+            return ['status'=>true, 'data'=>$goods];
+        }else{
+            return ['status'=>false, 'msg'=>'产品添加失败'];
+        }
+    }
 
+    /**
+     * 添加供应商关联商品
+     * @param $goods_id
+     * @param $data
+     */
+    public function addSupplierGoods($goods_id, $data){
+        $goods_id = 1;
+        $data = array(
+            'supplier_id' => 1,
+            'price' => '10.2',
+            'tax' => '10.2',
+            'num' => '10',
+            'length' => '10.2',
+            'width' => '10.2',
+            'height' => '10.2',
+            'gw' => '10.2',
+            'nw' => '10.2',
+            'mfrs_name' => 'safdsadsad',
+        );
+
+        $goods = OmGoods::where('id', $goods_id)->first();
+        if(!$goods){
+            return ['status'=>false, 'msg'=>'产品不存在'];
+        }
+        $v = $this->supplierGoodsValidator($data);
+        if(!$v['status']){
+            return $v;
+        }
+        $data['goods_id'] = $goods_id;
+        $data['uid'] = $this->uid;
+        $res = OmGoodsSupplier::create($data);
+        if($res->id){
+            return ['status'=>true, 'data'=>$res];
+        }else{
+            return ['status'=>false, 'msg'=>'产品添加失败'];
+        }
     }
 
     public function editGoods($id, $data){
+        $goods = OmGoods::where('id',$id)->first();
+        if(!$goods){
+            return ['status'=>false, 'msg'=>'产品不存在'];
+        }
+        $v = $this->goodsValidator($data,$id);
+        if(!$v['status']){
+            return $v;
+        }
+        $goods = OmGoods::where(array('id'=>$id,'is_deleted'=>0))->update($data);
 
+        if($goods){
+            $goods = OmGoods::where('id',$id)->first();
+            return ['status'=>true, 'data'=>$goods];
+        }else{
+            return ['status'=>false, 'msg'=>'产品更新失败'];
+        }
+    }
+
+    public function editSupplierGoods($id, $data){
+        $goods = OmGoodsSupplier::where('id',$id)->first();
+        if(!$goods){
+            return ['status'=>false, 'msg'=>'产品不存在'];
+        }
+        $v = $this->supplierGoodsValidator($data,$id);
+        if(!$v['status']){
+            return $v;
+        }
+        $goods = OmGoodsSupplier::where(array('id'=>$id,'is_deleted'=>0))->update($data);
+
+        if($goods){
+            $goods = OmGoodsSupplier::where('id',$id)->first();
+            return ['status'=>true, 'data'=>$goods];
+        }else{
+            return ['status'=>false, 'msg'=>'产品更新失败'];
+        }
     }
 
     public function getGoods($id){
-
+        $goods = OmGoods::where('id',$id)->first();
+        if(!$goods){
+            return ['status'=>false, 'msg'=>'产品不存在'];
+        }
+        $goods['supplier_goods'] = OmGoodsSupplier::where(array('goods_id'=>$id))->orderBy('sort','DESC')->get();
+        $goods['supplier_goods_count'] = count($goods['supplier_goods']);
+        if(isset($goods['supplier_goods'][0])){
+            $goods['price'] = $goods['supplier_goods'][0]['price'];
+            $goods['tax'] = $goods['supplier_goods'][0]['tax'];
+            $goods['num'] = $goods['supplier_goods'][0]['num'];
+            $goods['length'] = $goods['supplier_goods'][0]['length'];
+            $goods['width'] = $goods['supplier_goods'][0]['width'];
+            $goods['height'] = $goods['supplier_goods'][0]['height'];
+            $goods['gw'] = $goods['supplier_goods'][0]['gw'];
+            $goods['nw'] = $goods['supplier_goods'][0]['nw'];
+            $goods['mfrs_name'] = $goods['supplier_goods'][0]['mfrs_name'];
+        }
+        return ['status'=>true,'data'=>$goods];
     }
 
     public function getGoodses($data){
@@ -43,21 +153,47 @@ class GoodsService extends BaseService {
             'product_sn.required' => '产品编号不能为空',
             'en_name.required' => '英文品名不能为空',
             'cn_name.required' => '中文品名不能为空',
-            'tel.required' => '供货商电话不能为空',
-            'mobile.required' => '供货商手机不能为空',
-            'supplier_sn.unique' => '供货商编号已存在',
-            'tel.between' => '供货商电话长度必须在9-20位之间',
-            'mobile.regex' => '供货商手机格式不正确',
-            'address.required' => '供货商地址不能为空'
         ];
 
         $rule = [
-            'supplier_sn' => 'required|unique:om_supplier,supplier_sn,'.$id,
-            'name' => 'required',
-            'contacts' => 'required',
-            'tel' => 'required|between:9,20',
-            'mobile' => 'required|regex:/^1[34578][0-9]{9}$/',
-            'address' => 'required',
+            'product_sn' => 'required|unique:om_goods,product_sn,'.$id,
+            'en_name' => 'required',
+            'cn_name' => 'required',
+        ];
+        $v = Validator::make($data, $rule, $message);
+
+        if($v->fails()){
+            return ['status'=>false, 'msg' => $v->errors()];
+        }else{
+            return ['status'=>true];
+        }
+    }
+
+    //验证规则
+    public function supplierGoodsValidator($data){
+        $message = [
+            'price.required' => '采购价不能为空',
+            'price.numeric' => '采购价只能为数值',
+            'tax.required' => '税不能为空',
+            'tax.numeric' => '税只能为数值',
+            'num.required' => '装箱数不能为空',
+            'num.integer' => '装箱数只能是整数',
+            'length.numeric' => '规格长只能是数值',
+            'width.numeric' => '规格宽只能是数值',
+            'height.numeric' => '规格高只能是数值',
+            'gw.numeric' => '毛重只能是数值',
+            'nw.numeric' => '净重长只能是数值',
+        ];
+
+        $rule = [
+            'price' => 'required|numeric',
+            'tax' => 'required|numeric',
+            'num' => 'required|integer',
+            'length' => 'numeric',
+            'width' => 'numeric',
+            'height' => 'numeric',
+            'gw' => 'numeric',
+            'nw' => 'numeric',
         ];
 
         $v = Validator::make($data, $rule, $message);
