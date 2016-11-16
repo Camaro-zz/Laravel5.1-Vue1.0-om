@@ -47,7 +47,7 @@ class GoodsController extends Controller
 
     //商品列表
     public function getGoodses(Request $request){
-        $data = $this->goodsService->getGoods($request->all());
+        $data = $this->goodsService->getGoodses($request->all());
         return Response::json($data,200);
     }
 

@@ -17,6 +17,7 @@ class CreateOmGoodsTable extends Migration
             $table->integer('uid')->comment('添加人id')->default(0);
             $table->integer('cat_id')->comment('所属类目id')->default(0);
             $table->string('product_sn',50)->comment('产品编号')->default('');
+            $table->string('img',200)->comment('产品图片')->default('');
             $table->string('en_name',50)->comment('英文品名')->default('');
             $table->string('cn_name',50)->comment('中文品名')->default('');
             $table->text('car_types')->comment('适用车型');

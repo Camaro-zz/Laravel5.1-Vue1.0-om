@@ -9,6 +9,7 @@ use App\Models\OmGoodsMfrs;
 use App\Models\OmGoodsSupplier;
 use App\Models\OmSupplier;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class GoodsService extends BaseService {
@@ -27,15 +28,24 @@ class GoodsService extends BaseService {
             'en_name' => 'weq',
             'cn_name' => '撒打算',
             'car_types' => 'sadsadasdsds',
-            'mark' => 'asdads'
+            'mark' => 'asdads',
+            'img' => 'asadsadas',
+            'imgs' => array(
+                ['img'=>'sadsasad','sort'=>0],
+                ['img'=>'sadsasad','sort'=>0],
+                ['img'=>'sadsasad','sort'=>0]
+            )
         );
         $v = $this->goodsValidator($data);
         if(!$v['status']){
             return $v;
         }
-        $data['uid'] = $this->uid;
-        $goods = OmGoods::create($data);
+        $goods_data = $data;
+        unset($goods_data['imgs']);
+        $goods_data['uid'] = $this->uid;
+        $goods = OmGoods::create($goods_data);
         if($goods->id){
+            isset($data['imgs']) && $this->setGoodsImgs($goods, $data['imgs']);
             return ['status'=>true, 'data'=>$goods];
         }else{
             return ['status'=>false, 'msg'=>'产品添加失败'];
@@ -89,10 +99,13 @@ class GoodsService extends BaseService {
         if(!$v['status']){
             return $v;
         }
-        $goods = OmGoods::where(array('id'=>$id,'is_deleted'=>0))->update($data);
+        $goods_data = $data;
+        unset($goods_data['imgs']);
+        $goods = OmGoods::where(array('id'=>$id,'is_deleted'=>0))->update($goods_data);
 
         if($goods){
             $goods = OmGoods::where('id',$id)->first();
+            isset($data['imgs']) && $this->setGoodsImgs($goods, $data['imgs']);
             return ['status'=>true, 'data'=>$goods];
         }else{
             return ['status'=>false, 'msg'=>'产品更新失败'];
@@ -140,18 +153,45 @@ class GoodsService extends BaseService {
     }
 
     public function getGoodses($data){
+        $query = OmGoods::select('id','product_sn','en_name','cn_name','img')->where('is_deleted',0);
+        if(isset($data['cn_name'])){
+            $query->where('cn_name', 'like', '%' . $data['cn_name'] . '%');
+        }
+        if(isset($data['en_name'])){
+            $query->where('en_name', 'like', '%' . $data['en_name'] . '%');
+        }
+        if(isset($data['cat_id'])){
+            $query->where('cat_id', '=', $data['cat_id']);
+        }
+        $result['_count'] = $query->count();
+        if (isset($data['offset'])) {
+            $query->skip($data['offset']);
+        }
+        if (isset($data['limit'])) {
+            $query->take($data['limit']);
+        }
+        $result['data'] = $query->get();
+        if ($result['data']) {
+            foreach ($result['data'] as &$v) {
+                //DB::connection()->enableQueryLog();
+                $v['prop'] = OmGoodsSupplier::where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->first();
+                //dump(DB::getQueryLog());
+            }
+        }
 
+        return $result;
     }
 
     public function deleteGoodses($ids){
-
+        $delete = OmGoods::whereIn('id',$ids)->update(array('is_deleted'=>1));
+        return ['status'=>true];
     }
 
     //验证规则
     public function goodsValidator($data, $id=''){
         $message = [
             'product_sn.required' => '产品编号不能为空',
-            'en_name.required' => '英文品名不能为空',
+            'en_name.required' => '英文品名不.能为空',
             'cn_name.required' => '中文品名不能为空',
         ];
 
@@ -203,5 +243,14 @@ class GoodsService extends BaseService {
         }else{
             return ['status'=>true];
         }
+    }
+
+    protected function setGoodsImgs($goods, $imgs) {
+        $goods->imgs()->delete();
+        $imgsData = array();
+        foreach ($imgs as $key => &$_img) {
+            $imgsData[] = new OmGoodsImg($_img);
+        }
+        $goods->imgs()->saveMany($imgsData);
     }
 }
