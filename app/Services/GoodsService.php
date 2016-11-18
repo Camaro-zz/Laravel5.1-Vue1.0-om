@@ -90,6 +90,47 @@ class GoodsService extends BaseService {
         }
     }
 
+    public function addGoodsMfrs($data){
+        $goods_id = isset($data['goods_id']) ? intval($data['goods_id']) : 0;
+        $goods = OmGoods::where('id', $goods_id)->first();
+        if(!$goods){
+            return ['status'=>false, 'msg'=>'产品不存在'];
+        }
+        $v = $this->supplierGoodsValidator($data);
+        if(!$v['status']){
+            return $v;
+        }
+        $data['uid'] = $this->uid;
+        $res = OmGoodsMfrs::create($data);
+        if($res->id){
+            return ['status'=>true, 'data'=>$res];
+        }else{
+            return ['status'=>false, 'msg'=>'生产商添加失败'];
+        }
+    }
+
+    public function editGoodsMfrs($id, $data){
+        $mfrs = OmGoodsMfrs::where('id',$id)->first();
+        if(!$mfrs){
+            return ['status'=>false,'msg'=>'记录不存在'];
+        }
+        $goods_id = isset($data['goods_id']) ? intval($data['goods_id']) : 0;
+        $goods = OmGoods::where('id', $goods_id)->first();
+        if(!$goods){
+            return ['status'=>false, 'msg'=>'产品不存在'];
+        }
+        $v = $this->supplierGoodsValidator($data);
+        if(!$v['status']){
+            return $v;
+        }
+        $res = OmGoodsMfrs::where('id',$id)->update($data);
+        if($res->id){
+            return ['status'=>true, 'data'=>$res];
+        }else{
+            return ['status'=>false, 'msg'=>'生产商更新失败'];
+        }
+    }
+
     public function editGoods($id, $data){
         $goods = OmGoods::where('id',$id)->first();
         if(!$goods){
@@ -191,6 +232,7 @@ class GoodsService extends BaseService {
     public function goodsValidator($data, $id=''){
         $message = [
             'product_sn.required' => '产品编号不能为空',
+            'product_sn.unique' => '产品编号已存在',
             'en_name.required' => '英文品名不.能为空',
             'cn_name.required' => '中文品名不能为空',
         ];
@@ -200,13 +242,8 @@ class GoodsService extends BaseService {
             'en_name' => 'required',
             'cn_name' => 'required',
         ];
-        $v = Validator::make($data, $rule, $message);
-
-        if($v->fails()){
-            return ['status'=>false, 'msg' => $v->errors()];
-        }else{
-            return ['status'=>true];
-        }
+        $res = $this->doValidate($data,$rule,$message);
+        return $res;
     }
 
     //验证规则
@@ -236,13 +273,22 @@ class GoodsService extends BaseService {
             'nw' => 'numeric',
         ];
 
-        $v = Validator::make($data, $rule, $message);
+        $res = $this->doValidate($data,$rule,$message);
+        return $res;
+    }
 
-        if($v->fails()){
-            return ['status'=>false, 'msg' => $v->errors()];
-        }else{
-            return ['status'=>true];
-        }
+    public function mfrsGoodsValidator($data){
+        $message = [
+            'mfrs_sn.required' => '原厂编号不能为空',
+            'mfrs_name.required' => '生产商名称不能为空',
+        ];
+
+        $rule = [
+            'mfrs_sn' => 'required',
+            'mfrs_name' => 'required',
+        ];
+        $res = $this->doValidate($data,$rule,$message);
+        return $res;
     }
 
     protected function setGoodsImgs($goods, $imgs) {

@@ -112,13 +112,8 @@ class SupplierService extends BaseService {
             'address' => 'required',
         ];
 
-        $v = Validator::make($data, $rule, $message);
-
-        if($v->fails()){
-            return ['status'=>false, 'msg' => $v->errors()];
-        }else{
-            return ['status'=>true];
-        }
+        $res = $this->doValidate($data,$rule,$message);
+        return $res;
     }
 
     //获取供应商列表

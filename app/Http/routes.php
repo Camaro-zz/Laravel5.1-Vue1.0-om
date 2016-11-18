@@ -31,6 +31,7 @@ Route::group(['middleware'=>$authApiMiddleware],function(){
 
     Route::get('goods.json', 'Goods\GoodsController@getGoodses');//供应商详情
     Route::get('cats.json', 'Goods\GoodsCatController@getCats');//获取商品类目列表
+    Route::get('orders.json', 'Order\OrderController@getOrders');//获取订单列表
 });
 
 //商品模块
@@ -54,4 +55,11 @@ Route::group(['prefix' => 'supplier','middleware'=>$authApiMiddleware],function(
     Route::put('sort.json', 'Supplier\SupplierController@putSort');//修改供应商排序
     Route::put('{id}.json', 'Supplier\SupplierController@putSupplier');//修改供应商
     Route::get('{id}.json', 'Supplier\SupplierController@getSupplier');//供应商详情
+});
+
+//订单模块
+Route::group(['prefix' => 'order','middleware'=>$authApiMiddleware],function(){
+    Route::post('add.json', 'Order\OrderController@postOrder');//添加订单
+    Route::put('{id}.json', 'Order\OrderController@putOrder');//修改订单
+    Route::get('{id}.json', 'Order\OrderController@getOrder');//订单详情
 });

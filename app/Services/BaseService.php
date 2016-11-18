@@ -1,5 +1,7 @@
 <?php namespace App\Services;
 
+use Illuminate\Support\Facades\Validator;
+
 abstract class BaseService {
 
     protected $model;
@@ -162,6 +164,20 @@ abstract class BaseService {
         }
         $ip_arr = explode(',', $ip);
         return $ip_arr[0];
+    }
+
+    public function doValidate($data, $rule, $message){
+        $v = Validator::make($data, $rule, $message);
+
+        if($v->fails()){
+            $error = '';
+            foreach ($v->errors()->toArray() as $val){
+                $error = $val[0];
+            }
+            return ['status'=>false, 'msg' => $error];
+        }else{
+            return ['status'=>true];
+        }
     }
 
 }
