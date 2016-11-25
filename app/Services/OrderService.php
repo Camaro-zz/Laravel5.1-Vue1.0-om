@@ -75,7 +75,34 @@ class OrderService extends BaseService {
 
     //获取订单列表
     public function getOrders($data){
+        $offset = isset($params['offset']) ? $params['offset'] : 0;
+        $limit = isset($params['limit']) ? $params['limit'] : 10;
+        $query = OmOrder::leftJoin('om_customer', 'om_customer.id', '=', 'om_order.customer_id')
+                        ->select('om_order.contract_sn', 'om_order.price', 'om_order.manager', 'om_order.buy_at', 'om_order.mark', 'om_order.order_at', 'om_customer.name', 'om_customer.contact', 'om_customer.customer_sn');
+        $query->where('is_deleted',0);
+        if(isset($data['contract_sn']) && $data['contract_sn']){//按合同编号查询
+            $query->where('om_order.contract_sn','like','%'.$data['contract_sn'].'%');
+        }
+        if(isset($data['name']) && $data['name']){//按客户公司名称查询
+            $query->where('om_customer.name','like','%'.$data['name'].'%');
+        }
+        if(isset($data['customer_sn']) && $data['customer_sn']){//按客户编号查询
+            $query->where('om_customer.customer_sn','like','%'.$data['customer_sn'].'%');
+        }
+        if(isset($data['buy_start_at']) && isset($data['buy_end_at']) && $data['buy_start_at'] && $data['buy_end_at']){//按下单时间搜索
+            $query->where('om_order.buy_at','>=',$data['buy_start_at'])->where('buy_at','<=',$data['buy_end_at']);
+        }
+        if(isset($data['order_start_at']) && isset($data['order_end_at']) && $data['order_start_at'] && $data['order_end_at']){//按交货时间搜索
+            $query->where('om_order.order_at','>=',$data['order_start_at'])->where('order_at','<=',$data['order_end_at']);
+        }
+        $sort = isset($data['sort']) ? $data['sort'] : 'desc';
+        if(isset($data['sort_type']) && $data['sort_type']){
+            $query->orderBy($data['sort_type'], $sort);
+        }
+        $res['_count'] = $query->count();
+        $res['data'] = $query->skip($offset)->take($limit)->orderBy('id', $sort)->get();
 
+        return $res;
     }
 
     public function deleteOrder($data){
