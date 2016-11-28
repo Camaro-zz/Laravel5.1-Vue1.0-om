@@ -14777,7 +14777,54 @@ setTimeout(function () {
 module.exports = Vue;
 }).call(this,require('_process'))
 },{"_process":1}],6:[function(require,module,exports){
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div id=\"app\">\n\t<router-view></router-view>\n</div>\n"
+var inserted = exports.cache = {}
+
+exports.insert = function (css) {
+  if (inserted[css]) return
+  inserted[css] = true
+
+  var elem = document.createElement('style')
+  elem.setAttribute('type', 'text/css')
+
+  if ('textContent' in elem) {
+    elem.textContent = css
+  } else {
+    elem.styleSheet.cssText = css
+  }
+
+  document.getElementsByTagName('head')[0].appendChild(elem)
+  return elem
+}
+
+},{}],7:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.default = {
+	ready: function ready() {
+		this.getUserInfo();
+	},
+
+	components: {},
+	data: function data() {
+		return {
+			user: []
+		};
+	},
+
+	methods: {
+		getUserInfo: function getUserInfo() {
+			this.$http({ url: '/user/me.json', method: 'GET' }).then(function (response) {
+				this.$set('user', response.data.account);
+			});
+		}
+	},
+	replace: false
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<router-view></router-view>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -14788,32 +14835,185 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update("_v-7fef0a46", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],7:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = {
-  data: function data() {
-    return {
-      msg: 'This is a Example~!'
-    };
-  }
-};
+},{"vue":5,"vue-hot-reload-api":2}],8:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\nbody{\n    background-color:#ff0000;\n}\n")
+"use strict";
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "<h1>{{ msg }}</h1>"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"middle-box text-center loginscreen  animated fadeInDown\">\n    <div>\n        <div>\n\n            <h1 class=\"logo-name\">H+</h1>\n\n        </div>\n        <h3>欢迎使用 H+</h3>\n\n        <form class=\"m-t\" role=\"form\" action=\"index.html\">\n            <div class=\"form-group\">\n                <input type=\"email\" class=\"form-control\" placeholder=\"用户名\" required=\"\">\n            </div>\n            <div class=\"form-group\">\n                <input type=\"password\" class=\"form-control\" placeholder=\"密码\" required=\"\">\n            </div>\n            <button type=\"submit\" class=\"btn btn-primary block full-width m-b\">登 录</button>\n\n\n            <p class=\"text-muted text-center\"> <a href=\"login.html#\"><small>忘记密码了？</small></a> | <a href=\"register.html\">注册一个新账号</a>\n            </p>\n\n        </form>\n    </div>\n</div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\nbody{\n    background-color:#ff0000;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
-    hotAPI.createRecord("_v-7395d050", module.exports)
+    hotAPI.createRecord("_v-1454a797", module.exports)
   } else {
-    hotAPI.update("_v-7395d050", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+    hotAPI.update("_v-1454a797", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
   }
 })()}
-},{"vue":5,"vue-hot-reload-api":2}],8:[function(require,module,exports){
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],9:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n\n")
+"use strict";
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n\n<div id=\"page-wrapper\" class=\"gray-bg dashbard-1\">\n    <div class=\"row border-bottom\">\n        <nav class=\"navbar navbar-static-top\" role=\"navigation\" style=\"margin-bottom: 0\">\n            <div class=\"navbar-header\"><a class=\"navbar-minimalize minimalize-styl-2 btn btn-primary \" href=\"#\"><i class=\"fa fa-bars\"></i> </a>\n                <form role=\"search\" class=\"navbar-form-custom\" method=\"post\" action=\"search_results.html\">\n                    <div class=\"form-group\">\n                        <input type=\"text\" placeholder=\"请输入您需要查找的内容 …\" class=\"form-control\" name=\"top-search\" id=\"top-search\">\n                    </div>\n                </form>\n            </div>\n            <ul class=\"nav navbar-top-links navbar-right\">\n                <li class=\"dropdown\">\n                    <a class=\"dropdown-toggle count-info\" data-toggle=\"dropdown\" href=\"#\">\n                        <i class=\"fa fa-envelope\"></i> <span class=\"label label-warning\">16</span>\n                    </a>\n                    <ul class=\"dropdown-menu dropdown-messages\">\n                        <li class=\"m-t-xs\">\n                            <div class=\"dropdown-messages-box\">\n                                <a href=\"profile.html\" class=\"pull-left\">\n                                    <img alt=\"image\" class=\"img-circle\" src=\"img/a7.jpg\">\n                                </a>\n                                <div class=\"media-body\">\n                                    <small class=\"pull-right\">46小时前</small>\n                                    <strong>小四</strong> 这个在日本投降书上签字的军官，建国后一定是个不小的干部吧？\n                                    <br>\n                                    <small class=\"text-muted\">3天前 2014.11.8</small>\n                                </div>\n                            </div>\n                        </li>\n                        <li class=\"divider\"></li>\n                        <li>\n                            <div class=\"dropdown-messages-box\">\n                                <a href=\"profile.html\" class=\"pull-left\">\n                                    <img alt=\"image\" class=\"img-circle\" src=\"img/a4.jpg\">\n                                </a>\n                                <div class=\"media-body \">\n                                    <small class=\"pull-right text-navy\">25小时前</small>\n                                    <strong>国民岳父</strong> 如何看待“男子不满自己爱犬被称为狗，刺伤路人”？——这人比犬还凶\n                                    <br>\n                                    <small class=\"text-muted\">昨天</small>\n                                </div>\n                            </div>\n                        </li>\n                        <li class=\"divider\"></li>\n                        <li>\n                            <div class=\"text-center link-block\">\n                                <a class=\"J_menuItem\" href=\"mailbox.html\">\n                                    <i class=\"fa fa-envelope\"></i> <strong> 查看所有消息</strong>\n                                </a>\n                            </div>\n                        </li>\n                    </ul>\n                </li>\n                <li class=\"dropdown\">\n                    <a class=\"dropdown-toggle count-info\" data-toggle=\"dropdown\" href=\"#\">\n                        <i class=\"fa fa-bell\"></i> <span class=\"label label-primary\">8</span>\n                    </a>\n                    <ul class=\"dropdown-menu dropdown-alerts\">\n                        <li>\n                            <a href=\"mailbox.html\">\n                                <div>\n                                    <i class=\"fa fa-envelope fa-fw\"></i> 您有16条未读消息\n                                    <span class=\"pull-right text-muted small\">4分钟前</span>\n                                </div>\n                            </a>\n                        </li>\n                        <li class=\"divider\"></li>\n                        <li>\n                            <a href=\"profile.html\">\n                                <div>\n                                    <i class=\"fa fa-qq fa-fw\"></i> 3条新回复\n                                    <span class=\"pull-right text-muted small\">12分钟钱</span>\n                                </div>\n                            </a>\n                        </li>\n                        <li class=\"divider\"></li>\n                        <li>\n                            <div class=\"text-center link-block\">\n                                <a class=\"J_menuItem\" href=\"notifications.html\">\n                                    <strong>查看所有 </strong>\n                                    <i class=\"fa fa-angle-right\"></i>\n                                </a>\n                            </div>\n                        </li>\n                    </ul>\n                </li>\n                <li class=\"hidden-xs\">\n                    <a href=\"index_v1.html\" class=\"J_menuItem\" data-index=\"0\"><i class=\"fa fa-cart-arrow-down\"></i> 购买</a>\n                </li>\n                <li class=\"dropdown hidden-xs\">\n                    <a class=\"right-sidebar-toggle\" aria-expanded=\"false\">\n                        <i class=\"fa fa-tasks\"></i> 主题\n                    </a>\n                </li>\n            </ul>\n        </nav>\n    </div>\n    <div class=\"row content-tabs\">\n        <button class=\"roll-nav roll-left J_tabLeft\"><i class=\"fa fa-backward\"></i>\n        </button>\n        <nav class=\"page-tabs J_menuTabs\">\n            <div class=\"page-tabs-content\">\n                <a href=\"javascript:;\" class=\"active J_menuTab\" data-id=\"index_v1.html\">首页</a>\n            </div>\n        </nav>\n        <button class=\"roll-nav roll-right J_tabRight\"><i class=\"fa fa-forward\"></i>\n        </button>\n        <div class=\"btn-group roll-nav roll-right\">\n            <button class=\"dropdown J_tabClose\" data-toggle=\"dropdown\">关闭操作<span class=\"caret\"></span>\n\n            </button>\n            <ul role=\"menu\" class=\"dropdown-menu dropdown-menu-right\">\n                <li class=\"J_tabShowActive\"><a>定位当前选项卡</a>\n                </li>\n                <li class=\"divider\"></li>\n                <li class=\"J_tabCloseAll\"><a>关闭全部选项卡</a>\n                </li>\n                <li class=\"J_tabCloseOther\"><a>关闭其他选项卡</a>\n                </li>\n            </ul>\n        </div>\n        <a href=\"login.html\" class=\"roll-nav roll-right J_tabExit\"><i class=\"fa fa fa-sign-out\"></i> 退出</a>\n    </div>\n    <div class=\"row J_mainContent\" id=\"content-main\">\n        <iframe class=\"J_iframe\" name=\"iframe0\" width=\"100%\" height=\"100%\" src=\"index_v1.html?v=4.0\" frameborder=\"0\" data-id=\"index_v1.html\" seamless=\"\"></iframe>\n    </div>\n    <div class=\"footer\">\n        <div class=\"pull-right\">© 2014-2015 <a href=\"http://www.zi-han.net/\" target=\"_blank\">zihan's blog</a>\n        </div>\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-22d11b67", module.exports)
+  } else {
+    hotAPI.update("_v-22d11b67", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],10:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\n\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _Navbar = require('./Navbar.vue');
+
+var _Navbar2 = _interopRequireDefault(_Navbar);
+
+var _Content = require('./Content.vue');
+
+var _Content2 = _interopRequireDefault(_Content);
+
+var _RightSidebar = require('./RightSidebar.vue');
+
+var _RightSidebar2 = _interopRequireDefault(_RightSidebar);
+
+var _MiniChat = require('./MiniChat.vue');
+
+var _MiniChat2 = _interopRequireDefault(_MiniChat);
+
+var _Login = require('./Auth/Login.vue');
+
+var _Login2 = _interopRequireDefault(_Login);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    components: {
+        Navbar: _Navbar2.default,
+        Content: _Content2.default,
+        Rightsidebar: _RightSidebar2.default,
+        Minichat: _MiniChat2.default,
+        Login: _Login2.default
+    },
+    data: function data() {},
+
+    replace: false
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div id=\"wrapper\">\n    <!--左侧导航开始-->\n    <navbar></navbar>\n    <!--左侧导航结束-->\n    <!--右侧部分开始-->\n    <content></content>\n    <!--右侧部分结束-->\n    <!--右侧边栏开始-->\n    <rightsidebar></rightsidebar>\n    <!--右侧边栏结束-->\n    <!--mini聊天窗口开始-->\n    <minichat></minichat>\n    <!--mini聊天窗口结束-->\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\n\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-1e34a6e1", module.exports)
+  } else {
+    hotAPI.update("_v-1e34a6e1", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"./Auth/Login.vue":8,"./Content.vue":9,"./MiniChat.vue":11,"./Navbar.vue":12,"./RightSidebar.vue":13,"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],11:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\nbody{\n    background-color:#ff0000;\n}\n")
+"use strict";
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div class=\"small-chat-box fadeInRight animated\">\n\n    <div class=\"heading\" draggable=\"true\">\n        <small class=\"chat-date pull-right\">\n            2015.9.1\n        </small> 与 Beau-zihan 聊天中\n    </div>\n\n    <div class=\"content\">\n\n        <div class=\"left\">\n            <div class=\"author-name\">\n                Beau-zihan <small class=\"chat-date\">\n                10:02\n            </small>\n            </div>\n            <div class=\"chat-message active\">\n                你好\n            </div>\n\n        </div>\n        <div class=\"right\">\n            <div class=\"author-name\">\n                游客\n                <small class=\"chat-date\">\n                    11:24\n                </small>\n            </div>\n            <div class=\"chat-message\">\n                你好，请问H+有帮助文档吗？\n            </div>\n        </div>\n        <div class=\"left\">\n            <div class=\"author-name\">\n                Beau-zihan\n                <small class=\"chat-date\">\n                    08:45\n                </small>\n            </div>\n            <div class=\"chat-message active\">\n                有，购买的H+源码包中有帮助文档，位于docs文件夹下\n            </div>\n        </div>\n        <div class=\"right\">\n            <div class=\"author-name\">\n                游客\n                <small class=\"chat-date\">\n                    11:24\n                </small>\n            </div>\n            <div class=\"chat-message\">\n                那除了帮助文档还提供什么样的服务？\n            </div>\n        </div>\n        <div class=\"left\">\n            <div class=\"author-name\">\n                Beau-zihan\n                <small class=\"chat-date\">\n                    08:45\n                </small>\n            </div>\n            <div class=\"chat-message active\">\n                1.所有源码(未压缩、带注释版本)；\n                <br> 2.说明文档；\n                <br> 3.终身免费升级服务；\n                <br> 4.必要的技术支持；\n                <br> 5.付费二次开发服务；\n                <br> 6.授权许可；\n                <br> ……\n                <br>\n            </div>\n        </div>\n\n\n    </div>\n    <div class=\"form-chat\">\n        <div class=\"input-group input-group-sm\">\n            <input type=\"text\" class=\"form-control\"> <span class=\"input-group-btn\"> <button class=\"btn btn-primary\" type=\"button\">发送\n                </button> </span>\n        </div>\n    </div>\n\n</div>\n<div id=\"small-chat\">\n    <span class=\"badge badge-warning pull-right\">5</span>\n    <a class=\"open-small-chat\">\n        <i class=\"fa fa-comments\"></i>\n\n    </a>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\nbody{\n    background-color:#ff0000;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-fc13c55e", module.exports)
+  } else {
+    hotAPI.update("_v-fc13c55e", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],12:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\nbody{\n    background-color:#ff0000;\n}\n")
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    data: function data() {
+        return {
+            user: []
+        };
+    },
+
+    method: {
+        getUserInfo: function getUserInfo() {
+            this.$http({ url: '/camp/list_num.json', method: 'GET' }).then(function (response) {
+                this.$set('campaigns', response.data);
+            });
+        }
+    }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<nav class=\"navbar-default navbar-static-side\" role=\"navigation\">\n    <div class=\"nav-close\"><i class=\"fa fa-times-circle\"></i>\n    </div>\n    <div class=\"sidebar-collapse\">\n        <ul class=\"nav\" id=\"side-menu\">\n            <li class=\"nav-header\">\n                <div class=\"dropdown profile-element\">\n                    <span><img alt=\"image\" class=\"img-circle\" src=\"img/profile_small.jpg\"></span>\n                    <a data-toggle=\"dropdown\" class=\"dropdown-toggle\" href=\"#\">\n                            <span class=\"clear\">\n                           <span class=\"block m-t-xs\"><strong class=\"font-bold\">Beaut-zihan</strong></span>\n                            <span class=\"text-muted text-xs block\">超级管理员<b class=\"caret\"></b></span>\n                            </span>\n                    </a>\n                    <ul class=\"dropdown-menu animated fadeInRight m-t-xs\">\n                        <li><a class=\"J_menuItem\" href=\"form_avatar.html\">修改头像</a>\n                        </li>\n                        <li><a class=\"J_menuItem\" href=\"profile.html\">个人资料</a>\n                        </li>\n                        <li><a class=\"J_menuItem\" href=\"contacts.html\">联系我们</a>\n                        </li>\n                        <li><a class=\"J_menuItem\" href=\"mailbox.html\">信箱</a>\n                        </li>\n                        <li class=\"divider\"></li>\n                        <li><a href=\"login.html\">安全退出</a>\n                        </li>\n                    </ul>\n                </div>\n                <div class=\"logo-element\">H+\n                </div>\n            </li>\n            <li>\n                <a href=\"#\">\n                    <i class=\"fa fa-home\"></i>\n                    <span class=\"nav-label\">主页</span>\n                    <span class=\"fa arrow\"></span>\n                </a>\n                <ul class=\"nav nav-second-level\">\n                    <li>\n                        <a class=\"J_menuItem\" href=\"index_v1.html\" data-index=\"0\">主页示例一</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"index_v2.html\">主页示例二</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"index_v3.html\">主页示例三</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"index_v4.html\">主页示例四</a>\n                    </li>\n                    <li>\n                        <a href=\"index_v5.html\" target=\"_blank\">主页示例五</a>\n                    </li>\n                </ul>\n\n            </li>\n            <li>\n                <a class=\"J_menuItem\" href=\"layouts.html\"><i class=\"fa fa-columns\"></i> <span class=\"nav-label\">布局</span></a>\n            </li>\n            <li>\n                <a href=\"#\">\n                    <i class=\"fa fa fa-bar-chart-o\"></i>\n                    <span class=\"nav-label\">统计图表</span>\n                    <span class=\"fa arrow\"></span>\n                </a>\n                <ul class=\"nav nav-second-level\">\n                    <li>\n                        <a class=\"J_menuItem\" href=\"graph_echarts.html\">百度ECharts</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"graph_flot.html\">Flot</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"graph_morris.html\">Morris.js</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"graph_rickshaw.html\">Rickshaw</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"graph_peity.html\">Peity</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"graph_sparkline.html\">Sparkline</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"graph_metrics.html\">图表组合</a>\n                    </li>\n                </ul>\n            </li>\n\n            <li>\n                <a href=\"mailbox.html\"><i class=\"fa fa-envelope\"></i> <span class=\"nav-label\">信箱 </span><span class=\"label label-warning pull-right\">16</span></a>\n                <ul class=\"nav nav-second-level\">\n                    <li><a class=\"J_menuItem\" href=\"mailbox.html\">收件箱</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"mail_detail.html\">查看邮件</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"mail_compose.html\">写信</a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a href=\"#\"><i class=\"fa fa-edit\"></i> <span class=\"nav-label\">表单</span><span class=\"fa arrow\"></span></a>\n                <ul class=\"nav nav-second-level\">\n                    <li><a class=\"J_menuItem\" href=\"form_basic.html\">基本表单</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"form_validate.html\">表单验证</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"form_advanced.html\">高级插件</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"form_wizard.html\">表单向导</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">文件上传 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"form_webuploader.html\">百度WebUploader</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"form_file_upload.html\">DropzoneJS</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"form_avatar.html\">头像裁剪上传</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li>\n                        <a href=\"#\">编辑器 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"form_editors.html\">富文本编辑器</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"form_simditor.html\">simditor</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"form_markdown.html\">MarkDown编辑器</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"code_editor.html\">代码编辑器</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"suggest.html\">搜索自动补全</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"layerdate.html\">日期选择器layerDate</a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a href=\"#\"><i class=\"fa fa-desktop\"></i> <span class=\"nav-label\">页面</span><span class=\"fa arrow\"></span></a>\n                <ul class=\"nav nav-second-level\">\n                    <li><a class=\"J_menuItem\" href=\"contacts.html\">联系人</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"profile.html\">个人资料</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">项目管理 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"projects.html\">项目</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"project_detail.html\">项目详情</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"teams_board.html\">团队管理</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"social_feed.html\">信息流</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"clients.html\">客户管理</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"file_manager.html\">文件管理器</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"calendar.html\">日历</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">博客 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"blog.html\">文章列表</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"article.html\">文章详情</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"faq.html\">FAQ</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">时间轴 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"timeline.html\">时间轴</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"timeline_v2.html\">时间轴v2</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"pin_board.html\">标签墙</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">单据 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"invoice.html\">单据</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"invoice_print.html\">单据打印</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"search_results.html\">搜索结果</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"forum_main.html\">论坛</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">即时通讯 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"chat_view.html\">聊天窗口</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"webim.html\">layIM</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li>\n                        <a href=\"#\">登录注册相关 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a href=\"login.html\" target=\"_blank\">登录页面</a>\n                            </li>\n                            <li><a href=\"login_v2.html\" target=\"_blank\">登录页面v2</a>\n                            </li>\n                            <li><a href=\"register.html\" target=\"_blank\">注册页面</a>\n                            </li>\n                            <li><a href=\"lockscreen.html\" target=\"_blank\">登录超时</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"404.html\">404页面</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"500.html\">500页面</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"empty_page.html\">空白页</a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a href=\"#\"><i class=\"fa fa-flask\"></i> <span class=\"nav-label\">UI元素</span><span class=\"fa arrow\"></span></a>\n                <ul class=\"nav nav-second-level\">\n                    <li><a class=\"J_menuItem\" href=\"typography.html\">排版</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">字体图标 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li>\n                                <a class=\"J_menuItem\" href=\"fontawesome.html\">Font Awesome</a>\n                            </li>\n                            <li>\n                                <a class=\"J_menuItem\" href=\"glyphicons.html\">Glyphicon</a>\n                            </li>\n                            <li>\n                                <a class=\"J_menuItem\" href=\"iconfont.html\">阿里巴巴矢量图标库</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li>\n                        <a href=\"#\">拖动排序 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"draggable_panels.html\">拖动面板</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"agile_board.html\">任务清单</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"buttons.html\">按钮</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"tabs_panels.html\">选项卡 &amp; 面板</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"notifications.html\">通知 &amp; 提示</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"badges_labels.html\">徽章，标签，进度条</a>\n                    </li>\n                    <li>\n                        <a class=\"J_menuItem\" href=\"grid_options.html\">栅格</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"plyr.html\">视频、音频</a>\n                    </li>\n                    <li>\n                        <a href=\"#\">弹框插件 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"layer.html\">Web弹层组件layer</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"modal_window.html\">模态窗口</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"sweetalert.html\">SweetAlert</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li>\n                        <a href=\"#\">树形视图 <span class=\"fa arrow\"></span></a>\n                        <ul class=\"nav nav-third-level\">\n                            <li><a class=\"J_menuItem\" href=\"jstree.html\">jsTree</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"tree_view.html\">Bootstrap Tree View</a>\n                            </li>\n                            <li><a class=\"J_menuItem\" href=\"nestable_list.html\">nestable</a>\n                            </li>\n                        </ul>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"toastr_notifications.html\">Toastr通知</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"diff.html\">文本对比</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"spinners.html\">加载动画</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"widgets.html\">小部件</a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a href=\"#\"><i class=\"fa fa-table\"></i> <span class=\"nav-label\">表格</span><span class=\"fa arrow\"></span></a>\n                <ul class=\"nav nav-second-level\">\n                    <li><a class=\"J_menuItem\" href=\"table_basic.html\">基本表格</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"table_data_tables.html\">DataTables</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"table_jqgrid.html\">jqGrid</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"table_foo_table.html\">Foo Tables</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"table_bootstrap.html\">Bootstrap Table\n                        <span class=\"label label-danger pull-right\">推荐</span></a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a href=\"#\"><i class=\"fa fa-picture-o\"></i> <span class=\"nav-label\">相册</span><span class=\"fa arrow\"></span></a>\n                <ul class=\"nav nav-second-level\">\n                    <li><a class=\"J_menuItem\" href=\"basic_gallery.html\">基本图库</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"carousel.html\">图片切换</a>\n                    </li>\n                    <li><a class=\"J_menuItem\" href=\"blueimp.html\">Blueimp相册</a>\n                    </li>\n                </ul>\n            </li>\n            <li>\n                <a class=\"J_menuItem\" href=\"css_animation.html\"><i class=\"fa fa-magic\"></i> <span class=\"nav-label\">CSS动画</span></a>\n            </li>\n            <li>\n                <a href=\"#\"><i class=\"fa fa-cutlery\"></i> <span class=\"nav-label\">工具 </span><span class=\"fa arrow\"></span></a>\n                <ul class=\"nav nav-second-level\">\n                    <li><a class=\"J_menuItem\" href=\"form_builder.html\">表单构建器</a>\n                    </li>\n                </ul>\n            </li>\n\n        </ul>\n    </div>\n</nav>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\nbody{\n    background-color:#ff0000;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-6087bb12", module.exports)
+  } else {
+    hotAPI.update("_v-6087bb12", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],13:[function(require,module,exports){
+var __vueify_insert__ = require("vueify/lib/insert-css")
+var __vueify_style__ = __vueify_insert__.insert("\nbody{\n    background-color:#ff0000;\n}\n")
+"use strict";
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n<div id=\"right-sidebar\">\n    <div class=\"sidebar-container\">\n\n        <ul class=\"nav nav-tabs navs-3\">\n\n            <li class=\"active\">\n                <a data-toggle=\"tab\" href=\"#tab-1\">\n                    <i class=\"fa fa-gear\"></i> 主题\n                </a>\n            </li>\n            <li class=\"\"><a data-toggle=\"tab\" href=\"#tab-2\">\n                通知\n            </a>\n            </li>\n            <li><a data-toggle=\"tab\" href=\"#tab-3\">\n                项目进度\n            </a>\n            </li>\n        </ul>\n\n        <div class=\"tab-content\">\n            <div id=\"tab-1\" class=\"tab-pane active\">\n                <div class=\"sidebar-title\">\n                    <h3> <i class=\"fa fa-comments-o\"></i> 主题设置</h3>\n                    <small><i class=\"fa fa-tim\"></i> 你可以从这里选择和预览主题的布局和样式，这些设置会被保存在本地，下次打开的时候会直接应用这些设置。</small>\n                </div>\n                <div class=\"skin-setttings\">\n                    <div class=\"title\">主题设置</div>\n                    <div class=\"setings-item\">\n                        <span>收起左侧菜单</span>\n                        <div class=\"switch\">\n                            <div class=\"onoffswitch\">\n                                <input type=\"checkbox\" name=\"collapsemenu\" class=\"onoffswitch-checkbox\" id=\"collapsemenu\">\n                                <label class=\"onoffswitch-label\" for=\"collapsemenu\">\n                                    <span class=\"onoffswitch-inner\"></span>\n                                    <span class=\"onoffswitch-switch\"></span>\n                                </label>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"setings-item\">\n                        <span>固定顶部</span>\n\n                        <div class=\"switch\">\n                            <div class=\"onoffswitch\">\n                                <input type=\"checkbox\" name=\"fixednavbar\" class=\"onoffswitch-checkbox\" id=\"fixednavbar\">\n                                <label class=\"onoffswitch-label\" for=\"fixednavbar\">\n                                    <span class=\"onoffswitch-inner\"></span>\n                                    <span class=\"onoffswitch-switch\"></span>\n                                </label>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"setings-item\">\n                            <span>\n                    固定宽度\n                </span>\n\n                        <div class=\"switch\">\n                            <div class=\"onoffswitch\">\n                                <input type=\"checkbox\" name=\"boxedlayout\" class=\"onoffswitch-checkbox\" id=\"boxedlayout\">\n                                <label class=\"onoffswitch-label\" for=\"boxedlayout\">\n                                    <span class=\"onoffswitch-inner\"></span>\n                                    <span class=\"onoffswitch-switch\"></span>\n                                </label>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"title\">皮肤选择</div>\n                    <div class=\"setings-item default-skin nb\">\n                            <span class=\"skin-name \">\n                     <a href=\"#\" class=\"s-skin-0\">\n                         默认皮肤\n                     </a>\n                </span>\n                    </div>\n                    <div class=\"setings-item blue-skin nb\">\n                            <span class=\"skin-name \">\n                    <a href=\"#\" class=\"s-skin-1\">\n                        蓝色主题\n                    </a>\n                </span>\n                    </div>\n                    <div class=\"setings-item yellow-skin nb\">\n                            <span class=\"skin-name \">\n                    <a href=\"#\" class=\"s-skin-3\">\n                        黄色/紫色主题\n                    </a>\n                </span>\n                    </div>\n                </div>\n            </div>\n            <div id=\"tab-2\" class=\"tab-pane\">\n\n                <div class=\"sidebar-title\">\n                    <h3> <i class=\"fa fa-comments-o\"></i> 最新通知</h3>\n                    <small><i class=\"fa fa-tim\"></i> 您当前有10条未读信息</small>\n                </div>\n\n                <div>\n\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a1.jpg\">\n\n                                <div class=\"m-t-xs\">\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                </div>\n                            </div>\n                            <div class=\"media-body\">\n\n                                据天津日报报道：瑞海公司董事长于学伟，副董事长董社轩等10人在13日上午已被控制。\n                                <br>\n                                <small class=\"text-muted\">今天 4:21</small>\n                            </div>\n                        </a>\n                    </div>\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a2.jpg\">\n                            </div>\n                            <div class=\"media-body\">\n                                HCY48之音乐大魔王会员专属皮肤已上线，快来一键换装拥有他，宣告你对华晨宇的爱吧！\n                                <br>\n                                <small class=\"text-muted\">昨天 2:45</small>\n                            </div>\n                        </a>\n                    </div>\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a3.jpg\">\n\n                                <div class=\"m-t-xs\">\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                </div>\n                            </div>\n                            <div class=\"media-body\">\n                                写的好！与您分享\n                                <br>\n                                <small class=\"text-muted\">昨天 1:10</small>\n                            </div>\n                        </a>\n                    </div>\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a4.jpg\">\n                            </div>\n\n                            <div class=\"media-body\">\n                                国外极限小子的炼成！这还是亲生的吗！！\n                                <br>\n                                <small class=\"text-muted\">昨天 8:37</small>\n                            </div>\n                        </a>\n                    </div>\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a8.jpg\">\n                            </div>\n                            <div class=\"media-body\">\n\n                                一只流浪狗被收留后，为了减轻主人的负担，坚持自己觅食，甚至......有些东西，可能她比我们更懂。\n                                <br>\n                                <small class=\"text-muted\">今天 4:21</small>\n                            </div>\n                        </a>\n                    </div>\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a7.jpg\">\n                            </div>\n                            <div class=\"media-body\">\n                                这哥们的新视频又来了，创意杠杠滴，帅炸了！\n                                <br>\n                                <small class=\"text-muted\">昨天 2:45</small>\n                            </div>\n                        </a>\n                    </div>\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a3.jpg\">\n\n                                <div class=\"m-t-xs\">\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                    <i class=\"fa fa-star text-warning\"></i>\n                                </div>\n                            </div>\n                            <div class=\"media-body\">\n                                最近在补追此剧，特别喜欢这段表白。\n                                <br>\n                                <small class=\"text-muted\">昨天 1:10</small>\n                            </div>\n                        </a>\n                    </div>\n                    <div class=\"sidebar-message\">\n                        <a href=\"#\">\n                            <div class=\"pull-left text-center\">\n                                <img alt=\"image\" class=\"img-circle message-avatar\" src=\"img/a4.jpg\">\n                            </div>\n                            <div class=\"media-body\">\n                                我发起了一个投票 【你认为下午大盘会翻红吗？】\n                                <br>\n                                <small class=\"text-muted\">星期一 8:37</small>\n                            </div>\n                        </a>\n                    </div>\n                </div>\n\n            </div>\n            <div id=\"tab-3\" class=\"tab-pane\">\n\n                <div class=\"sidebar-title\">\n                    <h3> <i class=\"fa fa-cube\"></i> 最新任务</h3>\n                    <small><i class=\"fa fa-tim\"></i> 您当前有14个任务，10个已完成</small>\n                </div>\n\n                <ul class=\"sidebar-list\">\n                    <li>\n                        <a href=\"#\">\n                            <div class=\"small pull-right m-t-xs\">9小时以后</div>\n                            <h4>市场调研</h4> 按要求接收教材；\n\n                            <div class=\"small\">已完成： 22%</div>\n                            <div class=\"progress progress-mini\">\n                                <div style=\"width: 22%;\" class=\"progress-bar progress-bar-warning\"></div>\n                            </div>\n                            <div class=\"small text-muted m-t-xs\">项目截止： 4:00 - 2015.10.01</div>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"#\">\n                            <div class=\"small pull-right m-t-xs\">9小时以后</div>\n                            <h4>可行性报告研究报上级批准 </h4> 编写目的编写本项目进度报告的目的在于更好的控制软件开发的时间,对团队成员的 开发进度作出一个合理的比对\n\n                            <div class=\"small\">已完成： 48%</div>\n                            <div class=\"progress progress-mini\">\n                                <div style=\"width: 48%;\" class=\"progress-bar\"></div>\n                            </div>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"#\">\n                            <div class=\"small pull-right m-t-xs\">9小时以后</div>\n                            <h4>立项阶段</h4> 东风商用车公司 采购综合综合查询分析系统项目进度阶段性报告武汉斯迪克科技有限公司\n\n                            <div class=\"small\">已完成： 14%</div>\n                            <div class=\"progress progress-mini\">\n                                <div style=\"width: 14%;\" class=\"progress-bar progress-bar-info\"></div>\n                            </div>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"#\">\n                            <span class=\"label label-primary pull-right\">NEW</span>\n                            <h4>设计阶段</h4>\n                            <!--<div class=\"small pull-right m-t-xs\">9小时以后</div>-->\n                            项目进度报告(Project Progress Report)\n                            <div class=\"small\">已完成： 22%</div>\n                            <div class=\"small text-muted m-t-xs\">项目截止： 4:00 - 2015.10.01</div>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"#\">\n                            <div class=\"small pull-right m-t-xs\">9小时以后</div>\n                            <h4>拆迁阶段</h4> 科研项目研究进展报告 项目编号: 项目名称: 项目负责人:\n\n                            <div class=\"small\">已完成： 22%</div>\n                            <div class=\"progress progress-mini\">\n                                <div style=\"width: 22%;\" class=\"progress-bar progress-bar-warning\"></div>\n                            </div>\n                            <div class=\"small text-muted m-t-xs\">项目截止： 4:00 - 2015.10.01</div>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"#\">\n                            <div class=\"small pull-right m-t-xs\">9小时以后</div>\n                            <h4>建设阶段 </h4> 编写目的编写本项目进度报告的目的在于更好的控制软件开发的时间,对团队成员的 开发进度作出一个合理的比对\n\n                            <div class=\"small\">已完成： 48%</div>\n                            <div class=\"progress progress-mini\">\n                                <div style=\"width: 48%;\" class=\"progress-bar\"></div>\n                            </div>\n                        </a>\n                    </li>\n                    <li>\n                        <a href=\"#\">\n                            <div class=\"small pull-right m-t-xs\">9小时以后</div>\n                            <h4>获证开盘</h4> 编写目的编写本项目进度报告的目的在于更好的控制软件开发的时间,对团队成员的 开发进度作出一个合理的比对\n\n                            <div class=\"small\">已完成： 14%</div>\n                            <div class=\"progress progress-mini\">\n                                <div style=\"width: 14%;\" class=\"progress-bar progress-bar-info\"></div>\n                            </div>\n                        </a>\n                    </li>\n\n                </ul>\n\n            </div>\n        </div>\n\n    </div>\n</div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  module.hot.dispose(function () {
+    __vueify_insert__.cache["\nbody{\n    background-color:#ff0000;\n}\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord("_v-2eae6922", module.exports)
+  } else {
+    hotAPI.update("_v-2eae6922", module.exports, (typeof module.exports === "function" ? module.exports.options : module.exports).template)
+  }
+})()}
+},{"vue":5,"vue-hot-reload-api":2,"vueify/lib/insert-css":6}],14:[function(require,module,exports){
 'use strict';
 
 var _vue = require('vue');
@@ -14847,12 +15047,18 @@ var router = new _vueRouter2.default({
 
 router.map({
     '/': {
-        component: require('./components/Example.vue')
+        component: require('./components/Home.vue')
+    },
+    '': {
+        component: require('./components/Home.vue')
+    },
+    '/auth/login': {
+        component: require('./components/Auth/Login.vue')
     }
 });
 
 router.start(_App2.default, 'body');
 
-},{"./App.vue":6,"./components/Example.vue":7,"vue":5,"vue-resource":3,"vue-router":4}]},{},[8]);
+},{"./App.vue":7,"./components/Auth/Login.vue":8,"./components/Home.vue":10,"vue":5,"vue-resource":3,"vue-router":4}]},{},[14]);
 
 //# sourceMappingURL=main.js.map

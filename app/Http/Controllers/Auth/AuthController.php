@@ -94,6 +94,11 @@ class AuthController extends Controller
         
     }
 
+    public function getLogin()
+    {
+        return view('home');
+    }
+
     public function getLogout(){
         /*if(Auth::user()) {
             event(new UserLogout(Auth::user()));

@@ -22,6 +22,11 @@ Route::group(['prefix' => 'auth'], function(){
     Route::post('login.json', $Auth . 'postLogin');//登录
     Route::get('logout.json', $Auth . 'getLogout');//登出
     Route::get('resetpwd', 'Auth\PasswordController@resetPwd');//重设密码
+    Route::get('login', $Auth . 'getLogin');
+});
+
+Route::group(['prefix' => 'user'], function(){
+    Route::get('me.json', 'Users\UsersController@getMe');
 });
 
 Route::group(['middleware'=>$authApiMiddleware],function(){

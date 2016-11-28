@@ -16,7 +16,13 @@ var router = new VueRouter({
 
 router.map({
 	'/': {
-        component: require('./components/Example.vue')
+        component: require('./components/Home.vue')
+    },
+    '': {
+        component: require('./components/Home.vue')
+    },
+    '/auth/login': {
+        component: require('./components/Auth/Login.vue')
     }
 })
 

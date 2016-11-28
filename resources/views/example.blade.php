@@ -2,10 +2,10 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
-		<title>Example</title>
+		<title>Exampleaaa</title>
 	</head>
 	<body>
-		<div id="app">111111111111111</div>
+		<div id="app"></div>
 		<script src="{{ asset('js/main.js') }}"></script>
 	</body>
 </html>

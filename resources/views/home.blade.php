@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Laravel</title>
 
-        <link href="https://fonts.googleapis.com/css?family=Lato:100" rel="stylesheet" type="text/css">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
 
-        <style>
-            html, body {
-                height: 100%;
-            }
+    <title>H+ 后台主题UI框架 - 主页</title>
 
-            body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                display: table;
-                font-weight: 100;
-                font-family: 'Lato';
-            }
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
 
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
-            }
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
 
-            .content {
-                text-align: center;
-                display: inline-block;
-            }
+    <link rel="shortcut icon" href="favicon.ico"> <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/animate.css')}}" rel="stylesheet">
+    <link href="{{asset('css/style.css')}}" rel="stylesheet">
+</head>
 
-            .title {
-                font-size: 96px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="content">
-                <div class="title">Laravel 5</div>
-            </div>
-        </div>
-    </body>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+
+
+<!-- 全局js -->
+<script src="{{asset('js/jquery.min.js')}}"></script>
+<script src="{{asset('js/bootstrap.min.js')}}"></script>
+<script src="{{asset('js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
+<script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
+<script src="{{asset('js/plugins/layer/layer.min.js')}}"></script>
+
+<!-- 自定义js -->
+<script src="{{asset('js/hplus.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/contabs.js')}}"></script>
+
+<!-- 第三方插件 -->
+<script src="{{asset('js/plugins/pace/pace.min.js')}}"></script>
+<script src="{{asset('js/main.js')}}"></script>
+
+</body>
+
 </html>
