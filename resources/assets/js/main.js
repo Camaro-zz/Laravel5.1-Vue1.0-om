@@ -11,7 +11,7 @@ Vue.use(VueResource)
 
 var router = new VueRouter({
     history: true,
-    root: 'admin'
+    root: '/'
 })
 
 router.map({
@@ -26,4 +26,15 @@ router.map({
     }
 })
 
+router.beforeEach(function (transition) {
+    if (transition.to.path === '/auth/login') {
+        if(_global.user == ''){
+            transition.next();
+        }else{
+            transition.abort();
+        }
+    }else{
+        transition.next();
+    }
+})
 router.start(App, 'body')

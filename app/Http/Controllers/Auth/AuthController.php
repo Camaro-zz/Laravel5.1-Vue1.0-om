@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -51,7 +52,7 @@ class AuthController extends Controller
         $validator = Validator::make($input, $rules);
         if($validator->fails()){
             $this->clearCaptcha();//验证失败的话清除验证码的session
-            return Response::json(['error' => ['message'=>$validator->getMessageBag()->toArray(), 'type'=>'Auth', 'code'=>401]]);
+            return Response::json(['error' => ['message'=>['login'=>false,'captcha'=>true], 'type'=>'Auth', 'code'=>401]]);
         }else{
             //认证凭证
             $credentials = [
@@ -83,10 +84,10 @@ class AuthController extends Controller
                         }
                     }
                     $this->clearCaptcha();
-                    return Response::json(['error'=>['message'=>['login'=>['“登录失败，请重新登录！']], 'type'=>'Auth', 'code'=>401]]);
+                    return Response::json(['error'=>['message'=>['login'=>'“登录失败，请重新登录！','captcha'=>false], 'type'=>'Auth', 'code'=>401]]);
                 } else {
                     $this->clearCaptcha();
-                    return Response::json(['error'=>['message'=>['login'=>['“用户名”或“密码”错误，请重新登录！']], 'type'=>'Auth', 'code'=>401]]);
+                    return Response::json(['error'=>['message'=>['login'=>'“用户名”或“密码”错误，请重新登录！','captcha'=>false], 'type'=>'Auth', 'code'=>401]]);
                 }
             }
 
@@ -96,7 +97,10 @@ class AuthController extends Controller
 
     public function getLogin()
     {
-        return view('home');
+        $global['user'] = Auth::user() ? Auth::user()->toArray() : '';
+        //dd($global);
+        $data['global'] = json_encode($global);
+        return view('home',$data);
     }
 
     public function getLogout(){
@@ -104,13 +108,13 @@ class AuthController extends Controller
             event(new UserLogout(Auth::user()));
         }*/
         Auth::logout();
+        return Redirect::to('auth/login');
 
-
-        if(isset($_GET['runUrl'])){
+       /* if(isset($_GET['runUrl'])){
             return redirect()->guest('auth/login');
         }
 
-        return Response::json(['success'=>true], 200);
+        return Response::json(['success'=>true], 200);*/
     }
 
     public function getCaptcha(){

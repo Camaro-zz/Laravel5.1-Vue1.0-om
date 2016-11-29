@@ -22,7 +22,9 @@
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
-
+<script>
+    var _global = {!! $global !!};
+</script>
 
 <!-- 全局js -->
 <script src="{{asset('js/jquery.min.js')}}"></script>

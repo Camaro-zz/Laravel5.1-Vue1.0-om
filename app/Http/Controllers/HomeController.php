@@ -20,6 +20,8 @@ class HomeController extends Controller
         if(!isset(Auth::user()->id)){
             return Redirect::to('auth/login');
         }
-        return view('home');
+        $global['user'] = Auth::user()->toArray();
+        $data['global'] = json_encode($global);
+        return view('home',$data);
     }
 }

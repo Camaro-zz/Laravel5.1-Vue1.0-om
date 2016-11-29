@@ -10,22 +10,19 @@
 
         <form class="m-t" role="form" action="" name="form">
             <div class="form-group" v-bind:class="{'has-error' :login.errors.message.login}">
-                <span class="help-block" v-if="login.errors.message.login">用户名或者密码错误！</span>
+                <span class="help-block" v-if="login.errors.message.login">{{login.errors.message.login}}</span>
             </div>
-            <div class="form-group has-icon" v-bind:class="{'has-error' :validate.username}">
+            <div class="form-group has-icon">
                 <input v-model="auth.username" type="username" class="form-control" placeholder="用户名" required="true">
                 <i class="fa fa-user clr-gray"></i>
-                <span class="help-block" v-if="!auth.username">请输入用户名</span>
             </div>
-            <div class="form-group has-icon" v-bind:class="{'has-error' :validate.password}">
+            <div class="form-group has-icon">
                 <input v-model="auth.password" type="password" class="form-control" placeholder="密码" required="">
                 <i class="fa fa-lock clr-gray"></i>
-                <span class="help-block" v-if="!auth.password">请输入密码</span>
             </div>
-            <div class="form-group" v-bind:class="{'has-error' :validate.captcha}">
+            <div class="form-group" v-bind:class="{'has-error' :login.errors.message.captcha}">
                 <input name="captcha" class="form-control captcha-code" placeholder="验证码" type="text" v-model="auth.captcha">
                 <img class="captcha-img" @click="changeCaptcha" v-bind:src="captcha_src">
-                <span class="help-block" v-if="!auth.captcha">请输入验证码</span>
                 <span class="help-block" v-if="login.errors.message.captcha">验证码不正确！</span>
             </div>
             <button type="button" class="btn btn-primary block full-width m-b" @click="postLogin" v-bind:disabled="login.disable">{{login.text}}</button>
@@ -74,14 +71,9 @@
             return {
                 captcha_src:'/captcha',
                 auth:{},
-                validate:{
-                    username:false,
-                    password:false,
-                    captcha:false,
-                },
                 login:{
                     text:'登 录',
-                    disable:true,
+                    disable:false,
                     errors:{
                         message:{
                             login:false,
@@ -93,16 +85,36 @@
         },
         methods:{
             postLogin(){
-                //console.log(this.auth.username);
-                /*this.$http.post('/auth/login.json', this.auth).then(function(response){
-
+                if(!this.auth.username){
+                    this.login.errors.message.login = '请输入用户名';
+                    return false;
+                }
+                if(!this.auth.password){
+                    this.login.errors.message.login = '请输入密码';
+                    return false;
+                }
+                if(!this.auth.captcha){
+                    this.login.errors.message.login = '请输入验证码';
+                    return false;
+                }
+                this.login.text = '登录中...'
+                this.login.disable = true
+                this.$http.post('/auth/login.json', this.auth).then(function(response){
+                    this.changeCaptcha()
+                    if(!response.data.error){//登录成功
+                        this.$route.router.go({path: '/'})
+                    }else{
+                        this.login.text = '登 录'
+                        this.login.disable = false
+                        this.$set('login.errors',response.data.error)
+                    }
                 }, function(response){
-
-                });*/
+                    console.log(response);
+                });
             },
             changeCaptcha(){
                 this.captcha_src = '/captcha?'+ Math.random();
-            },
+            }
         }
     }
 
