@@ -13,19 +13,19 @@
                 <span class="help-block" v-if="login.errors.message.login">用户名或者密码错误！</span>
             </div>
             <div class="form-group has-icon" v-bind:class="{'has-error' :validate.username}">
-                <input v-model="auth.username" type="username" v-on:blur="doValidate" class="form-control" placeholder="用户名" required="true">
+                <input v-model="auth.username" type="username" class="form-control" placeholder="用户名" required="true">
                 <i class="fa fa-user clr-gray"></i>
-                <span class="help-block" v-if="validate.username">请输入用户名</span>
+                <span class="help-block" v-if="!auth.username">请输入用户名</span>
             </div>
             <div class="form-group has-icon" v-bind:class="{'has-error' :validate.password}">
-                <input v-model="auth.password" type="password" v-on:blur="doValidate" class="form-control" placeholder="密码" required="">
+                <input v-model="auth.password" type="password" class="form-control" placeholder="密码" required="">
                 <i class="fa fa-lock clr-gray"></i>
-                <span class="help-block" v-if="validate.password">请输入密码</span>
+                <span class="help-block" v-if="!auth.password">请输入密码</span>
             </div>
             <div class="form-group" v-bind:class="{'has-error' :validate.captcha}">
-                <input name="captcha" class="form-control captcha-code" v-on:blur="doValidate" placeholder="验证码" type="text" v-model="auth.captcha" >
+                <input name="captcha" class="form-control captcha-code" placeholder="验证码" type="text" v-model="auth.captcha">
                 <img class="captcha-img" @click="changeCaptcha" v-bind:src="captcha_src">
-                <span class="help-block" v-if="validate.captcha">请输入验证码</span>
+                <span class="help-block" v-if="!auth.captcha">请输入验证码</span>
                 <span class="help-block" v-if="login.errors.message.captcha">验证码不正确！</span>
             </div>
             <button type="button" class="btn btn-primary block full-width m-b" @click="postLogin" v-bind:disabled="login.disable">{{login.text}}</button>
@@ -99,23 +99,6 @@
                 }, function(response){
 
                 });*/
-            },
-            doValidate(){
-                if(this.auth.username && this.auth.password && this.auth.captcha){
-                    this.$set('login.disable', false)
-                    this.$set('validate.username', false)
-                    this.$set('validate.password', false)
-                    this.$set('validate.captcha', false)
-                }else if(!this.auth.username){
-                    this.$set('login.disable', true)
-                    this.$set('validate.username', true)
-                }else if(!this.auth.password){
-                    this.$set('login.disable', true)
-                    this.$set('validate.password', true)
-                }else if(!this.auth.captcha){
-                    this.$set('login.disable', true)
-                    this.$set('validate.captcha', true)
-                }
             },
             changeCaptcha(){
                 this.captcha_src = '/captcha?'+ Math.random();
