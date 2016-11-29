@@ -10,6 +10,7 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
                                <span class="block m-t-xs"><strong class="font-bold">Beaut-zihan</strong></span>
+
                                 <span class="text-muted text-xs block">超级管理员<b class="caret"></b></span>
                                 </span>
                         </a>
@@ -359,12 +360,12 @@
                 user:[]
             }
         },
-        method:{
+        methods: {
             getUserInfo(){
-                this.$http({url: '/camp/list_num.json', method: 'GET'}).then(function (response) {
-                    this.$set('campaigns', response.data)
+                this.$http({url: '/user/me.json', method: 'GET'}).then(function (response) {
+                    this.$set('user', response.data.account)
                 })
             }
-        }
+        },
     }
 </script>

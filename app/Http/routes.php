@@ -13,7 +13,7 @@
 $authApiMiddleware = 'auth.api';
 Route::get('/', 'HomeController@index');
 
-Route::get('captcha.json', 'Auth\AuthController@getCaptcha');
+Route::get('captcha', 'Auth\AuthController@getCaptcha');
 
 //用户验证
 Route::group(['prefix' => 'auth'], function(){
@@ -68,3 +68,5 @@ Route::group(['prefix' => 'order','middleware'=>$authApiMiddleware],function(){
     Route::put('{id}.json', 'Order\OrderController@putOrder');//修改订单
     Route::get('{id}.json', 'Order\OrderController@getOrder');//订单详情
 });
+
+Route::any('{all}', 'HomeController@index')->where('all', '.*');
