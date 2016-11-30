@@ -23,6 +23,9 @@ router.map({
     },
     '/auth/login': {
         component: require('./components/Auth/Login.vue')
+    },
+    '/goods/list': {
+        component: require('./components/Goods/GoodsList.vue')
     }
 })
 
@@ -31,7 +34,8 @@ router.beforeEach(function (transition) {
         if(_global.user == ''){
             transition.next();
         }else{
-            transition.abort();
+            //transition.redirect('/')
+            window.location.href='/'
         }
     }else{
         transition.next();

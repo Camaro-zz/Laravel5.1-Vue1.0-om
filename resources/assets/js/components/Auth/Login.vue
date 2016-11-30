@@ -102,7 +102,9 @@
                 this.$http.post('/auth/login.json', this.auth).then(function(response){
                     this.changeCaptcha()
                     if(!response.data.error){//登录成功
-                        this.$route.router.go({path: '/'})
+                        //this.$route.router.go({path: '/'})
+                        //location.reload()
+                        window.location.href='/'
                     }else{
                         this.login.text = '登 录'
                         this.login.disable = false

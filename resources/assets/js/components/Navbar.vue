@@ -35,32 +35,18 @@
                     </div>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/">
                         <i class="fa fa-home"></i>
                         <span class="nav-label">主页</span>
-                        <span class="fa arrow"></span>
                     </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="index_v1.html" data-index="0">主页示例一</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="index_v2.html">主页示例二</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="index_v3.html">主页示例三</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="index_v4.html">主页示例四</a>
-                        </li>
-                        <li>
-                            <a href="index_v5.html" target="_blank">主页示例五</a>
-                        </li>
-                    </ul>
 
                 </li>
                 <li>
-                    <a class="J_menuItem" href="layouts.html"><i class="fa fa-columns"></i> <span class="nav-label">布局</span></a>
+                    <a class="J_menuItem" v-link="{path:'/goods/list'}">
+                        <i class="fa fa-columns"></i>
+                        <span class="nav-label">产品</span>
+                        <!--<span class="fa arrow"></span>-->
+                    </a>
                 </li>
                 <li>
                     <a href="#">
@@ -359,7 +345,6 @@
 <script>
     export default{
         ready(){
-        console.log(_global);
             this.getUserInfo();
         },
         data(){
