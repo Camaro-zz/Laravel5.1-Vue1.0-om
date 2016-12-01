@@ -26,6 +26,13 @@ router.map({
     },
     '/goods/list': {
         component: require('./components/Goods/GoodsList.vue')
+    },
+    '/goods/add': {
+        component: require('./components/Goods/GoodsAdd.vue')
+    },
+    '/goods/edit/:id': {
+        name: 'goods_edit',
+        component: require('./components/Goods/GoodsEdit.vue')
     }
 })
 

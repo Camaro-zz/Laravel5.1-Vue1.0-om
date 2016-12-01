@@ -19,9 +19,10 @@
     <link href="{{asset('css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/footable/footable.core.css')}}" rel="stylesheet">
 </head>
 
-<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<body class="fixed-sidebar full-height-layout gray-bg">
 <script>
     var _global = {!! $global !!};
 </script>
@@ -32,6 +33,7 @@
 <script src="{{asset('js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
 <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('js/plugins/layer/layer.min.js')}}"></script>
+<script src="{{asset('js/plugins/footable/footable.all.min.js')}}"></script>
 
 <!-- 自定义js -->
 <script src="{{asset('js/hplus.js')}}"></script>

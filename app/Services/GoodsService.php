@@ -194,28 +194,36 @@ class GoodsService extends BaseService {
     }
 
     public function getGoodses($data){
-        $query = OmGoods::select('id','product_sn','en_name','cn_name','img')->where('is_deleted',0);
-        if(isset($data['cn_name'])){
-            $query->where('cn_name', 'like', '%' . $data['cn_name'] . '%');
+        $offset = isset($data['offset']) ? $data['offset'] : 0;
+        $limit = isset($data['limit']) ? $data['limit'] : 20;
+        $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
+                        ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','om_goods.car_types','cat.name as cat_name')->where('om_goods.is_deleted',0);
+        if(isset($data['cn_name']) && $data['cn_name']){
+            $query->where('om_goods.cn_name', 'like', '%' . $data['cn_name'] . '%');
         }
-        if(isset($data['en_name'])){
-            $query->where('en_name', 'like', '%' . $data['en_name'] . '%');
+        if(isset($data['en_name']) && $data['en_name']){
+            $query->where('om_goods.en_name', 'like', '%' . $data['en_name'] . '%');
         }
-        if(isset($data['cat_id'])){
-            $query->where('cat_id', '=', $data['cat_id']);
+        if(isset($data['cat_id']) && $data['cat_id'] > 0){
+            $query->where('om_goods.cat_id', '=', $data['cat_id']);
         }
         $result['_count'] = $query->count();
-        if (isset($data['offset'])) {
-            $query->skip($data['offset']);
-        }
-        if (isset($data['limit'])) {
-            $query->take($data['limit']);
-        }
+        $query->skip($offset);
+        $query->take($limit);
         $result['data'] = $query->get();
         if ($result['data']) {
             foreach ($result['data'] as &$v) {
                 //DB::connection()->enableQueryLog();
-                $v['prop'] = OmGoodsSupplier::where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->first();
+                $v['prop'] = OmGoodsSupplier::leftJoin('om_supplier as sup','sup.id','=','om_goods_supplier.supplier_id')
+                                            ->select('sup.name','sup.supplier_sn','om_goods_supplier.*')
+                                            ->where(array('om_goods_supplier.goods_id'=>$v['id'],'om_goods_supplier.is_deleted'=>0))->orderBy('sort', 'DESC')->first();
+                if(!$v['prop']){
+                    $v['prop'] = '';
+                }
+                $v['mfrs'] = OmGoodsMfrs::select('mfrs_sn','mfrs_name','sort')->where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->first();
+                if(!$v['mfrs']){
+                    $v['mfrs'] = '';
+                }
                 //dump(DB::getQueryLog());
             }
         }
@@ -224,6 +232,7 @@ class GoodsService extends BaseService {
     }
 
     public function deleteGoodses($ids){
+        $ids = explode(',',$ids);
         $delete = OmGoods::whereIn('id',$ids)->update(array('is_deleted'=>1));
         return ['status'=>true];
     }

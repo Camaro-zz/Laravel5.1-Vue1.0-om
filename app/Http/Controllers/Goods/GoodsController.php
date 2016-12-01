@@ -53,8 +53,8 @@ class GoodsController extends Controller
 
     //商品删除
     public function deleteGoodses(Request $request){
-        $ids = $request->all()->ids;
-        $data = $this->goodsService->deleteGoodses($ids);
+        $ids = $request->all();
+        $data = $this->goodsService->deleteGoodses($ids['ids']);
         return Response::json($data,200);
     }
 }
