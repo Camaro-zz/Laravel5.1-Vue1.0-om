@@ -1,6 +1,4 @@
 <template>
-
-    <div id="page-wrapper" class="gray-bg dashbard-1">
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
@@ -45,14 +43,6 @@
             </div>
             <a href="/auth/logout.json" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
         </div>
-        <div class="row J_mainContent" id="content-main">
-            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="index_v1.html?v=4.0" frameborder="0" data-id="index_v1.html" seamless></iframe>
-        </div>
-        <div class="footer">
-            <div class="pull-right">&copy; 2016-fuck <a href="" target="_blank">what the fuck</a>
-            </div>
-        </div>
-    </div>
 </template>
 <script>
 

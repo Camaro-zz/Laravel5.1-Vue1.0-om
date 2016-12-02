@@ -194,8 +194,10 @@ class GoodsService extends BaseService {
     }
 
     public function getGoodses($data){
-        $offset = isset($data['offset']) ? $data['offset'] : 0;
-        $limit = isset($data['limit']) ? $data['limit'] : 20;
+        //$offset = isset($data['offset']) ? $data['offset'] : 0;
+        $page = isset($data['page']) ? $data['page'] : 1;
+        $limit = isset($data['limit']) ? $data['limit'] : 1;
+        $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
                         ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','om_goods.car_types','cat.name as cat_name')->where('om_goods.is_deleted',0);
         if(isset($data['cn_name']) && $data['cn_name']){

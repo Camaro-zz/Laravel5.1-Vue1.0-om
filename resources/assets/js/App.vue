@@ -9,8 +9,10 @@
 		<!--右侧部分开始-->
 		<div id="page-wrapper" class="gray-bg dashbard-1">
 			<Topbar></Topbar>
-			<router-view></router-view>
-			<div class="footer">
+			<div class="wrapper wrapper-content animated fadeInUp">
+				<router-view></router-view>
+			</div>
+			<div class="footer fixed">
 				<div class="pull-right">&copy; 2016-fuck <a href="" target="_blank">what the fuck</a>
 				</div>
 			</div>

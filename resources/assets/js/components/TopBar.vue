@@ -1,6 +1,6 @@
 <template>
     <div class="row border-bottom">
-        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <nav class="navbar navbar-static-top fixed" role="navigation">
             <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
                 <!--<form role="search" class="navbar-form-custom" method="post" action="search_results.html">
                     <div class="form-group">
@@ -14,8 +14,8 @@
                         <i class="fa fa-tasks"></i> 主题
                     </a>
                 </li>
-                <li class="hidden-xs">
-                    <a class="J_menuItem" href="/auth/logout.json">
+                <li class="-xs">
+                    <a class="" href="/auth/logout.json">
                         <i class="fa fa fa-sign-out"></i> 退出
                     </a>
                 </li>

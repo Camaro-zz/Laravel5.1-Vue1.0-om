@@ -395,7 +395,14 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
 .navbar-static-top {
     background: #f3f3f4;
 }
-
+.navbar-static-top.fixed {
+    margin-bottom: 0;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 0;
+    margin-left: 220px;
+}
 .fixed-nav #wrapper {
     padding-top: 60px;
     box-sizing: border-box;
@@ -463,6 +470,7 @@ body.canvas-menu .navbar-static-side {
     width: 220px;
     z-index: 2001;
     height: 100%;
+    top:0;
 }
 
 body.fixed-sidebar.mini-navbar .navbar-static-side {
@@ -470,11 +478,11 @@ body.fixed-sidebar.mini-navbar .navbar-static-side {
 }
 
 body.fixed-sidebar.mini-navbar #page-wrapper {
-    margin: 0 0 0 70px;
+    margin: 55px 0 0 70px;
 }
 
 body.body-small.fixed-sidebar.mini-navbar #page-wrapper {
-    margin: 0 0 0 70px;
+    margin: 55px 0 0 70px;
 }
 
 body.body-small.fixed-sidebar.mini-navbar .navbar-static-side {
@@ -3525,7 +3533,7 @@ video {
 #page-wrapper {
     padding: 0 15px;
     position: inherit;
-    margin: 0 0 0 220px;
+    margin: 55px 0 0 220px;
 }
 
 .title-action {
@@ -3594,6 +3602,10 @@ ol.unstyled {
 
 body.mini-navbar .footer.fixed,
 body.body-small.mini-navbar .footer.fixed {
+    margin: 0 0 0 70px;
+}
+body.mini-navbar .navbar-static-top.fixed,
+body.body-small.mini-navbar .navbar-static-top.fixed {
     margin: 0 0 0 70px;
 }
 
