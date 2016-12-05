@@ -5,18 +5,24 @@
                 <div class="ibox-title">
                     <h5>所有产品</h5>
                     <div class="ibox-tools">
-                        <a href="projects.html" class="btn btn-primary btn-xs">添加产品</a>
+                        <a v-link="{path:'/goods/add'}" class="btn btn-primary btn-xs">添加产品</a>
                     </div>
                 </div>
                 <div class="ibox-content">
                     <div class="row m-b-sm m-t-sm">
                         <div class="col-md-1">
-                            <button type="button" id="loading-example-btn" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> 刷新</button>
+                            <button type="button" id="loading-example-btn" v-on:click="goodsSerch()" class="btn btn-white btn-sm"><i class="fa fa-refresh"></i> 刷新</button>
                         </div>
-                        <div class="col-md-11">
+                        <div class="col-md-5" style="float:right;">
                             <div class="input-group">
-                                <input type="text" placeholder="请输入产品名称" class="input-sm form-control"> <span class="input-group-btn">
-                                <button type="button" class="btn btn-sm btn-primary"> 搜索</button> </span>
+                                <input type="text" v-model="search_data.keywords" style="width:50% !important;float:right;" placeholder="请输入产品名称" class="input-sm form-control col-md-5">
+                                <select class=" input-sm form-control col-md-3" style="width:25% !important;float:right;" v-model="search_data.type" number>
+                                    <option value="0">中文品名</option>
+                                    <option value="1">英文品名</option>
+                                </select>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-primary" v-on:click="goodsSerch()"> 搜索</button>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -38,7 +44,7 @@
                             <th data-sort-ignore="true">操作</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="all > 0">
                         <tr v-for="goods in goodses">
                             <td>{{goods.en_name}}</td>
                             <td>{{goods.cn_name}}</td>
@@ -65,12 +71,21 @@
                             </td>
                         </tr>
                         </tbody>
-                        <tfoot>
+                        <tbody v-else>
+                            <tr class="no-records-found"><td colspan="4">没有找到匹配的记录</td></tr>
+                        </tbody>
+                        <tfoot v-if="all > 0">
                         <tr>
                             <td colspan="7">
                                 <ul class="pagination pull-right">
                                     <li class="footable-page-arrow">
-                                        <a data-page="first" href="#first">«</a>
+                                        <input type="text" class="go_page_class" v-model="go_page_class" number>
+                                        <a data-page="last" class="go_page_class_a" v-on:click="btnClick(go_page_class)">跳转</a>
+                                    </li>
+                                </ul>
+                                <ul class="pagination pull-right">
+                                    <li class="footable-page-arrow">
+                                        <a data-page="first" v-on:click="goPage(2)">«</a>
                                     </li>
                                     <li class="footable-page-arrow">
                                         <a data-page="prev" v-on:click="goPage(0)">‹</a>
@@ -82,7 +97,7 @@
                                         <a data-page="next" v-on:click="goPage(1)">›</a>
                                     </li>
                                     <li class="footable-page-arrow">
-                                        <a data-page="last" href="#last">»</a>
+                                        <a data-page="last" v-on:click="goPage(3)">»</a>
                                     </li>
                                 </ul>
                             </td>
@@ -94,10 +109,33 @@
         </div>
     </div>
 </template>
+<style>
+    .go_page_class{
+        float: left;
+        display: inline-block;
+        padding: 4px 6px;
+        margin-left: 10px;
+        width: 40px;
+        height: 28px;
+        border: 1px solid #DDDDDD;
+        border-right: 0px;
+        border-bottom-left-radius: 4px;
+        border-top-left-radius: 4px;
+    }
+    .go_page_class_a{
+        border-bottom-left-radius: 0px !important;
+        border-top-left-radius: 0px !important;
+    }
+    .pagination .active a{
+        background-color: #18a689 !important;
+        border-color: #18a689 !important;
+        color: #FFFFFF;
+    }
+</style>
 <script>
 export default{
     ready(){
-        this.getGoodes()
+        this.getGoodses()
     },
     data(){
         return{
@@ -110,11 +148,12 @@ export default{
             page_size:1,
             page_count:0,
             cur: 1,
-            all: 1
+            all: 1,
+            go_page_class: ''
         }
     },
     methods:{
-        getGoodes(){
+        getGoodses(){
             var serch_data = this.search_data;
             var en_name = '';
             var cn_name = '';
@@ -127,35 +166,42 @@ export default{
             var page = this.cur ? this.cur : 1;
             this.$http.get('/goods.json?en_name='+en_name+'&cn_name='+cn_name+'&cat_id='+cat_id+'&page='+page).then(function(response){
                 this.$set('goodses',response.data.data);
-                this.$set('all',response.data._count);
+                this.$set('all',response.data.all_page);
                 this.$set('cur', page)
             });
         },
+        goodsSerch(){
+            this.getGoodses();
+            $(".footable").data('footable').reset();
+        },
         deleteGoods(ids){
             this.$http.delete('/goods/batch.json?ids='+ids).then(function(response){
-                this.getGoodes();
+                this.getGoodses();
                 $(".footable").data('footable').reset();
             });
         },
         goPage(type){
-            if(type == 1){
+            if(type == 1){//下一页
                 if(this.cur < this.all){
                     this.cur++
                 }
-            }else{
+            }else if(type == 0){//上一页
                 if(this.cur > 1){
                     this.cur--
                 }
+            }else if(type == 2){//第一页
+                this.cur = 1
+            }else if(type == 3){//最后一页
+                this.cur = this.all
             }
-            console.log(this.cur);
-            this.getGoodes()
+            this.getGoodses()
             $(".footable").data('footable').reset();
         },
         btnClick(data){
             if(data != this.cur){
                 this.cur = data
                 this.$dispatch('btn-click',data)
-                this.getGoodes()
+                this.getGoodses()
                 $(".footable").data('footable').reset();
             }
         }
@@ -171,25 +217,25 @@ export default{
     },
     computed: {
         indexs: function(){
-            var left = 1
-            var right = this.all
-            var ar = []
+            var left = 1;
+            var right = this.all;
+            var ar = [];
             if(this.all>= 11){
                 if(this.cur > 5 && this.cur < this.all-4){
-                    left = this.cur - 5
+                    left = this.cur - 5;
                     right = this.cur + 4
                 }else{
                     if(this.cur<=5){
-                        left = 1
+                        left = 1;
                         right = 10
                     }else{
-                        right = this.all
+                        right = this.all;
                         left = this.all -9
                     }
                 }
             }
             while (left <= right){
-                ar.push(left)
+                ar.push(left);
                 left ++
             }
             return ar

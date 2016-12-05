@@ -20,6 +20,7 @@ class CreateOmGoodsTable extends Migration
             $table->string('img',200)->comment('产品图片')->default('');
             $table->string('en_name',50)->comment('英文品名')->default('');
             $table->string('cn_name',50)->comment('中文品名')->default('');
+            $table->decimal('fob_price',10,2)->comment('fob价格')->default(0);
             $table->text('car_types')->comment('适用车型');
             $table->text('mark')->comment('备注');
             $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);

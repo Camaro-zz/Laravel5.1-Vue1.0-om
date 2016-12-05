@@ -16,10 +16,11 @@
     <![endif]-->
 
     <link rel="shortcut icon" href="favicon.ico"> <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/footable/footable.core.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/chosen/chosen.css')}}" rel="stylesheet">
     <link href="{{asset('css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
-    <link href="{{asset('css/plugins/footable/footable.core.css')}}" rel="stylesheet">
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg">
@@ -33,7 +34,7 @@
 <script src="{{asset('js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
 <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>
 <script src="{{asset('js/plugins/layer/layer.min.js')}}"></script>
-<script src="{{asset('js/plugins/footable/footable.all.min.js')}}"></script>
+<script src="{{asset('js/plugins/layer/extend/layer.ext.js')}}"></script>
 
 <!-- 自定义js -->
 <script src="{{asset('js/hplus.js')}}"></script>
@@ -41,6 +42,8 @@
 
 <!-- 第三方插件 -->
 <script src="{{asset('js/plugins/pace/pace.min.js')}}"></script>
+<script src="{{asset('js/plugins/footable/footable.all.min.js')}}"></script>
+<script src="{{asset('js/plugins/chosen/chosen.jquery.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
 
 </body>

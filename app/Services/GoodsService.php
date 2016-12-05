@@ -196,26 +196,28 @@ class GoodsService extends BaseService {
     public function getGoodses($data){
         //$offset = isset($data['offset']) ? $data['offset'] : 0;
         $page = isset($data['page']) ? $data['page'] : 1;
-        $limit = isset($data['limit']) ? $data['limit'] : 1;
+        $limit = isset($data['limit']) ? $data['limit'] : 10;
         $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
                         ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','om_goods.car_types','cat.name as cat_name')->where('om_goods.is_deleted',0);
-        if(isset($data['cn_name']) && $data['cn_name']){
+        if(isset($data['cn_name'])){
             $query->where('om_goods.cn_name', 'like', '%' . $data['cn_name'] . '%');
         }
-        if(isset($data['en_name']) && $data['en_name']){
+        if(isset($data['en_name'])){
             $query->where('om_goods.en_name', 'like', '%' . $data['en_name'] . '%');
         }
         if(isset($data['cat_id']) && $data['cat_id'] > 0){
             $query->where('om_goods.cat_id', '=', $data['cat_id']);
         }
         $result['_count'] = $query->count();
+        $result['all_page'] = ceil($result['_count'] / $limit);
         $query->skip($offset);
         $query->take($limit);
+        //DB::connection()->enableQueryLog();
         $result['data'] = $query->get();
+        //dump(DB::getQueryLog());
         if ($result['data']) {
             foreach ($result['data'] as &$v) {
-                //DB::connection()->enableQueryLog();
                 $v['prop'] = OmGoodsSupplier::leftJoin('om_supplier as sup','sup.id','=','om_goods_supplier.supplier_id')
                                             ->select('sup.name','sup.supplier_sn','om_goods_supplier.*')
                                             ->where(array('om_goods_supplier.goods_id'=>$v['id'],'om_goods_supplier.is_deleted'=>0))->orderBy('sort', 'DESC')->first();
@@ -226,7 +228,6 @@ class GoodsService extends BaseService {
                 if(!$v['mfrs']){
                     $v['mfrs'] = '';
                 }
-                //dump(DB::getQueryLog());
             }
         }
 
