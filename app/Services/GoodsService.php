@@ -22,20 +22,6 @@ class GoodsService extends BaseService {
      * 添加商品
      */
     public function addGoods($data){
-        $data = array(
-            'cat_id' => 1,
-            'product_sn' => '12121',
-            'en_name' => 'weq',
-            'cn_name' => '撒打算',
-            'car_types' => 'sadsadasdsds',
-            'mark' => 'asdads',
-            'img' => 'asadsadas',
-            'imgs' => array(
-                ['img'=>'sadsasad','sort'=>0],
-                ['img'=>'sadsasad','sort'=>0],
-                ['img'=>'sadsasad','sort'=>0]
-            )
-        );
         $v = $this->goodsValidator($data);
         if(!$v['status']){
             return $v;
@@ -307,7 +293,8 @@ class GoodsService extends BaseService {
         $goods->imgs()->delete();
         $imgsData = array();
         foreach ($imgs as $key => &$_img) {
-            $imgsData[] = new OmGoodsImg($_img);
+            $img_arr['img'] = $_img['path'];
+            $imgsData[] = new OmGoodsImg($img_arr);
         }
         $goods->imgs()->saveMany($imgsData);
     }

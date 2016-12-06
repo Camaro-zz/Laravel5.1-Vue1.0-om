@@ -25,9 +25,13 @@
                             <label class="col-sm-2 control-label">产品图片</label>
 
                             <div class="col-sm-4">
-                                <div id="uploader-demo">
-                                    <div id="fileList" class="uploader-list"></div>
-                                    <div id="filePicker">选择图片</div>
+                                <div id="uploader" class="wu-example">
+                                    <div id="filePicker"></div>
+                                    <div class="queueList">
+                                        <div id="dndArea" class="placeholder">
+                                            <p>或将图片拖到这里，单次最多可选300张</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -81,8 +85,8 @@
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="submit">保存内容</button>
-                                <button class="btn btn-white" type="submit">取消</button>
+                                <button class="btn btn-primary" type="button" @click="postGoods()">保存内容</button>
+                                <button class="btn btn-white" type="button">取消</button>
                             </div>
                         </div>
                     </form>
@@ -96,121 +100,302 @@ export default{
     ready(){
         this.getCats();
         var __this = this;
-        var $ = jQuery,
-                $list = $('#fileList'),
-        // 优化retina, 在retina下这个值是2
+        var $ = jQuery,    // just in case. Make sure it's not an other libaray.
+
+                $wrap = $('#uploader'),
+
+                // 图片容器
+                $queue = $('<ul class="filelist"></ul>')
+                    .appendTo( $wrap.find('.queueList') ),
+
+                // 状态栏，包括进度和控制按钮
+                $statusBar = $wrap.find('.statusBar'),
+
+                // 文件总体选择信息。
+                $info = $statusBar.find('.info'),
+
+                // 上传按钮
+                $upload = $wrap.find('.uploadBtn'),
+
+                // 没选择文件之前的内容。
+                $placeHolder = $wrap.find('.placeholder'),
+
+                // 总体进度条
+                $progress = $statusBar.find('.progress').hide(),
+
+                // 添加的文件数量
+                fileCount = 0,
+
+                // 添加的文件总大小
+                fileSize = 0,
+
+                // 优化retina, 在retina下这个值是2
                 ratio = window.devicePixelRatio || 1,
 
-        // 缩略图大小
-                thumbnailWidth = 100 * ratio,
-                thumbnailHeight = 100 * ratio,
+                // 缩略图大小
+                thumbnailWidth = 110 * ratio,
+                thumbnailHeight = 110 * ratio,
 
-        // Web Uploader实例
+                // 可能有pedding, ready, uploading, confirm, done.
+                state = 'pedding',
+
+                // 所有文件的进度信息，key为file id
+                percentages = {},
+
+                supportTransition = (function(){
+                    var s = document.createElement('p').style,
+                        r = 'transition' in s ||
+                              'WebkitTransition' in s ||
+                              'MozTransition' in s ||
+                              'msTransition' in s ||
+                              'OTransition' in s;
+                    s = null;
+                    return r;
+                })(),
+
+                // WebUploader实例
                 uploader;
 
-        // 初始化Web Uploader
-        uploader = WebUploader.create({
-
-            // 自动上传。
-            auto: true,
-
-            // swf文件路径
-            swf: BASE_URL + '/js/Uploader.swf',
-
-            // 文件接收服务端。
-            server: '/upload.json',
-
-            // 选择文件的按钮。可选。
-            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-            pick: '#filePicker',
-
-            // 只允许选择文件，可选。
-            accept: {
-                title: 'Images',
-                extensions: 'gif,jpg,jpeg,bmp,png',
-                //mimeTypes: 'image/gif,image/jpeg,image/jpg,image/png,image/bmp'
+            if ( !WebUploader.Uploader.support() ) {
+                alert( 'Web Uploader 不支持您的浏览器！如果你使用的是IE浏览器，请尝试升级 flash 播放器');
+                throw new Error( 'WebUploader does not support the browser you are using.' );
             }
-        });
 
-        // 当有文件添加进来的时候
-        uploader.on( 'fileQueued', function( file ) {
-            var $li = $(
-                            '<div id="' + file.id + '" class="file-item thumbnail">' +
-                            '<img><i @click="remove(this)" class="upload-img-remove-i fa fa-remove"></i><div class="upload-img-remove"></div>' +
-                            '</div>'
-                    ),
-                    $img = $li.find('img');
+            // 实例化
+            uploader = WebUploader.create({
+                pick: {
+                    id: '#filePicker',
+                    label: '点击选择图片'
+                },
+                dnd: '#uploader .queueList',
+                paste: document.body,
+                auto: true,
+                accept: {
+                    title: 'Images',
+                    extensions: 'gif,jpg,jpeg,bmp,png',
+                    //mimeTypes: 'image/*'
+                },
 
-            $list.append( $li );
+                // swf文件路径
+                swf: BASE_URL + '/Uploader.swf',
 
-            // 创建缩略图
-            uploader.makeThumb( file, function( error, src ) {
-                if ( error ) {
-                    $img.replaceWith('<span>不能预览</span>');
-                    return;
+                disableGlobalDnd: true,
+
+                chunked: true,
+                server: '/upload.json',
+                fileNumLimit: 300,
+                fileSizeLimit: 5 * 1024 * 1024,    // 200 M
+                fileSingleSizeLimit: 1 * 1024 * 1024    // 50 M
+            });
+            // 当有文件添加进来时执行，负责view的创建
+            function addFile( file ) {
+                var $li = $( '<li id="' + file.id + '">' +
+                        '<p class="title">' + file.name + '</p>' +
+                        '<p class="imgWrap"></p>'+
+                        '<p class="progress"><span></span></p>' +
+                        '</li>' ),
+
+                    $btns = $('<div class="file-panel">' +
+                        '<span class="cancel">删除</span></div>').appendTo( $li ),
+                    $prgress = $li.find('p.progress span'),
+                    $wrap = $li.find( 'p.imgWrap' ),
+                    $info = $('<p class="error"></p>'),
+
+                    showError = function( code ) {
+                        switch( code ) {
+                            case 'exceed_size':
+                                text = '文件大小超出';
+                                break;
+
+                            case 'interrupt':
+                                text = '上传暂停';
+                                break;
+
+                            default:
+                                text = '上传失败，请重试';
+                                break;
+                        }
+
+                        $info.text( text ).appendTo( $li );
+                    };
+
+                if ( file.getStatus() === 'invalid' ) {
+                    showError( file.statusText );
+                } else {
+                    // @todo lazyload
+                    $wrap.text( '预览中' );
+                    uploader.makeThumb( file, function( error, src ) {
+                        if ( error ) {
+                            $wrap.text( '不能预览' );
+                            return;
+                        }
+
+                        var img = $('<img src="'+src+'">');
+                        $wrap.empty().append( img );
+                    }, thumbnailWidth, thumbnailHeight );
+
+                    percentages[ file.id ] = [ file.size, 0 ];
+                    file.rotation = 0;
                 }
 
-                $img.attr( 'src', src );
-            }, thumbnailWidth, thumbnailHeight );
-        });
+                file.on('statuschange', function( cur, prev ) {
+                    if ( prev === 'progress' ) {
+                        $prgress.hide().width(0);
+                    }
 
-        // 文件上传过程中创建进度条实时显示。
-        uploader.on( 'uploadProgress', function( file, percentage ) {
-            var $li = $( '#'+file.id ),
+                    // 成功
+                    if ( cur === 'error' || cur === 'invalid' ) {
+                        console.log( file.statusText );
+                        showError( file.statusText );
+                        percentages[ file.id ][ 1 ] = 1;
+                    } else if ( cur === 'interrupt' ) {
+                        showError( 'interrupt' );
+                    } else if ( cur === 'queued' ) {
+                        percentages[ file.id ][ 1 ] = 0;
+                    } else if ( cur === 'progress' ) {
+                        $info.remove();
+                        $prgress.css('display', 'block');
+                    } else if ( cur === 'complete' ) {
+                        $li.append( '<span class="success"></span>' );
+                    }
+
+                    $li.removeClass( 'state-' + prev ).addClass( 'state-' + cur );
+                });
+
+                $li.on( 'mouseenter', function() {
+                    $btns.stop().animate({height: 30});
+                });
+
+                $li.on( 'mouseleave', function() {
+                    $btns.stop().animate({height: 0});
+                });
+
+                $btns.on( 'click', 'span', function() {
+                    var index = $(this).index(),
+                        deg;
+
+                    switch ( index ) {
+                        case 0:
+                            uploader.removeFile( file );
+                            return;
+
+                        case 1:
+                            file.rotation += 90;
+                            break;
+
+                        case 2:
+                            file.rotation -= 90;
+                            break;
+                    }
+
+                    if ( supportTransition ) {
+                        deg = 'rotate(' + file.rotation + 'deg)';
+                        $wrap.css({
+                            '-webkit-transform': deg,
+                            '-mos-transform': deg,
+                            '-o-transform': deg,
+                            'transform': deg
+                        });
+                    } else {
+                        $wrap.css( 'filter', 'progid:DXImageTransform.Microsoft.BasicImage(rotation='+ (~~((file.rotation/90)%4 + 4)%4) +')');
+                    }
+
+
+                });
+
+                $li.appendTo( $queue );
+            }
+
+            // 负责view的销毁
+            function removeFile( file ) {
+                var $li = $('#'+file.id);
+
+                delete percentages[ file.id ];
+                updateTotalProgress();
+                $li.off().find('.file-panel').off().end().remove();
+            }
+
+            function updateTotalProgress() {
+                var loaded = 0,
+                    total = 0,
+                    spans = $progress.children(),
+                    percent;
+
+                $.each( percentages, function( k, v ) {
+                    total += v[ 0 ];
+                    loaded += v[ 0 ] * v[ 1 ];
+                } );
+
+                percent = total ? loaded / total : 0;
+
+                spans.eq( 0 ).text( Math.round( percent * 100 ) + '%' );
+                spans.eq( 1 ).css( 'width', Math.round( percent * 100 ) + '%' );
+            }
+
+            uploader.onUploadProgress = function( file, percentage ) {
+                var $li = $('#'+file.id),
                     $percent = $li.find('.progress span');
 
-            // 避免重复创建
-            if ( !$percent.length ) {
-                $percent = $('<p class="progress"><span></span></p>')
-                        .appendTo( $li )
-                        .find('span');
-            }
+                $percent.css( 'width', percentage * 100 + '%' );
+                percentages[ file.id ][ 1 ] = percentage;
+                updateTotalProgress();
+            };
 
-            $percent.css( 'width', percentage * 100 + '%' );
-        });
+            uploader.onFileQueued = function( file ) {
+                fileCount++;
+                fileSize += file.size;
 
-        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-        uploader.on( 'uploadSuccess', function( file, response) {
-            console.log(response)
-            if(response.status == true){
-                __this.setImgsUrl(response);
-                $( '#'+file.id ).addClass('upload-state-done');
-            }else{
-                var $li = $( '#'+file.id ),
-                        $error = $li.find('div.error');
-
-                // 避免重复创建
-                if ( !$error.length ) {
-                    $error = $('<div class="error"></div>').appendTo( $li );
+                if ( fileCount === 1 ) {
+                    $placeHolder.addClass( 'element-invisible' );
+                    $statusBar.show();
                 }
 
-                $error.text('上传失败');
-            }
-        });
+                addFile( file );
+                updateTotalProgress();
+            };
 
-        // 文件上传失败，现实上传出错。
-        uploader.on( 'uploadError', function( file ) {
-            var $li = $( '#'+file.id ),
-                    $error = $li.find('div.error');
+            uploader.onFileDequeued = function( file ) {
+                fileCount--;
 
-            // 避免重复创建
-            if ( !$error.length ) {
-                $error = $('<div class="error"></div>').appendTo( $li );
-            }
+                removeFile( file );
+                updateTotalProgress();
 
-            $error.text('上传失败');
-        });
+            };
+            uploader.onUploadSuccess = function( file, response ) {
+                if(response.status == true){
+                    var img = {};
+                     img.path = response.path
+                     img.id = file.id
+                    __this.goods.imgs.push(img);
+                }
+            };
+            $upload.on('click', function() {
+                if ( $(this).hasClass( 'disabled' ) ) {
+                    return false;
+                }
 
-        // 完成上传完了，成功或者失败，先删除进度条。
-        uploader.on( 'uploadComplete', function( file ) {
-            $( '#'+file.id ).find('.progress').remove();
-        });
+                if ( state === 'ready' ) {
+                    uploader.upload();
+                } else if ( state === 'paused' ) {
+                    uploader.upload();
+                } else if ( state === 'uploading' ) {
+                    uploader.stop();
+                }
+            });
+
+            $info.on( 'click', '.retry', function() {
+                uploader.retry();
+            } );
+            $upload.addClass( 'state-' + state );
+            updateTotalProgress();
     },
     data(){
         return{
             cats: [],
+            imgs: [],
             goods: {
-                cat_id:0
+                cat_id:0,
+                imgs: []
             },
         }
     },
@@ -236,22 +421,38 @@ export default{
             });
         },
         postGoods(){
-            if(this.goods.cn_name){
+            if(!this.goods.cn_name){
+                toastr.error("中文品名不能为空");
                 return false;
             }
-            if(this.goods.en_name){
+            if(!this.goods.en_name){
+                toastr.error("英文品名不能为空");
                 return false;
             }
-            if(this.goods.product_sn){
+            if(!this.goods.product_sn){
+                toastr.error("产品编号不能为空");
                 return false;
             }
+            this.goods.cat_id = $(".chosen-select").val();
             if(this.goods.cat_id == 0){
+                toastr.error("请选择类目");
                 return false;
             }
-        },
-        setImgsUrl(){
-            alert(1);
+            /*if(this.imgs.length == 0){
+                toastr.error("请上传至少一张图片");
+                return false;
+            }*/
+
+            console.log(this.goods);
+            this.$http.post('/goods/add.json',this.goods).then(function(response){
+                if(response.data.status == true){
+                    this.$route.router.go({path: '/goods/list'})
+                }else{
+                    toastr.error(response.data.msg);
+                }
+            });
         }
+
     },
     watch:{
         'cats':function () {
