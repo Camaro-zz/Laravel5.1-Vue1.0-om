@@ -18,6 +18,10 @@
     <link rel="shortcut icon" href="favicon.ico"> <link href="{{asset('css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/plugins/footable/footable.core.css')}}" rel="stylesheet">
     <link href="{{asset('css/plugins/chosen/chosen.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/dropzone/basic.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/dropzone/dropzone.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/webuploader/webuploader.css')}}" rel="stylesheet">
+    <link href="{{asset('css/plugins/toastr/toastr.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/animate.css')}}" rel="stylesheet">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
@@ -26,6 +30,7 @@
 <body class="fixed-sidebar full-height-layout gray-bg">
 <script>
     var _global = {!! $global !!};
+    var BASE_URL = 'js/plugins/webuploader';
 </script>
 
 <!-- 全局js -->
@@ -44,6 +49,8 @@
 <script src="{{asset('js/plugins/pace/pace.min.js')}}"></script>
 <script src="{{asset('js/plugins/footable/footable.all.min.js')}}"></script>
 <script src="{{asset('js/plugins/chosen/chosen.jquery.js')}}"></script>
+<script src="{{asset('js/plugins/toastr/toastr.min.js')}}"></script>
+<script src="{{asset('js/plugins/webuploader/webuploader.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
 
 </body>

@@ -37,6 +37,7 @@ Route::group(['middleware'=>$authApiMiddleware],function(){
     Route::get('goods.json', 'Goods\GoodsController@getGoodses');//供应商详情
     Route::get('cats.json', 'Goods\GoodsCatController@getCats');//获取商品类目列表
     Route::get('orders.json', 'Order\OrderController@getOrders');//获取订单列表
+    Route::post('upload.json', 'UploadController@upload');//上传图片
 });
 
 //商品模块

@@ -2713,9 +2713,9 @@ label.error {
 
 /* Toastr custom style */
 
-#toast-container > .toast {
+/*#toast-container > .toast {
     background-image: none !important;
-}
+}*/
 
 #toast-container > .toast:before {
     position: fixed;
@@ -7901,4 +7901,24 @@ body.skin-3 {
         width: 12.5%;
         font-size: 12px
     }
+}
+.upload-img-remove{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgba(4, 4, 4, 0.11);
+    display: none;
+    z-index: 50;
+}
+.upload-img-remove-i{
+    position: absolute;
+    top: 28%;
+    left: 32%;
+    font-size: 50px;
+    z-index: 70;
+    color: red;
+    display: none;
+    z-index: 51;
 }
