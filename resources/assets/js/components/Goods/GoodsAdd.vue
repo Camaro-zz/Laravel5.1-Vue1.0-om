@@ -28,9 +28,26 @@
                                 <div id="uploader" class="wu-example">
                                     <div id="filePicker"></div>
                                     <div class="queueList">
-                                        <div id="dndArea" class="placeholder">
+                                        <div id="dndArea" v-show="goods.imgs.length == 0" class="placeholder">
                                             <p>或将图片拖到这里，单次最多可选300张</p>
                                         </div>
+                                        <template v-if="goods_id > 0">
+                                        <ul class="filelist" v-for="img in goods.real_imgs">
+                                            <li id="{{img.id}}" class="state-complete">
+                                                <p class="title"></p>
+                                                <p class="imgWrap">
+                                                    <img v-bind:src="img.img">
+                                                </p>
+                                                <p class="progress">
+                                                    <span style="display: none; width: 0px;"></span>
+                                                </p>
+                                                <div class="file-panel" style="height: 30px; overflow: hidden;">
+                                                    <span class="cancel" @click="removeImg(img.id,this)">删除</span>
+                                                </div>
+                                                <span class="success"></span>
+                                            </li>
+                                        </ul>
+                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -97,6 +114,12 @@
 </template>
 <script>
 export default{
+    created(){
+        this.goods_id = this.$route.params.id;
+        if(this.goods_id > 0){
+            this.getGoods();
+        }
+    },
     ready(){
         this.getCats();
         var __this = this;
@@ -104,12 +127,9 @@ export default{
 
                 $wrap = $('#uploader'),
 
-                // 图片容器
-                $queue = $('<ul class="filelist"></ul>')
-                    .appendTo( $wrap.find('.queueList') ),
-
                 // 状态栏，包括进度和控制按钮
                 $statusBar = $wrap.find('.statusBar'),
+                $queue = $('<ul class="filelist"></ul>').appendTo( $wrap.find('.queueList') ),
 
                 // 文件总体选择信息。
                 $info = $statusBar.find('.info'),
@@ -162,7 +182,7 @@ export default{
             }
 
             // 实例化
-            uploader = WebUploader.create({
+            __this.upolader = uploader = WebUploader.create({
                 pick: {
                     id: '#filePicker',
                     label: '点击选择图片'
@@ -313,6 +333,12 @@ export default{
                 delete percentages[ file.id ];
                 updateTotalProgress();
                 $li.off().find('.file-panel').off().end().remove();
+                $.each(__this.goods.imgs,function(n,i){
+                    if(i['id'] == file.id){
+                        __this.goods.imgs.splice(n, 1);
+                        return false;
+                    }
+                });
             }
 
             function updateTotalProgress() {
@@ -397,6 +423,7 @@ export default{
                 cat_id:0,
                 imgs: []
             },
+            goods_id: 0
         }
     },
     methods:{
@@ -438,19 +465,55 @@ export default{
                 toastr.error("请选择类目");
                 return false;
             }
-            /*if(this.imgs.length == 0){
+            if(this.goods.imgs.length == 0){
                 toastr.error("请上传至少一张图片");
                 return false;
-            }*/
-
-            console.log(this.goods);
-            this.$http.post('/goods/add.json',this.goods).then(function(response){
+            }
+            if(this.goods_id > 0){//编辑
+                this.$http.put('/goods/'+this.goods_id+'.json',this.goods).then(function(response){
+                    if(response.data.status == true){
+                        this.$route.router.go({path: '/goods/list'})
+                    }else{
+                        toastr.error(response.data.msg);
+                    }
+                });
+            }else{//新增
+                this.$http.post('/goods/add.json',this.goods).then(function(response){
+                    if(response.data.status == true){
+                        this.$route.router.go({path: '/goods/list'})
+                    }else{
+                        toastr.error(response.data.msg);
+                    }
+                });
+            }
+        },
+        getGoods(){
+            this.$http.get('/goods/'+this.goods_id+'.json').then(function(response){
                 if(response.data.status == true){
-                    this.$route.router.go({path: '/goods/list'})
+                    this.$set('goods', response.data.data);
+                    console.log(this.goods.cat_id);
+                    /*$.each(response.data.data.real_imgs, function (n,i) {
+                        var file = {};
+                        file.id = i.id;
+                        file.name = '';
+                        file.type = 'image/jpeg';
+                        file.
+                    })*/
                 }else{
                     toastr.error(response.data.msg);
                 }
-            });
+            })
+        },
+        removeImg(id, obj){
+            var __this = this;
+            $.each(this.goods.imgs,function (n,i) {
+                if(i.id == id){
+                    __this.goods.imgs.splice(n, 1);
+                    return false;
+                }
+            })
+            $(obj).remove();
+            console.log(this.goods.imgs);
         }
 
     },

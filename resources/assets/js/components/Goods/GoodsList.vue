@@ -33,8 +33,9 @@
                             <th data-sort-ignore="true">中文品名</th>
                             <th data-sort-ignore="true">产品编号</th>
                             <th data-sort-ignore="true">类目</th>
-                            <th data-sort-ignore="true">采购价(含税)</th>
-                            <th data-sort-ignore="true">采购价(不含税)</th>
+                            <th data-sort-ignore="true">FOB价格</th>
+                            <th data-hide="all">采购价(含税)</th>
+                            <th data-hide="all">采购价(不含税)</th>
                             <th data-hide="all">生产商</th>
                             <th data-hide="all">原厂编号</th>
                             <th data-hide="all">供应商</th>
@@ -50,6 +51,7 @@
                             <td>{{goods.cn_name}}</td>
                             <td>{{goods.product_sn}}</td>
                             <td>{{goods.cat_name}}</td>
+                            <td>{{goods.fob_price}}</td>
                             <td v-if="goods.prop != ''">{{goods.prop.price + goods.prop.tax}}</td>
                             <td v-else>0</td>
                             <td v-if="goods.prop != ''">{{goods.prop.price}}</td>

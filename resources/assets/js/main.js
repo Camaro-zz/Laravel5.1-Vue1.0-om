@@ -32,7 +32,7 @@ router.map({
     },
     '/goods/edit/:id': {
         name: 'goods_edit',
-        component: require('./components/Goods/GoodsEdit.vue')
+        component: require('./components/Goods/GoodsAdd.vue')
     }
 })
 

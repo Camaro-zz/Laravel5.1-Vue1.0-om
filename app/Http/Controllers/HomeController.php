@@ -21,6 +21,7 @@ class HomeController extends Controller
             return Redirect::to('auth/login');
         }
         $global['user'] = Auth::user()->toArray();
+        $global['img_path'] = '';
         $data['global'] = json_encode($global);
         return view('home',$data);
     }

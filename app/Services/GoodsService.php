@@ -10,6 +10,7 @@ use App\Models\OmGoodsSupplier;
 use App\Models\OmSupplier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class GoodsService extends BaseService {
@@ -44,19 +45,6 @@ class GoodsService extends BaseService {
      * @param $data
      */
     public function addSupplierGoods($goods_id, $data){
-        $goods_id = 1;
-        $data = array(
-            'supplier_id' => 1,
-            'price' => '10.2',
-            'tax' => '10.2',
-            'num' => '10',
-            'length' => '10.2',
-            'width' => '10.2',
-            'height' => '10.2',
-            'gw' => '10.2',
-            'nw' => '10.2',
-            'mfrs_name' => 'safdsadsad',
-        );
 
         $goods = OmGoods::where('id', $goods_id)->first();
         if(!$goods){
@@ -128,6 +116,10 @@ class GoodsService extends BaseService {
         }
         $goods_data = $data;
         unset($goods_data['imgs']);
+        unset($goods_data['real_imgs']);
+        unset($goods_data['supplier_goods']);
+        unset($goods_data['supplier_goods_count']);
+        //dd($goods_data);
         $goods = OmGoods::where(array('id'=>$id,'is_deleted'=>0))->update($goods_data);
 
         if($goods){
@@ -159,7 +151,7 @@ class GoodsService extends BaseService {
     }
 
     public function getGoods($id){
-        $goods = OmGoods::where('id',$id)->first();
+        $goods = OmGoods::select('id','cat_id','product_sn','en_name','cn_name','fob_price','car_types','mark')->where('id',$id)->first();
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
@@ -176,6 +168,8 @@ class GoodsService extends BaseService {
             $goods['nw'] = $goods['supplier_goods'][0]['nw'];
             $goods['mfrs_name'] = $goods['supplier_goods'][0]['mfrs_name'];
         }
+        $goods['imgs'] = $this->getImgs($id, 0);
+        $goods['real_imgs'] = $this->getImgs($id, 1);
         return ['status'=>true,'data'=>$goods];
     }
 
@@ -185,7 +179,7 @@ class GoodsService extends BaseService {
         $limit = isset($data['limit']) ? $data['limit'] : 10;
         $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
-                        ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','om_goods.car_types','cat.name as cat_name')->where('om_goods.is_deleted',0);
+                        ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','om_goods.car_types','cat.name as cat_name','om_goods.fob_price')->where('om_goods.is_deleted',0);
         if(isset($data['cn_name'])){
             $query->where('om_goods.cn_name', 'like', '%' . $data['cn_name'] . '%');
         }
@@ -200,7 +194,7 @@ class GoodsService extends BaseService {
         $query->skip($offset);
         $query->take($limit);
         //DB::connection()->enableQueryLog();
-        $result['data'] = $query->get();
+        $result['data'] = $query->orderBy('om_goods.created_at', 'DESC')->get();
         //dump(DB::getQueryLog());
         if ($result['data']) {
             foreach ($result['data'] as &$v) {
@@ -297,5 +291,21 @@ class GoodsService extends BaseService {
             $imgsData[] = new OmGoodsImg($img_arr);
         }
         $goods->imgs()->saveMany($imgsData);
+    }
+
+    protected  function getImgs($goods_id, $type){
+        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
+        $imgs_arr = [];
+        if($imgs){
+            foreach ($imgs as $k=>$v){
+                $imgs_arr[$k]['id'] = 'WU_FILE_'.$v['id'];
+                if($type == 0){
+                    $imgs_arr[$k]['path'] = $v['img'];
+                }else{
+                    $imgs_arr[$k]['img'] = 'data:image/jpeg;base64,'.base64_encode(Storage::get($v['img']));
+                }
+            }
+        }
+        return $imgs_arr;
     }
 }
