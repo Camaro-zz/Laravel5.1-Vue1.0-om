@@ -220,6 +220,23 @@ class GoodsService extends BaseService {
         return ['status'=>true];
     }
 
+    public function postMfrsGoods($id, $data){
+        if(!isset($data['mfrs_sn']) || !$data['mfrs_sn']){
+            return ['status'=>false,'msg'=>'原厂编号不能为空'];
+        }
+        if(!isset($data['mfrs_name']) || !$data['mfrs_name']){
+            return ['status'=>false,'msg'=>'生产商名称不能为空'];
+        }
+        $data['goods_id'] = $id;
+        $data['uid'] = $this->uid;
+        $mfrs = OmGoodsMfrs::create($data);
+        if($mfrs){
+            return ['status'=>true, 'data'=>$mfrs];
+        }else{
+            return ['status'=>false,'msg'=>'生产商添加失败'];
+        }
+    }
+
     //验证规则
     public function goodsValidator($data, $id=''){
         $message = [
@@ -308,4 +325,14 @@ class GoodsService extends BaseService {
         }
         return $imgs_arr;
     }
+
+    public function getMfrsByGoods($goods_id){
+        $mfrs = OmGoodsMfrs::select('id','mfrs_sn','mfrs_name','sort')->where(array('goods_id'=>intval($goods_id),'is_deleted'=>0))->orderBy('sort', 'DESC')->get();
+        if(!$mfrs){
+            $mfrs = '';
+        }
+
+        return $mfrs;
+    }
+
 }

@@ -69,7 +69,10 @@
                             <td>{{goods.car_types}}</td>
                             <td>
                                 <a v-link="{name:'goods_edit', params:{id:goods.id}}"><i class="fa fa-edit"></i> 编辑</a>
-                                <a @click="deleteGoods(goods.id)"><i class="fa fa-remove"></i> 删除</a>
+                                <span class="delimiter">|</span>
+                                <a @click="deleteGoods(goods.id)"><i class="fa fa-remove"></i>   删除</a>
+                                <span class="delimiter">|</span>
+                                <a v-link="{name:'goods_mfrs_add', params:{goods_id:goods.id}}"><i class="fa fa-cubes"></i>   添加生产商</a>
                             </td>
                         </tr>
                         </tbody>

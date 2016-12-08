@@ -5560,7 +5560,6 @@ dd.project-people {
 
 .clients-list .tab-pane {
     position: relative;
-    height: 600px;
 }
 
 .client-detail {
@@ -8253,4 +8252,11 @@ body.skin-3 {
 #uploader .statusBar .btns .uploadBtn.disabled {
     pointer-events: none;
     opacity: 0.6;
+}
+span.delimiter {
+    color: #f5f5f5;
+    padding: 0 2px;
+}
+.sortable-list tr{
+    cursor:move;
 }

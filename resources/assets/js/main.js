@@ -33,7 +33,21 @@ router.map({
     '/goods/edit/:id': {
         name: 'goods_edit',
         component: require('./components/Goods/GoodsAdd.vue')
-    }
+    },
+    '/goods_mfrs/add/:goods_id': {
+        name: 'goods_mfrs_add',
+        component: require('./components/Goods/GoodsMfrs.vue')
+    },
+    '/goods_mfrs/edit/:id':{
+        name: 'goods_mfrs_edit',
+        component: require('./components/Goods/GoodsMfrs.vue')
+    },
+    '/supplier/list': {
+        component: require('./components/Supplier/SupplierList.vue')
+    },
+    '/supplier/add': {
+        component: require('./components/Supplier/SupplierAdd.vue')
+    },
 })
 
 router.beforeEach(function (transition) {

@@ -56,6 +56,21 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a class="J_menuItem">
+                        <i class="fa fa-columns"></i>
+                        <span class="nav-label">供应商</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" v-link="{path:'/supplier/list'}">供应商列表</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" v-link="{path:'/supplier/add'}">添加供应商</a>
+                        </li>
+                    </ul>
+                </li>
 
             </ul>
         </div>

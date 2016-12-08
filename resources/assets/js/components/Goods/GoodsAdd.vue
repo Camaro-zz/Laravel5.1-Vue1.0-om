@@ -99,6 +99,16 @@
                                 </textarea>
                             </div>
                         </div>
+                        <template v-if="goods_id > 0">
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">管理</label>
+
+                            <div class="col-sm-10">
+                                <Goodstabs :goods_id="goods_id"></Goodstabs>
+                            </div>
+                        </div>
+                        </template>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
@@ -113,15 +123,19 @@
     </div>
 </template>
 <script>
+    import Goodstabs from './GoodsTabs.vue'
 export default{
     created(){
         this.goods_id = this.$route.params.id;
-        if(this.goods_id > 0){
-            this.getGoods();
-        }
+    },
+    components:{
+        Goodstabs
     },
     ready(){
         this.getCats();
+        if(this.goods_id > 0){
+            this.getGoods();
+        }
         var __this = this;
         var $ = jQuery,    // just in case. Make sure it's not an other libaray.
 
@@ -491,7 +505,7 @@ export default{
             this.$http.get('/goods/'+this.goods_id+'.json').then(function(response){
                 if(response.data.status == true){
                     this.$set('goods', response.data.data);
-                    console.log(this.goods.cat_id);
+                    $(".chosen-select").val(this.goods.cat_id);
                     /*$.each(response.data.data.real_imgs, function (n,i) {
                         var file = {};
                         file.id = i.id;
@@ -513,7 +527,6 @@ export default{
                 }
             })
             $(obj).remove();
-            console.log(this.goods.imgs);
         }
 
     },

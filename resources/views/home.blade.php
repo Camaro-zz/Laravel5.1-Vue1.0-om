@@ -35,6 +35,7 @@
 
 <!-- 全局js -->
 <script src="{{asset('js/jquery.min.js')}}"></script>
+<script src="{{asset('js/jquery-ui-1.10.4.min.js')}}"></script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script src="{{asset('js/plugins/metisMenu/jquery.metisMenu.js')}}"></script>
 <script src="{{asset('js/plugins/slimscroll/jquery.slimscroll.min.js')}}"></script>

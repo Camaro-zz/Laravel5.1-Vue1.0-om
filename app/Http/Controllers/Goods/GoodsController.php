@@ -57,4 +57,15 @@ class GoodsController extends Controller
         $data = $this->goodsService->deleteGoodses($ids['ids']);
         return Response::json($data,200);
     }
+
+    public function postMfrsGoods(Request $request, $id){
+        $data = $this->goodsService->postMfrsGoods($id, $request->all());
+        return Response::json($data,200);
+    }
+
+    public function getMfrsByGoods($id){
+        $data = $this->goodsService->getMfrsByGoods($id);
+        return Response::json($data,200);
+    }
+    
 }

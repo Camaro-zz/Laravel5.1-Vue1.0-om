@@ -53,6 +53,9 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::put('cat/{id}.json', 'Goods\GoodsCatController@putCat');//编辑商品类目
     Route::get('cat/{id}.json', 'Goods\GoodsCatController@getCat');//获取商品类目详情
     Route::delete('cat/batch.json', 'Goods\GoodsCatController@deleteCats');//删除类目
+
+    Route::post('mfrs/{id}.json', 'Goods\GoodsController@postMfrsGoods');//添加产品生产商
+    Route::get('mfrs/goods/{id}.json', 'Goods\GoodsController@getMfrsByGoods');//通过产品获取生产商
 });
 
 //供应商模块
@@ -62,6 +65,15 @@ Route::group(['prefix' => 'supplier','middleware'=>$authApiMiddleware],function(
     Route::put('{id}.json', 'Supplier\SupplierController@putSupplier');//修改供应商
     Route::get('{id}.json', 'Supplier\SupplierController@getSupplier');//供应商详情
 });
+
+//生产商模块
+Route::group(['prefix' => 'mfrs','middleware'=>$authApiMiddleware],function(){
+    Route::put('sort/{id}.json', 'Mfrs\MfrsController@putMfrsSort');//修改排序
+    Route::put('{id}.json', 'Mfrs\MfrsController@putMfrs');//修改生产商
+    Route::get('{id}.json', 'Mfrs\MfrsController@getMfrs');//生产商详情
+    Route::delete('{id}.json', 'Mfrs\MfrsController@deleteMfrs');//生产商删除
+});
+
 
 //订单模块
 Route::group(['prefix' => 'order','middleware'=>$authApiMiddleware],function(){
