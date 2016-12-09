@@ -118,7 +118,10 @@ class SupplierService extends BaseService {
 
     //获取供应商列表
     public function getSuppliers($data){
-        $query = $this->model->select('id','supplier_sn','name','contacts','sort');
+        $page = isset($data['page']) ? $data['page'] : 1;
+        $limit = isset($data['limit']) ? $data['limit'] : 10;
+        $offset = ($page-1)*$limit;
+        $query = $this->model->select('id','supplier_sn','name','contacts','sort','tel','mobile','qq','website');
         $query->where('is_deleted',0);
 
         if(isset($data['name']) && $data['name']){
@@ -129,13 +132,10 @@ class SupplierService extends BaseService {
             $query->where('supplier_sn','like','%'.$data['supplier_sn'].'%');
         }
         $result['_count'] = $query->count();
-        if (isset($data['offset'])) {
-            $query->skip($data['offset']);
-        }
-        if (isset($data['limit'])) {
-            $query->take($data['limit']);
-        }
-        $result['data'] = $query->orderBy('sort DESC')->get();
+        $result['all_page'] = ceil($result['_count'] / $limit);
+        $query->skip($offset);
+        $query->take($limit);
+        $result['data'] = $query->orderBy('sort','DESC')->get();
 
         return $result;
     }

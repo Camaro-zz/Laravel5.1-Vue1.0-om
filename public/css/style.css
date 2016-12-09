@@ -8260,3 +8260,25 @@ span.delimiter {
 .sortable-list tr{
     cursor:move;
 }
+
+.go_page_class{
+    float: left;
+    display: inline-block;
+    padding: 4px 6px;
+    margin-left: 10px;
+    width: 40px;
+    height: 28px;
+    border: 1px solid #DDDDDD;
+    border-right: 0px;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+.go_page_class_a{
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+}
+.pagination .active a{
+    background-color: #18a689 !important;
+    border-color: #18a689 !important;
+    color: #FFFFFF;
+}

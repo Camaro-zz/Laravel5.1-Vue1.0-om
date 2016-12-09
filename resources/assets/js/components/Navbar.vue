@@ -43,7 +43,7 @@
                 </li>
                 <li>
                     <a class="J_menuItem">
-                        <i class="fa fa-columns"></i>
+                        <i class="fa fa-th"></i>
                         <span class="nav-label">产品</span>
                         <span class="fa arrow"></span>
                     </a>

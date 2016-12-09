@@ -64,6 +64,7 @@ Route::group(['prefix' => 'supplier','middleware'=>$authApiMiddleware],function(
     Route::put('sort.json', 'Supplier\SupplierController@putSort');//修改供应商排序
     Route::put('{id}.json', 'Supplier\SupplierController@putSupplier');//修改供应商
     Route::get('{id}.json', 'Supplier\SupplierController@getSupplier');//供应商详情
+    Route::delete('batch.json', 'Supplier\SupplierController@deleteSupplier');//供应商删除
 });
 
 //生产商模块

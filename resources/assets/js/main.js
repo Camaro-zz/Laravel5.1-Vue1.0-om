@@ -48,6 +48,14 @@ router.map({
     '/supplier/add': {
         component: require('./components/Supplier/SupplierAdd.vue')
     },
+    '/supplier/edit/:id': {
+        name: 'supplier_edit',
+        component: require('./components/Supplier/SupplierAdd.vue')
+    },
+    '/goods_supplier/add/:goods_id': {
+        name: 'goods_supplier_add',
+        component: require('./components/Goods/GoodsSupplier.vue')
+    },
 })
 
 router.beforeEach(function (transition) {

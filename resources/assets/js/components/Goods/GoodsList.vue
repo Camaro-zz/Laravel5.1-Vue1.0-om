@@ -70,9 +70,11 @@
                             <td>
                                 <a v-link="{name:'goods_edit', params:{id:goods.id}}"><i class="fa fa-edit"></i> 编辑</a>
                                 <span class="delimiter">|</span>
-                                <a @click="deleteGoods(goods.id)"><i class="fa fa-remove"></i>   删除</a>
+                                <a @click="deleteGoods(goods.id)"><i class="fa fa-remove"></i> 删除</a>
                                 <span class="delimiter">|</span>
-                                <a v-link="{name:'goods_mfrs_add', params:{goods_id:goods.id}}"><i class="fa fa-cubes"></i>   添加生产商</a>
+                                <a v-link="{name:'goods_mfrs_add', params:{goods_id:goods.id}}"><i class="fa fa-cubes"></i> 添加生产商</a>
+                                <span class="delimiter">|</span>
+                                <a v-link="{name:'goods_supplier_add', params:{goods_id:goods.id}}"><i class="fa fa-cubes"></i> 关联供应商</a>
                             </td>
                         </tr>
                         </tbody>
@@ -114,29 +116,6 @@
         </div>
     </div>
 </template>
-<style>
-    .go_page_class{
-        float: left;
-        display: inline-block;
-        padding: 4px 6px;
-        margin-left: 10px;
-        width: 40px;
-        height: 28px;
-        border: 1px solid #DDDDDD;
-        border-right: 0px;
-        border-bottom-left-radius: 4px;
-        border-top-left-radius: 4px;
-    }
-    .go_page_class_a{
-        border-bottom-left-radius: 0px !important;
-        border-top-left-radius: 0px !important;
-    }
-    .pagination .active a{
-        background-color: #18a689 !important;
-        border-color: #18a689 !important;
-        color: #FFFFFF;
-    }
-</style>
 <script>
 export default{
     ready(){
