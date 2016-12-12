@@ -41,12 +41,12 @@ class AuthController extends Controller
         $input = array(
             'username' => Input::get('username'),//用户名
             'password' => Input::get('password'),//密码
-            'captcha'  => Input::get('captcha')//验证码
+            //'captcha'  => Input::get('captcha')//验证码
         );
         $rules = array (
             'username' => 'required',
             'password' => 'required',
-            'captcha' => 'required|captcha'
+            //'captcha' => 'required|captcha'
         );
 
         $validator = Validator::make($input, $rules);

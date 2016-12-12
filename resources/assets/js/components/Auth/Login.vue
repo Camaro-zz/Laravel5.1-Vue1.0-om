@@ -20,11 +20,11 @@
                 <input v-model="auth.password" type="password" class="form-control" placeholder="密码" required="">
                 <i class="fa fa-lock clr-gray"></i>
             </div>
-            <div class="form-group" v-bind:class="{'has-error' :login.errors.message.captcha}">
+            <!--<div class="form-group" v-bind:class="{'has-error' :login.errors.message.captcha}">
                 <input name="captcha" class="form-control captcha-code" placeholder="验证码" type="text" v-model="auth.captcha">
                 <img class="captcha-img" @click="changeCaptcha" v-bind:src="captcha_src">
                 <span class="help-block" v-if="login.errors.message.captcha">验证码不正确！</span>
-            </div>
+            </div>-->
             <button type="button" class="btn btn-primary block full-width m-b" @click="postLogin" v-bind:disabled="login.disable">{{login.text}}</button>
 
 
@@ -93,10 +93,10 @@
                     this.login.errors.message.login = '请输入密码';
                     return false;
                 }
-                if(!this.auth.captcha){
+                /*if(!this.auth.captcha){
                     this.login.errors.message.login = '请输入验证码';
                     return false;
-                }
+                }*/
                 this.login.text = '登录中...'
                 this.login.disable = true
                 this.$http.post('/auth/login.json', this.auth).then(function(response){

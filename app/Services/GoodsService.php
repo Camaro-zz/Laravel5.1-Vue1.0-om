@@ -169,7 +169,6 @@ class GoodsService extends BaseService {
             $goods['mfrs_name'] = $goods['supplier_goods'][0]['mfrs_name'];
         }
         $goods['imgs'] = $this->getImgs($id, 0);
-        $goods['real_imgs'] = $this->getImgs($id, 1);
         return ['status'=>true,'data'=>$goods];
     }
 
@@ -310,17 +309,13 @@ class GoodsService extends BaseService {
         $goods->imgs()->saveMany($imgsData);
     }
 
-    protected  function getImgs($goods_id, $type){
+    protected  function getImgs($goods_id){
         $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
         $imgs_arr = [];
         if($imgs){
             foreach ($imgs as $k=>$v){
                 $imgs_arr[$k]['id'] = 'WU_FILE_'.$v['id'];
-                if($type == 0){
-                    $imgs_arr[$k]['path'] = $v['img'];
-                }else{
-                    $imgs_arr[$k]['img'] = 'data:image/jpeg;base64,'.base64_encode(Storage::get($v['img']));
-                }
+                $imgs_arr[$k]['path'] = $v['img'];
             }
         }
         return $imgs_arr;

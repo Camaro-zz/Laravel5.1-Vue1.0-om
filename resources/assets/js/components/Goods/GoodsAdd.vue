@@ -31,23 +31,6 @@
                                         <div id="dndArea" v-show="goods.imgs.length == 0" class="placeholder">
                                             <p>或将图片拖到这里，单次最多可选300张</p>
                                         </div>
-                                        <template v-if="goods_id > 0">
-                                        <ul class="filelist" v-for="img in goods.real_imgs">
-                                            <li id="{{img.id}}" class="state-complete">
-                                                <p class="title"></p>
-                                                <p class="imgWrap">
-                                                    <img v-bind:src="img.img">
-                                                </p>
-                                                <p class="progress">
-                                                    <span style="display: none; width: 0px;"></span>
-                                                </p>
-                                                <div class="file-panel" style="height: 30px; overflow: hidden;">
-                                                    <span class="cancel" @click="removeImg(img.id,this)">删除</span>
-                                                </div>
-                                                <span class="success"></span>
-                                            </li>
-                                        </ul>
-                                        </template>
                                     </div>
                                 </div>
                             </div>
@@ -78,16 +61,10 @@
                             <label class="col-sm-2 control-label">FOB价格</label>
 
                             <div class="col-sm-4">
-                                <input type="number" step="0.01" v-model="goods.fob_price" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">适用车型</label>
-
-                            <div class="col-sm-4">
-                                <textarea class="form-control" v-model="goods.car_types">
-
-                                </textarea>
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="number" step="0.01" v-model="goods.fob_price" class="form-control">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -125,17 +102,11 @@
 <script>
     import Goodstabs from './GoodsTabs.vue'
 export default{
-    created(){
-        this.goods_id = this.$route.params.id;
-    },
     components:{
         Goodstabs
     },
     ready(){
         this.getCats();
-        if(this.goods_id > 0){
-            this.getGoods();
-        }
         var __this = this;
         var $ = jQuery,    // just in case. Make sure it's not an other libaray.
 
@@ -483,40 +454,13 @@ export default{
                 toastr.error("请上传至少一张图片");
                 return false;
             }
-            if(this.goods_id > 0){//编辑
-                this.$http.put('/goods/'+this.goods_id+'.json',this.goods).then(function(response){
-                    if(response.data.status == true){
-                        this.$route.router.go({path: '/goods/list'})
-                    }else{
-                        toastr.error(response.data.msg);
-                    }
-                });
-            }else{//新增
-                this.$http.post('/goods/add.json',this.goods).then(function(response){
-                    if(response.data.status == true){
-                        this.$route.router.go({path: '/goods/list'})
-                    }else{
-                        toastr.error(response.data.msg);
-                    }
-                });
-            }
-        },
-        getGoods(){
-            this.$http.get('/goods/'+this.goods_id+'.json').then(function(response){
+            this.$http.post('/goods/add.json',this.goods).then(function(response){
                 if(response.data.status == true){
-                    this.$set('goods', response.data.data);
-                    $(".chosen-select").val(this.goods.cat_id);
-                    /*$.each(response.data.data.real_imgs, function (n,i) {
-                        var file = {};
-                        file.id = i.id;
-                        file.name = '';
-                        file.type = 'image/jpeg';
-                        file.
-                    })*/
+                    this.$route.router.go({path: '/goods/list'})
                 }else{
                     toastr.error(response.data.msg);
                 }
-            })
+            });
         },
         removeImg(id, obj){
             var __this = this;
@@ -528,7 +472,6 @@ export default{
             })
             $(obj).remove();
         }
-
     },
     watch:{
         'cats':function () {
