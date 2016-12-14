@@ -8282,3 +8282,9 @@ span.delimiter {
     border-color: #18a689 !important;
     color: #FFFFFF;
 }
+.goods_list_css{
+    cursor: pointer;
+}
+.goods_list_css:hover{
+    background-color: #e8e8e8 !important;
+}

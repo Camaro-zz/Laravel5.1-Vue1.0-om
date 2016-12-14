@@ -2,6 +2,7 @@
 namespace App\Services;
 
 
+use App\Models\OmCarType;
 use App\Models\OmGoods;
 use App\Models\OmGoodsCat;
 use App\Models\OmGoodsImg;
@@ -206,6 +207,10 @@ class GoodsService extends BaseService {
                 $v['mfrs'] = OmGoodsMfrs::select('mfrs_sn','mfrs_name','sort')->where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->first();
                 if(!$v['mfrs']){
                     $v['mfrs'] = '';
+                }
+                $v['car_type'] = OmCarType::where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->pluck('car_type');
+                if(!$v['car_type']){
+                    $v['car_type'] = '';
                 }
             }
         }
