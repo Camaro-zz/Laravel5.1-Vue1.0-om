@@ -56,6 +56,8 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
 
     Route::post('mfrs/{id}.json', 'Goods\GoodsController@postMfrsGoods');//添加产品生产商
     Route::get('mfrs/goods/{id}.json', 'Goods\GoodsController@getMfrsByGoods');//通过产品获取生产商
+
+    Route::get('imgs/{id}.json', 'Goods\GoodsController@getGoodsImgs');//获取图片
 });
 
 //供应商模块

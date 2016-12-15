@@ -152,7 +152,7 @@ class GoodsService extends BaseService {
     }
 
     public function getGoods($id){
-        $goods = OmGoods::select('id','cat_id','product_sn','en_name','cn_name','fob_price','car_types','mark')->where('id',$id)->first();
+        $goods = OmGoods::select('id','cat_id','product_sn','img','en_name','cn_name','fob_price','car_types','mark')->where('id',$id)->first();
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
@@ -333,6 +333,11 @@ class GoodsService extends BaseService {
         }
 
         return $mfrs;
+    }
+
+    public function getGoodsImgs($goods_id){
+        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
+        return $imgs;
     }
 
 }

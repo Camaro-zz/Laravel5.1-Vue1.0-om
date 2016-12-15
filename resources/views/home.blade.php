@@ -24,6 +24,7 @@
     <link href="{{asset('css/plugins/toastr/toastr.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/font-awesome.min.css')}}" rel="stylesheet">
     <link href="{{asset('css/animate.css')}}" rel="stylesheet">
+    <link href="{{asset('js/plugins/fancybox/jquery.fancybox.css')}}" rel="stylesheet">
     <link href="{{asset('css/style.css')}}" rel="stylesheet">
 </head>
 
@@ -51,6 +52,8 @@
 <script src="{{asset('js/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{asset('js/plugins/webuploader/webuploader.js')}}"></script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
+<!-- Fancy box -->
+<script src="{{asset('js/plugins/fancybox/jquery.fancybox.js')}}"></script>
 <script src="{{asset('js/main.js')}}"></script>
 
 </body>

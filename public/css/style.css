@@ -8288,3 +8288,16 @@ span.delimiter {
 .goods_list_css:hover{
     background-color: #e8e8e8 !important;
 }
+.fancybox img{
+    margin: 5px;
+    width: 160px;
+}
+.info_bigimg{
+    width: 50%;
+    height: 50%;
+    margin: 0 auto;
+}
+.do_show{
+    border: none !important;
+    background-color: transparent !important;
+}

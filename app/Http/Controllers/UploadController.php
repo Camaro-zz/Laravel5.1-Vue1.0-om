@@ -23,7 +23,7 @@ class UploadController extends Controller
             return ['status'=>false,'msg'=>'文件上传出错'];
         }
         $newFileName = md5(time().rand(0,10000)).'.'.$file->getClientOriginalExtension();
-        $savePath = 'upload/imgs/'.$newFileName;
+        $savePath = '/upload/imgs/'.$newFileName;
         $bytes = Storage::put(
             $savePath,
             file_get_contents($file->getRealPath())

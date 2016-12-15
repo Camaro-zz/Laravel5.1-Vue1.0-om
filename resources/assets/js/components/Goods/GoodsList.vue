@@ -16,9 +16,16 @@
                         <div class="col-md-5" style="float:right;">
                             <div class="input-group">
                                 <input type="text" v-model="search_data.keywords" style="width:50% !important;float:right;" placeholder="请输入产品名称" class="input-sm form-control col-md-5">
-                                <select class=" input-sm form-control col-md-3" style="width:25% !important;float:right;" v-model="search_data.type" number>
+                                <select class=" input-sm form-control col-md-3" style="width:20% !important;float:right;" v-model="search_data.type" number>
                                     <option value="0">中文品名</option>
                                     <option value="1">英文品名</option>
+                                </select>
+
+                                <select class=" input-sm form-control col-md-3" style="width:20% !important;" v-model="search_data.cat_id" number>
+                                    <option value="">请选择类目</option>
+                                    <template v-for="cat in cats">
+                                    <option value="{{cat.id}}">{{cat.name}}</option>
+                                    </template>
                                 </select>
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-sm btn-primary" v-on:click="goodsSerch()"> 搜索</button>
@@ -31,48 +38,45 @@
                             <thead>
                             <tr>
                                 <th>{{ids | json}}</th>
-                                <th>原厂编号</th>
-                                <th>英文品名</th>
-                                <th>中文品名</th>
                                 <th>产品编号</th>
+                                <th>原厂编号</th>
+                                <th>中文品名</th>
+                                <th>英文品名</th>
                                 <th>类目</th>
+                                <th>含税采购价</th>
+                                <th>不含税采购价</th>
+                                <th>适用车型</th>
                                 <th>FOB价格</th>
-                                <th>生产商</th>
                                 <th>供应商</th>
-                                <th>操作</th>
+                                <th>备注</th>
                             </tr>
                             </thead>
                             <tbody v-if="all > 0">
-                            <tr v-for="goods in goodses">
+                            <tr class="goods_list_css" v-for="goods in goodses" @click="goToInfo(goods.id)">
                                 <td><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
                                 <td v-if="goods.mfrs != ''">
                                     <a v-link="{name:'goods_info', params:{id:goods.id}}">{{goods.mfrs.mfrs_sn}}</a>
                                 </td>
                                 <td v-else>暂无</td>
-                                <td>{{goods.en_name}}</td>
-                                <td>{{goods.cn_name}}</td>
                                 <td>{{goods.product_sn}}</td>
+                                <td>{{goods.cn_name}}</td>
+                                <td>{{goods.en_name}}</td>
                                 <td>{{goods.cat_name}}</td>
-                                <td>{{goods.fob_price}}</td>
-                                <td v-if="goods.mfrs != ''">{{goods.mfrs.mfrs_name}}</td>
+                                <td v-if="goods.prop != ''">{{(parseFloat(goods.prop.price) + parseFloat(goods.prop.tax)).toFixed(2)}}</td>
                                 <td v-else>暂无</td>
+                                <td v-if="goods.prop != ''">{{goods.prop.price}}</td>
+                                <td v-else>暂无</td>
+                                <td>{{goods.car_type}}</td>
+                                <td>{{goods.fob_price}}</td>
                                 <td v-if="goods.prop != ''">{{goods.prop.name}}</td>
                                 <td v-else>暂无</td>
-                                <td>
-                                    <a v-link="{name:'goods_edit', params:{id:goods.id}}"><i class="fa fa-edit"></i> 编辑</a>
-                                    <span class="delimiter">|</span>
-                                    <a @click="deleteGoods(goods.id)"><i class="fa fa-remove"></i> 删除</a>
-                                    <span class="delimiter">|</span>
-                                    <a v-link="{name:'goods_mfrs_add', params:{goods_id:goods.id}}"><i class="fa fa-cubes"></i> 添加生产商</a>
-                                    <span class="delimiter">|</span>
-                                    <a v-link="{name:'goods_supplier_add', params:{goods_id:goods.id}}"><i class="fa fa-cubes"></i> 关联供应商</a>
-                                </td>
+                                <td>{{goods.mark}}</td>
                             </tr>
                             </tbody>
                             <tbody v-else>
                                 <tr class="no-records-found"><td colspan="4">没有找到匹配的记录</td></tr>
                             </tbody>
-                            <tfoot v-if="all > 0">
+                            <tfoot v-if="all > 1">
                             <tr>
                                 <td colspan="10">
                                     <ul class="pagination pull-right">
@@ -112,6 +116,7 @@
 export default{
     ready(){
         this.getGoodses()
+        this.getCats()
     },
     data(){
         return{
@@ -126,7 +131,8 @@ export default{
             cur: 1,
             all: 1,
             go_page_class: '',
-            ids: []
+            ids: [],
+            cats: {}
         }
     },
     methods:{
@@ -134,7 +140,7 @@ export default{
             var serch_data = this.search_data;
             var en_name = '';
             var cn_name = '';
-            var cat_id = 0;
+            var cat_id = this.search_data.cat_id;
             if(serch_data.type == 0){//按中文名搜索
                 cn_name = serch_data.keywords
             }else{
@@ -178,9 +184,14 @@ export default{
                 this.getGoodses()
             }
         },
-        /*setGoodsIds(){
-            console.log(checked);
-        }*/
+        goToInfo(goods_id){
+            this.$route.router.go({path: '/goods/info/'+goods_id})
+        },
+        getCats(){
+            this.$http.get('/cats.json').then(function (response) {
+                this.$set('cats', response.data.data);
+            });
+        }
     },
     watch:{
         'goodses':function () {}

@@ -67,5 +67,10 @@ class GoodsController extends Controller
         $data = $this->goodsService->getMfrsByGoods($id);
         return Response::json($data,200);
     }
+
+    public function getGoodsImgs($id){
+        $data = $this->goodsService->getGoodsImgs($id);
+        return Response::json($data,200);
+    }
     
 }
