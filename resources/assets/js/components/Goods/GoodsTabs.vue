@@ -24,16 +24,16 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
-                                <th>生产商名称</th>
-                                <th>生产商编号</th>
-                                <th></th>
+                                <th>原厂商</th>
+                                <th>原厂编号</th>
+                                <th><a @click="addMfrs()" class="btn btn-info btn-xs pull-right">添加原厂编号</a></th>
                             </thead>
                             <tbody class="sortable-list connectList">
-                                <tr id="{{m.id}}" v-for="m in mfrs">
+                                <tr id="mfrs_{{m.id}}" v-for="m in mfrs">
                                     <td>{{m.mfrs_name}}</td>
                                     <td>{{m.mfrs_sn}}</td>
                                     <td>
-                                        <a v-link="{name:'goods_mfrs_edit', params:{id:m.id}}"><i class="fa fa-edit"></i> 编辑</a>
+                                        <a @click="editMfrs(m)"><i class="fa fa-edit"></i> 编辑</a>
                                         <span class="delimiter">|</span>
                                         <a @click="deleteMfrs(m.id)"><i class="fa fa-remove"></i>   删除</a>
                                     </td>
@@ -48,41 +48,26 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
-                                <th>公司编号</th>
-                                <th>公司名</th>
+                                <th>供应商编号</th>
+                                <th>供应商名称</th>
                                 <th>采购价(含税)</th>
-                                <th>采购价(不含税</th>
-                                <th>联系人</th>
-                                <th>QQ</th>
-                                <th>手机</th>
-                                <th>电话</th>
-                                <th></th>
+                                <th>采购价(不含税)</th>
+                                <th>其他</th>
+                                <th><a @click="addSupplier()" class="btn btn-info btn-xs pull-right">添加供应商</a></th>
                             </thead>
                             <tbody class="sortable-list connectList">
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司1</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司2</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司3</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
+                                <tr id="supplier_{{s.id}}" v-for="s in suppliers">
+                                    <td>{{s.supplier_sn}}</td>
+                                    <td>{{s.name}}</td>
+                                    <td>{{(parseFloat(s.price) + parseFloat(s.tax)).toFixed(2)}}</td>
+                                    <td>{{s.price}}</td>
+                                    <td>{{s.price}}</td>
+                                    <td>
+                                        <a @click="editSupplier(s)"><i class="fa fa-edit"></i> 编辑</a>
+                                        <span class="delimiter">|</span>
+                                        <a @click="deleteMfrs(m.id)"><i class="fa fa-remove"></i>   删除</a>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
