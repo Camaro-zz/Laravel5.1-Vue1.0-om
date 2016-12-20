@@ -335,6 +335,18 @@ class GoodsService extends BaseService {
         return $mfrs;
     }
 
+    public function getSupplierByGoods($goods_id){
+        $suppliers = OmGoodsSupplier::leftJoin('om_supplier as sup', 'sup.id', '=', 'om_goods_supplier.supplier_id')
+                                    ->select('sup.supplier_sn','sup.name','sup.contacts','sup.mobile','om_goods_supplier.*')
+                                    ->where(array('om_goods_supplier.goods_id'=>$goods_id,'om_goods_supplier.is_deleted'=>0))
+                                    ->orderBy('om_goods_supplier.sort', 'DESC')->get();
+        if(!$suppliers){
+            $suppliers = '';
+        }
+
+        return $suppliers;
+    }
+
     public function getGoodsImgs($goods_id){
         $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
         return $imgs;

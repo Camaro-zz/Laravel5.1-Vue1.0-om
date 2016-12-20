@@ -26,9 +26,9 @@
                             <thead>
                                 <th>原厂商</th>
                                 <th>原厂编号</th>
-                                <th><a @click="addMfrs()" class="btn btn-info btn-xs pull-right">添加原厂编号</a></th>
+                                <th><a @click="addMfrs()" class="btn btn-info btn-xs">添加原厂编号</a></th>
                             </thead>
-                            <tbody class="sortable-list connectList">
+                            <tbody class="mfrs-sortable-list connectList">
                                 <tr id="mfrs_{{m.id}}" v-for="m in mfrs">
                                     <td>{{m.mfrs_name}}</td>
                                     <td>{{m.mfrs_sn}}</td>
@@ -53,9 +53,9 @@
                                 <th>采购价(含税)</th>
                                 <th>采购价(不含税)</th>
                                 <th>其他</th>
-                                <th><a @click="addSupplier()" class="btn btn-info btn-xs pull-right">添加供应商</a></th>
+                                <th><a @click="addSupplier()" class="btn btn-info btn-xs">添加供应商</a></th>
                             </thead>
-                            <tbody class="sortable-list connectList">
+                            <tbody class="supplier-sortable-list connectList">
                                 <tr id="supplier_{{s.id}}" v-for="s in suppliers">
                                     <td>{{s.supplier_sn}}</td>
                                     <td>{{s.name}}</td>
@@ -165,6 +165,9 @@
             </div>
         </div>
     </div>
+    <div class="show_mfrs_prop" style="display:none">
+    <Goodsmfrs :goods_id="goods_id" v-bind:id="edit_mfrs_id"></Goodsmfrs>
+    </div>
 </template>
 <style>
 
@@ -178,10 +181,14 @@
             this.getSuppliers();
             this.getGoodsImgs();
             var _this = this;
-            $(".sortable-list").sortable({
+            $(".mfrs-sortable-list").sortable({
                 update: function (event, ui) {
                     _this.sortMfrses($(this).sortable("toArray"));
-                    console.log($(this).sortable("toArray"));
+                }
+            }).disableSelection();
+            $(".supplier-sortable-list").sortable({
+                update: function (event, ui) {
+                    _this.sortSuppliers($(this).sortable("toArray"));
                 }
             }).disableSelection();
             $('.fancybox').fancybox({
@@ -193,8 +200,10 @@
             return{
                 mfrs: {},
                 mfrs_sort: [],
-                supplier: {},
-                imgs:{}
+                suppliers: {},
+                sup_sort:[],
+                imgs:{},
+                edit_mfrs_id: 0
             }
         },
         components:{
@@ -216,7 +225,7 @@
                     _this.mfrs_sort.push(m);
                 });
                 this.$http.put('/mfrs/sort/'+this.goods_id+'.json', this.mfrs_sort).then(function(response){
-
+                    this.$set('mfrs_sort',[]);
                 });
             },
             deleteMfrs(id){
@@ -229,12 +238,39 @@
                 });
             },
             getSuppliers(){
-
+                this.$http.get('/goods/supplier/'+this.goods_id+'.json').then(function (response) {
+                    this.$set('suppliers', response.data);
+                });
+            },
+            sortSuppliers(sort){
+                var sup_length = this.suppliers.length;
+                var _this = this;
+                $.each(sort,function (n, i) {
+                    var m = {};
+                    m.sort = sup_length - n;
+                    m.id = i;
+                    _this.sup_sort.push(m);
+                });
+                this.$http.put('/supplier/sort/'+this.goods_id+'.json', this.sup_sort).then(function(response){
+                    this.$set('sup_sort',[]);
+                });
             },
             getGoodsImgs(){
                 this.$http.get('/goods/imgs/'+this.goods_id+'.json').then(function(response){
                     this.$set('imgs',response.data);
                 });
+            },
+            addMfrs(){
+                layer.open({
+                 type: 1,
+                 shade: false,
+                 area: ['600px', '330px'], //宽高
+                 title: '添加原厂编号',
+                 content: $('.show_mfrs_prop')
+                 });
+            },
+            addSupplier(){
+
             }
         }
     }

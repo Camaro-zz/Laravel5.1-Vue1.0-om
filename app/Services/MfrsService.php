@@ -17,7 +17,8 @@ class MfrsService extends BaseService {
     //修改排序
     public function putMfrsSort($goods_id, $data){
         foreach ($data as $k=>$v) {
-            OmGoodsMfrs::where(array('id'=>$v['id'],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
+            $mfrs = explode('_',$v['id']);
+            OmGoodsMfrs::where(array('id'=>$mfrs[1],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
         }
     }
 

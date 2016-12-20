@@ -2,6 +2,7 @@
 namespace App\Services;
 
 
+use App\Models\OmGoodsSupplier;
 use App\Models\OmSupplier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -153,6 +154,13 @@ class SupplierService extends BaseService {
     public function deleteSupplier($ids){
         $delete = $this->model->whereIn('id',$ids)->update(array('is_deleted'=>1));
         return ['status'=>true];
+    }
+
+    public function putSupplierSort($goods_id, $data){
+        foreach ($data as $k=>$v) {
+            $sup = explode('_',$v['id']);
+            OmGoodsSupplier::where(array('id'=>$sup[1],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
+        }
     }
 
 }

@@ -38,14 +38,14 @@ router.map({
         name: 'goods_info',
         component: require('./components/Goods/GoodsInfo.vue')
     },
-    '/goods_mfrs/add/:goods_id': {
+    /*'/goods_mfrs/add/:goods_id': {
         name: 'goods_mfrs_add',
         component: require('./components/Goods/GoodsMfrs.vue')
     },
     '/goods_mfrs/edit/:id':{
         name: 'goods_mfrs_edit',
         component: require('./components/Goods/GoodsMfrs.vue')
-    },
+    },*/
     '/supplier/list': {
         component: require('./components/Supplier/SupplierList.vue')
     },

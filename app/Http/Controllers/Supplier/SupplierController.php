@@ -38,4 +38,9 @@ class SupplierController extends Controller
         $data = $this->supplierService->getSupplier($id);
         return Response::json($data, 200);
     }
+
+    public function putSupplierSort($id, Request $request){
+        $data = $this->supplierService->putSupplierSort($id, $request->all());
+        return Response::json($data,200);
+    }
 }
