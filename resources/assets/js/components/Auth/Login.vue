@@ -25,7 +25,7 @@
                 <img class="captcha-img" @click="changeCaptcha" v-bind:src="captcha_src">
                 <span class="help-block" v-if="login.errors.message.captcha">验证码不正确！</span>
             </div>-->
-            <button type="button" class="btn btn-primary block full-width m-b" @click="postLogin" v-bind:disabled="login.disable">{{login.text}}</button>
+            <button type="submit" class="btn btn-primary block full-width m-b" @click="postLogin" v-bind:disabled="login.disable">{{login.text}}</button>
 
 
             <!--<p class="text-muted text-center"> <a href="login.html#"><small>忘记密码了？</small></a> | <a href="register.html">注册一个新账号</a>

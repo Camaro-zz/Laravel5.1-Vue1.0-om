@@ -65,7 +65,7 @@
                                     <td>
                                         <a @click="editSupplier(s)"><i class="fa fa-edit"></i> 编辑</a>
                                         <span class="delimiter">|</span>
-                                        <a @click="deleteMfrs(m.id)"><i class="fa fa-remove"></i>   删除</a>
+                                        <a @click="deleteSupplier(s.id)"><i class="fa fa-remove"></i>   删除</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -165,9 +165,6 @@
             </div>
         </div>
     </div>
-    <div class="show_mfrs_prop" style="display:none">
-    <Goodsmfrs :goods_id="goods_id" v-bind:id="edit_mfrs_id"></Goodsmfrs>
-    </div>
 </template>
 <style>
 
@@ -237,6 +234,65 @@
                     }
                 });
             },
+            addMfrs(){
+                var _this = this;
+                layer.open({
+                    type: 1,
+                    shade: false,
+                    area: ['600px', '230px'], //宽高
+                    title: '添加原厂编号',
+                    btn: ['保存','取消'],
+                    yes: function (index) {
+                        var mfrs = {};
+                        mfrs.mfrs_sn = $('.form-mfrs-sn').val();
+                        mfrs.mfrs_name = $('.form-mfrs-name').val();
+                        _this.postMfrs(mfrs,index);
+
+                    },
+                    content: Goodsmfrs.template,
+                });
+            },
+            editMfrs(mfrs){
+                var _this = this;
+                layer.open({
+                    type: 1,
+                    shade: false,
+                    area: ['600px', '230px'], //宽高
+                    title: '编辑原厂编号',
+                    btn: ['保存','取消'],
+                    yes: function (index) {
+                        mfrs.mfrs_sn = $('.form-mfrs-sn').val();
+                        mfrs.mfrs_name = $('.form-mfrs-name').val();
+                        _this.putMfrs(mfrs,index);
+
+                    },
+                    content: Goodsmfrs.template,
+                    success: function(){
+                        $('.form-mfrs-sn').val(mfrs.mfrs_sn);
+                        $('.form-mfrs-name').val(mfrs.mfrs_name);
+                    }
+                });
+            },
+            putMfrs(mfrs, index){
+                this.$http.put('/mfrs/'+mfrs.id+'.json', mfrs).then(function(response){
+                    if(response.data.status == false){
+                        toastr.error(response.data.msg);
+                    }else{
+                        layer.close(index);
+                        this.getMfrses();
+                    }
+                });
+            },
+            postMfrs(mfrs,index){
+                this.$http.post('/goods/mfrs/'+this.goods_id+'.json', mfrs).then(function(response){
+                    if(response.data.status == false){
+                        toastr.error(response.data.msg);
+                    }else{
+                        layer.close(index);
+                        this.getMfrses();
+                    }
+                });
+            },
             getSuppliers(){
                 this.$http.get('/goods/supplier/'+this.goods_id+'.json').then(function (response) {
                     this.$set('suppliers', response.data);
@@ -260,14 +316,12 @@
                     this.$set('imgs',response.data);
                 });
             },
-            addMfrs(){
-                layer.open({
-                 type: 1,
-                 shade: false,
-                 area: ['600px', '330px'], //宽高
-                 title: '添加原厂编号',
-                 content: $('.show_mfrs_prop')
-                 });
+            getMfrs(){
+                this.$http.get('/mfrs/'+this.id+'.json').then(function(response){
+                    this.$set('mfrs', response.data.data);
+                    this.$set('goods_name', response.data.goods_name);
+                    this.$set('goods_id', response.data.goods_id);
+                });
             },
             addSupplier(){
 
