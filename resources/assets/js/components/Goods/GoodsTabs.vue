@@ -78,39 +78,21 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
-                            <th>公司编号</th>
-                            <th>公司名</th>
-                            <th>采购价(含税)</th>
-                            <th>采购价(不含税</th>
-                            <th>联系人</th>
-                            <th>QQ</th>
-                            <th>手机</th>
-                            <th>电话</th>
+                            <th>品牌</th>
+                            <th>车型</th>
+                            <th>发动机</th>
+                            <th>年份</th>
                             <th></th>
                             </thead>
                             <tbody class="sortable-list connectList">
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司1</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司2</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司3</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
+                            <tr id="cartype_{{s.id}}" v-for="c in car_types">
+                                <td>{{c.name}}</td>
+                                <td>{{c.car_type}}</td>
+                                <td>{{c.engine}}</td>
+                                <td>
+                                    <a @click="editCartype(c)"><i class="fa fa-edit"></i> 编辑</a>
+                                    <span class="delimiter">|</span>
+                                    <a @click="deleteCartype(c.id)"><i class="fa fa-remove"></i>   删除</a>
                                 </td>
                             </tr>
                             </tbody>
@@ -123,36 +105,16 @@
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead>
-                            <th>公司编号</th>
+                            <th>客户编号</th>
                             <th>公司名</th>
-                            <th>采购价(含税)</th>
-                            <th>采购价(不含税</th>
                             <th>联系人</th>
-                            <th>QQ</th>
-                            <th>手机</th>
-                            <th>电话</th>
+                            <th>邮箱</th>
+                            <th>FOB</th>
                             <th></th>
                             </thead>
                             <tbody class="sortable-list connectList">
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司1</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司2</a>
-                                </td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><a data-toggle="tab" href="#company-1" class="client-link">瑞安市海诚机械有限公司3</a>
-                                </td>
+                            <tr id="offer_{{o.id}}" v-for="o in offers">
+                                <td>{{o.customer_sn}}</td>
                                 <td>广州</td>
                                 <td><i class="fa fa-flag"></i> 中国</td>
                                 <td class="client-status"><span class="label label-primary">已验证</span>
