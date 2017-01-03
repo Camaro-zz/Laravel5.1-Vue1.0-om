@@ -59,7 +59,10 @@ class CustomerService extends BaseService {
 
     //客户列表
     public function getCustomers($data){
-        $query = $this->model->select('id','customer_sn','name','contacts','sort');
+        $page = isset($data['page']) ? $data['page'] : 1;
+        $limit = isset($data['limit']) ? $data['limit'] : 10;
+        $offset = ($page-1)*$limit;
+        $query = $this->model;
         $query->where('is_deleted',0);
 
         if(isset($data['name']) && $data['name']){
@@ -70,13 +73,10 @@ class CustomerService extends BaseService {
             $query->where('customer_sn','like','%'.$data['customer_sn'].'%');
         }
         $result['_count'] = $query->count();
-        if (isset($data['offset'])) {
-            $query->skip($data['offset']);
-        }
-        if (isset($data['limit'])) {
-            $query->take($data['limit']);
-        }
-        $result['data'] = $query->orderBy('sort DESC')->get();
+        $query->skip($offset);
+        $query->take($limit);
+        $result['all_page'] = ceil($result['_count'] / $limit);
+        $result['data'] = $query->orderBy('sort','DESC')->get();
 
         return $result;
     }
@@ -105,7 +105,7 @@ class CustomerService extends BaseService {
         ];
 
         $rule = [
-            'customer_sn' => 'required|unique:om_customer, customer_sn,'.$id,
+            'customer_sn' => 'required|unique:om_customer,customer_sn,'.$id,
             'contact' => 'required',
             'tel' => 'required|between:9,20',
             'mobile' => 'required|regex:/^1[34578][0-9]{9}$/',

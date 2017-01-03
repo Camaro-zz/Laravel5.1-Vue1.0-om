@@ -82,15 +82,16 @@
                             <th>车型</th>
                             <th>发动机</th>
                             <th>年份</th>
-                            <th></th>
+                            <th><a @click="addCarType()" class="btn btn-info btn-xs">添加适用车型</a></th>
                             </thead>
                             <tbody class="sortable-list connectList">
-                            <tr id="cartype_{{s.id}}" v-for="c in car_types">
-                                <td>{{c.name}}</td>
+                            <tr id="cartype_{{c.id}}" v-for="c in car_types">
+                                <td>{{c.brand}}</td>
                                 <td>{{c.car_type}}</td>
                                 <td>{{c.engine}}</td>
+                                <td>{{c.year}}</td>
                                 <td>
-                                    <a @click="editCartype(c)"><i class="fa fa-edit"></i> 编辑</a>
+                                    <a @click="editCarType(c)"><i class="fa fa-edit"></i> 编辑</a>
                                     <span class="delimiter">|</span>
                                     <a @click="deleteCartype(c.id)"><i class="fa fa-remove"></i>   删除</a>
                                 </td>
@@ -133,12 +134,14 @@
 </style>
 <script>
     import Goodsmfrs from './GoodsMfrs.vue'
+    import GoodsCarType from './GoodsCarType.vue'
     export default{
         props: ['goods_id'],
         ready(){
             this.getMfrses();
             this.getSuppliers();
             this.getGoodsImgs();
+            this.getCarTypes();
             var _this = this;
             $(".mfrs-sortable-list").sortable({
                 update: function (event, ui) {
@@ -162,11 +165,13 @@
                 suppliers: {},
                 sup_sort:[],
                 imgs:{},
-                edit_mfrs_id: 0
+                edit_mfrs_id: 0,
+                car_types:{}
             }
         },
         components:{
-            Goodsmfrs
+            Goodsmfrs,
+            GoodsCarType
         },
         methods:{
             getMfrses(){
@@ -287,6 +292,85 @@
             },
             addSupplier(){
 
+            },
+            addCarType(){
+                var _this = this;
+                layer.open({
+                    type: 1,
+                    shade: false,
+                    area: ['600px', '330px'], //宽高
+                    title: '添加适用车型',
+                    btn: ['保存','取消'],
+                    yes: function (index) {
+                        var car_type = {};
+                        car_type.car_type = $('.form-car-type-cx').val();
+                        car_type.year = $('.form-car-type-nf').val();
+                        car_type.brand = $('.form-car-type-pp').val();
+                        car_type.engine = $('.form-car-type-fdj').val();
+                        _this.postCarType(car_type,index);
+
+                    },
+                    content: GoodsCarType.template,
+                });
+            },
+            editCarType(car_type){
+                var _this = this;
+                layer.open({
+                    type: 1,
+                    shade: false,
+                    area: ['600px', '330px'], //宽高
+                    title: '编辑适用车型',
+                    btn: ['保存','取消'],
+                    yes: function (index) {
+                        car_type.car_type = $('.form-car-type-cx').val();
+                        car_type.year = $('.form-car-type-nf').val();
+                        car_type.brand = $('.form-car-type-pp').val();
+                        car_type.engine = $('.form-car-type-fdj').val();
+                        _this.putCarType(car_type,index);
+
+                    },
+                    content: GoodsCarType.template,
+                    success: function(){
+                        $('.form-car-type-cx').val(car_type.car_type);
+                        $('.form-car-type-nf').val(car_type.year);
+                        $('.form-car-type-pp').val(car_type.brand);
+                        $('.form-car-type-fdj').val(car_type.engine);
+                    }
+                });
+            },
+            getCarTypes(){
+                this.$http.get('/goods/car_type/'+this.goods_id+'.json').then(function(response){
+                    this.$set('car_types',response.data);
+                });
+            },
+            postCarType(car_type,index){
+                this.$http.post('/goods/car_type/'+this.goods_id+'.json', car_type).then(function(response){
+                    if(response.data.status == false){
+                        toastr.error(response.data.msg);
+                    }else{
+                        layer.close(index);
+                        this.getCarTypes();
+                    }
+                });
+            },
+            putCarType(car_type, index){
+                this.$http.put('/goods/car_type/'+car_type.id+'.json', car_type).then(function(response){
+                    if(response.data.status == false){
+                        toastr.error(response.data.msg);
+                    }else{
+                        layer.close(index);
+                        this.getCarTypes();
+                    }
+                });
+            },
+            deleteCartype(id){
+                this.$http.delete('/goods/car_type/'+id+'.json').then(function(response){
+                    if(response.data.status == true){
+                        this.getCarTypes();
+                    }else{
+                        toastr.error(response.data.msg);
+                    }
+                });
             }
         }
     }

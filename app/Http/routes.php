@@ -33,6 +33,7 @@ Route::group(['middleware'=>$authApiMiddleware],function(){
     Route::put('pass.json', ['as' => 'userPass', 'uses' => 'Users\UsersController@putPassword']);//修改密码
 
     Route::get('suppliers.json', 'Supplier\SupplierController@getSuppliers');//供应商列表
+    Route::get('customers.json', 'Customer\CustomerController@getCustomers');//客户列表
 
     Route::get('goods.json', 'Goods\GoodsController@getGoodses');//供应商详情
     Route::get('cats.json', 'Goods\GoodsCatController@getCats');//获取商品类目列表
@@ -59,6 +60,12 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::get('mfrs/goods/{id}.json', 'Goods\GoodsController@getMfrsByGoods');//通过产品获取生产商
 
     Route::get('imgs/{id}.json', 'Goods\GoodsController@getGoodsImgs');//获取图片
+
+    Route::get('car_type/{id}.json', 'Goods\GoodsController@getGoodsCarTypes');//获取车型
+    Route::delete('car_type/batch.json', 'Goods\GoodsController@deleteGoodsCarTypes');//删除车型
+    Route::delete('car_type/{id}.json', 'Goods\GoodsController@deleteGoodsCarType');//删除车型
+    Route::post('car_type/{id}.json', 'Goods\GoodsController@postGoodsCarType');//添加车型
+    Route::put('car_type/{id}.json', 'Goods\GoodsController@putGoodsCarType');//编辑车型
 });
 
 //供应商模块
@@ -68,6 +75,15 @@ Route::group(['prefix' => 'supplier','middleware'=>$authApiMiddleware],function(
     Route::put('{id}.json', 'Supplier\SupplierController@putSupplier');//修改供应商
     Route::get('{id}.json', 'Supplier\SupplierController@getSupplier');//供应商详情
     Route::delete('batch.json', 'Supplier\SupplierController@deleteSupplier');//供应商删除
+});
+
+//客户模块
+Route::group(['prefix' => 'customer','middleware'=>$authApiMiddleware],function(){
+    Route::post('add.json', 'Customer\CustomerController@postCustomer');//添加客户
+    //Route::put('sort/{id}.json', 'Customer\CustomerController@putSupplierSort');//修改客户排序
+    Route::put('{id}.json', 'Customer\CustomerController@putCustomer');//修改客户
+    Route::get('{id}.json', 'Customer\CustomerController@getCustomer');//客户详情
+    Route::delete('batch.json', 'Customer\CustomerController@deleteCustomer');//客户删除
 });
 
 //生产商模块

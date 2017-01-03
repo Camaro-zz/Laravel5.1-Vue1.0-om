@@ -56,6 +56,16 @@ router.map({
         name: 'supplier_edit',
         component: require('./components/Supplier/SupplierAdd.vue')
     },
+    '/customer/list': {
+        component: require('./components/Customer/CustomerList.vue')
+    },
+    '/customer/add': {
+        component: require('./components/Customer/CustomerAdd.vue')
+    },
+    '/customer/edit/:id': {
+        name: 'customer_edit',
+        component: require('./components/Customer/CustomerAdd.vue')
+    },
     '/goods_supplier/add/:goods_id': {
         name: 'goods_supplier_add',
         component: require('./components/Goods/GoodsSupplier.vue')

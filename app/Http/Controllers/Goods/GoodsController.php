@@ -77,5 +77,32 @@ class GoodsController extends Controller
         $data = $this->goodsService->getGoodsImgs($id);
         return Response::json($data,200);
     }
+
+    public function getGoodsCarTypes($id){
+        $data = $this->goodsService->getGoodsCarTypes($id);
+        return Response::json($data,200);
+    }
+
+    public function deleteGoodsCarTypes(Request $request){
+        $ids = $request->all()->ids;
+        $data = $this->goodsService->deleteGoodsCarTypes($ids);
+        return Response::json($data);
+    }
+
+    public function deleteGoodsCarType($id){
+        $ids = [$id];
+        $data = $this->goodsService->deleteGoodsCarTypes($ids);
+        return Response::json($data);
+    }
+
+    public function postGoodsCarType(Request $request, $id){
+        $data = $this->goodsService->postGoodsCarType($request->all(), $id);
+        return Response::json($data,200);
+    }
+
+    public function putGoodsCarType(Request $request, $id){
+        $data = $this->goodsService->putGoodsCarType($request->all(), $id);
+        return Response::json($data,200);
+    }
     
 }

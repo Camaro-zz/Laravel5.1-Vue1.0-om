@@ -71,6 +71,21 @@
                         </li>
                     </ul>
                 </li>
+                <li>
+                    <a class="J_menuItem">
+                        <i class="fa fa-group"></i>
+                        <span class="nav-label">客户</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a class="J_menuItem" v-link="{path:'/customer/list'}">客户列表</a>
+                        </li>
+                        <li>
+                            <a class="J_menuItem" v-link="{path:'/customer/add'}">添加客户</a>
+                        </li>
+                    </ul>
+                </li>
 
             </ul>
         </div>

@@ -352,4 +352,56 @@ class GoodsService extends BaseService {
         return $imgs;
     }
 
+    public function getGoodsCarTypes($goods_id){
+        $car_types = OmCarType::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
+        return $car_types;
+    }
+
+    public function postGoodsCarType($car_type, $goods_id){
+        if(!$goods_id){
+            return ['status'=>false,'msg'=>'参数错误'];
+        }
+        if(!isset($car_type['brand']) || !$car_type['brand']){
+            return ['status'=>false,'msg'=>'品牌不能为空'];
+        }
+        if(!isset($car_type['car_type']) || !$car_type['car_type']){
+            return ['status'=>false,'msg'=>'车型不能为空'];
+        }
+        $car_type['goods_id'] = $goods_id;
+        $save = OmCarType::create($car_type);
+        if($save){
+            return ['status'=>true,'data'=>$save];
+        }else{
+            return ['status'=>false,'msg'=>'添加车型出错'];
+        }
+    }
+
+    public function deleteGoodsCarTypes($ids){
+        $res = OmCarType::whereIn('id',$ids)->delete();
+        if(!$res){
+            return ['status'=>false,'msg'=>'操作失败'];
+        }
+        return ['status'=>true];
+    }
+
+    public function putGoodsCarType($car_type, $id){
+        $res = OmCarType::where(array('id'=>$id,'is_deleted'=>0))->first();
+        if(!$res){
+            return ['status'=>false, 'msg'=>'车型不存在'];
+        }
+        if(!isset($car_type['brand']) || !$car_type['brand']){
+            return ['status'=>false,'msg'=>'品牌不能为空'];
+        }
+        if(!isset($car_type['car_type']) || !$car_type['car_type']){
+            return ['status'=>false,'msg'=>'车型不能为空'];
+        }
+
+        $car_type_id = OmCarType::where('id', $id)->update($car_type);
+        if($car_type_id){
+            $res = OmCarType::where('id',$car_type_id)->first();
+            return ['status'=>true, 'data'=>$res];
+        }else{
+            return ['status'=>false, 'msg'=>'车型编辑失败'];
+        }
+    }
 }

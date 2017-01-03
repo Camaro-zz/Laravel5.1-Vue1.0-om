@@ -15,7 +15,10 @@ class CreateOmGoodsCarTable extends Migration
         Schema::create('om_goods_cartype', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('goods_id')->comment('商品id')->default(0);
+            $table->string('brand')->comment('品牌')->default('');
             $table->string('car_type')->comment('车型')->default('');
+            $table->string('engine')->comment('发动机')->default('');
+            $table->string('year')->comment('年份')->default('');
             $table->tinyInteger('sort')->comment('排序，数值越大越靠前')->default(0);
             $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
