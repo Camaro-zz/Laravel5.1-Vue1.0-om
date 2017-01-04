@@ -70,6 +70,10 @@ router.map({
         name: 'goods_supplier_add',
         component: require('./components/Goods/GoodsSupplier.vue')
     },
+    '/goods_supplier/edit/:id': {
+        name: 'goods_supplier_edit',
+        component: require('./components/Goods/GoodsSupplier.vue')
+    },
 })
 
 router.beforeEach(function (transition) {

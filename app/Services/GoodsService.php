@@ -29,8 +29,12 @@ class GoodsService extends BaseService {
             return $v;
         }
         $goods_data = $data;
+        if(count($data['imgs']) <= 0){
+            return ['status'=>false, 'msg'=>'请至少上传一张图片'];
+        }
         unset($goods_data['imgs']);
         $goods_data['uid'] = $this->uid;
+        $goods_data['img'] = $data['imgs'][0]['path'];
         $goods = OmGoods::create($goods_data);
         if($goods->id){
             isset($data['imgs']) && $this->setGoodsImgs($goods, $data['imgs']);
@@ -142,7 +146,7 @@ class GoodsService extends BaseService {
             return $v;
         }
         $goods = OmGoodsSupplier::where(array('id'=>$id,'is_deleted'=>0))->update($data);
-
+        //dd($data);
         if($goods){
             $goods = OmGoodsSupplier::where('id',$id)->first();
             return ['status'=>true, 'data'=>$goods];
@@ -335,7 +339,7 @@ class GoodsService extends BaseService {
         return $mfrs;
     }
 
-    public function getSupplierByGoods($goods_id){
+    public function getSuppliersByGoods($goods_id){
         $suppliers = OmGoodsSupplier::leftJoin('om_supplier as sup', 'sup.id', '=', 'om_goods_supplier.supplier_id')
                                     ->select('sup.supplier_sn','sup.name','sup.contacts','sup.mobile','om_goods_supplier.*')
                                     ->where(array('om_goods_supplier.goods_id'=>$goods_id,'om_goods_supplier.is_deleted'=>0))
@@ -345,6 +349,15 @@ class GoodsService extends BaseService {
         }
 
         return $suppliers;
+    }
+    public function getSupplierByGoods($id){
+        $supplier = OmGoodsSupplier::where('id',$id)->select('goods_id','price','supplier_id','tax','num','length','width','height','gw','nw')->first();
+        if(!$supplier || !$id){
+            return ['status'=>false, 'msg'=>'参数错误'];
+        }
+        $goods = OmGoods::where('id',$supplier['goods_id'])->select('cn_name','en_name')->first();
+        $goods_name = $goods['cn_name'].'/'.$goods['en_name'];
+        return ['status'=>true, 'data'=>$supplier, 'goods_name'=>$goods_name];
     }
 
     public function getGoodsImgs($goods_id){

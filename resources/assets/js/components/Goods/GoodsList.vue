@@ -37,8 +37,9 @@
                         <table class="table table-striped" >
                             <thead>
                             <tr>
-                                <th>{{ids | json}}</th>
+                                <th></th>
                                 <th>产品编号</th>
+                                <th>图片</th>
                                 <th>原厂编号</th>
                                 <th>中文品名</th>
                                 <th>英文品名</th>
@@ -52,12 +53,13 @@
                             </tr>
                             </thead>
                             <tbody v-if="all > 0">
-                            <tr class="goods_list_css" v-for="goods in goodses" @click="goToInfo(goods.id)">
+                            <tr class="goods_list_css" v-for="goods in goodses" @click="goToInfo($event, goods.id)">
                                 <td><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
                                 <td v-if="goods.mfrs != ''">
                                     <a v-link="{name:'goods_info', params:{id:goods.id}}">{{goods.mfrs.mfrs_sn}}</a>
                                 </td>
                                 <td v-else>暂无</td>
+                                <td><img class="goods_img" v-bind:src="goods.img"/></td>
                                 <td>{{goods.product_sn}}</td>
                                 <td>{{goods.cn_name}}</td>
                                 <td>{{goods.en_name}}</td>
@@ -74,10 +76,13 @@
                             </tr>
                             </tbody>
                             <tbody v-else>
-                                <tr class="no-records-found"><td colspan="4">没有找到匹配的记录</td></tr>
+                                <tr class="no-records-found"><td colspan="13">没有找到匹配的记录</td></tr>
                             </tbody>
                             <tfoot v-if="all > 1">
                             <tr>
+                                <td colspan="3">
+                                    <button type="button" v-on:click="deleteGoods(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
+                                </td>
                                 <td colspan="10">
                                     <ul class="pagination pull-right">
                                         <li class="footable-page-arrow">
@@ -184,7 +189,10 @@ export default{
                 this.getGoodses()
             }
         },
-        goToInfo(goods_id){
+        goToInfo(event, goods_id){
+            if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
+                return false;
+            }
             this.$route.router.go({path: '/goods/info/'+goods_id})
         },
         getCats(){

@@ -73,6 +73,11 @@ class GoodsController extends Controller
         return Response::json($data,200);
     }
 
+    public function getSuppliersByGoods($id){
+        $data = $this->goodsService->getSuppliersByGoods($id);
+        return Response::json($data,200);
+    }
+
     public function getGoodsImgs($id){
         $data = $this->goodsService->getGoodsImgs($id);
         return Response::json($data,200);

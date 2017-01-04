@@ -21,7 +21,7 @@
                                 <select v-model="supplier.supplier_id" data-placeholder="请选择供应商..." class="chosen-select" style="width:100%;" tabindex="2">
                                     <option value="0" hassubinfo="true">请选择供应商</option>
                                     <template v-for="s in suppliers">
-                                        <option value="{{s.id}}" hassubinfo="true">{{s.name}}</option>
+                                        <option value="{{s.id}}">{{s.name}}</option>
                                     </template>
                                 </select>
                             </div>
@@ -118,7 +118,7 @@
             getGoodsName(){
                 this.$http.get('/goods/'+this.goods_id+'.json').then(function(response){
                     if(response.data.status == true){
-                        this.$set('goods_name', response.data.data.cn_name);
+                        this.$set('goods_name', response.data.data.cn_name+'/'+response.data.data.en_name);
                     }else{
                         toastr.error(response.data.msg);
                     }
@@ -133,6 +133,7 @@
                 this.$http.get('/goods/supplier/'+this.id+'.json').then(function(response){
                     if(response.data.status == true){
                         this.$set('supplier', response.data.data);
+                        this.$set('goods_name', response.data.goods_name);
                     }else{
                         toastr.error(response.data.msg);
                     }
@@ -143,7 +144,7 @@
                 if(this.id > 0){//编辑
                     this.$http.put('/goods/supplier/'+this.id+'.json', this.supplier).then(function(response){
                         if(response.data.status == true){
-                            this.$route.router.go({path: '/goods/edit/'+this.goods_id})
+                            this.$route.router.go({path: '/goods/info/'+this.goods_id})
                         }else{
                             toastr.error(response.data.msg);
                         }
@@ -151,7 +152,7 @@
                 }else{//新增
                     this.$http.post('/goods/supplier/'+this.goods_id+'.json', this.supplier).then(function(response){
                         if(response.data.status == true){
-                            this.$route.router.go({path: '/goods/edit/'+this.goods_id})
+                            this.$route.router.go({path: '/goods/info/'+this.goods_id})
                         }else{
                             toastr.error(response.data.msg);
                         }

@@ -8307,3 +8307,7 @@ span.delimiter {
 .form-group p{
     line-height: 31px;
 }
+.goods_img{
+    max-width:80px;
+    max-height:80px;
+}

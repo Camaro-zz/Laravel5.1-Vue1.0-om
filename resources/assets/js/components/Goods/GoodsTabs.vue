@@ -53,7 +53,10 @@
                                 <th>采购价(含税)</th>
                                 <th>采购价(不含税)</th>
                                 <th>其他</th>
-                                <th><a @click="addSupplier()" class="btn btn-info btn-xs">添加供应商</a></th>
+                                <th>
+                                    <a v-link="{path:'/supplier/add'}" class="btn btn-info btn-xs">添加供应商</a>
+                                    <span class="delimiter">|</span>
+                                    <a v-link="{name:'goods_supplier_add', params:{goods_id:goods_id}}" class="btn btn-info btn-xs">关联供应商</a></th>
                             </thead>
                             <tbody class="supplier-sortable-list connectList">
                                 <tr id="supplier_{{s.id}}" v-for="s in suppliers">
@@ -63,7 +66,7 @@
                                     <td>{{s.price}}</td>
                                     <td>{{s.price}}</td>
                                     <td>
-                                        <a @click="editSupplier(s)"><i class="fa fa-edit"></i> 编辑</a>
+                                        <a v-link="{name:'goods_supplier_edit', params:{id:s.id}}"><i class="fa fa-edit"></i> 编辑</a>
                                         <span class="delimiter">|</span>
                                         <a @click="deleteSupplier(s.id)"><i class="fa fa-remove"></i>   删除</a>
                                     </td>
@@ -84,7 +87,7 @@
                             <th>年份</th>
                             <th><a @click="addCarType()" class="btn btn-info btn-xs">添加适用车型</a></th>
                             </thead>
-                            <tbody class="sortable-list connectList">
+                            <tbody class="car-type-sortable-list connectList">
                             <tr id="cartype_{{c.id}}" v-for="c in car_types">
                                 <td>{{c.brand}}</td>
                                 <td>{{c.car_type}}</td>
@@ -139,7 +142,7 @@
         props: ['goods_id'],
         ready(){
             this.getMfrses();
-            this.getSuppliers();
+            this.getGoodsSuppliers();
             this.getGoodsImgs();
             this.getCarTypes();
             var _this = this;
@@ -149,6 +152,11 @@
                 }
             }).disableSelection();
             $(".supplier-sortable-list").sortable({
+                update: function (event, ui) {
+                    _this.sortSuppliers($(this).sortable("toArray"));
+                }
+            }).disableSelection();
+            $(".car-type-sortable-list").sortable({
                 update: function (event, ui) {
                     _this.sortSuppliers($(this).sortable("toArray"));
                 }
@@ -171,7 +179,7 @@
         },
         components:{
             Goodsmfrs,
-            GoodsCarType
+            GoodsCarType,
         },
         methods:{
             getMfrses(){
@@ -260,8 +268,8 @@
                     }
                 });
             },
-            getSuppliers(){
-                this.$http.get('/goods/supplier/'+this.goods_id+'.json').then(function (response) {
+            getGoodsSuppliers(){
+                this.$http.get('/goods/suppliers/'+this.goods_id+'.json').then(function (response) {
                     this.$set('suppliers', response.data);
                 });
             },
@@ -289,9 +297,6 @@
                     this.$set('goods_name', response.data.goods_name);
                     this.$set('goods_id', response.data.goods_id);
                 });
-            },
-            addSupplier(){
-
             },
             addCarType(){
                 var _this = this;
