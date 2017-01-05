@@ -38,14 +38,6 @@ router.map({
         name: 'goods_info',
         component: require('./components/Goods/GoodsInfo.vue')
     },
-    /*'/goods_mfrs/add/:goods_id': {
-        name: 'goods_mfrs_add',
-        component: require('./components/Goods/GoodsMfrs.vue')
-    },
-    '/goods_mfrs/edit/:id':{
-        name: 'goods_mfrs_edit',
-        component: require('./components/Goods/GoodsMfrs.vue')
-    },*/
     '/supplier/list': {
         component: require('./components/Supplier/SupplierList.vue')
     },
@@ -62,9 +54,8 @@ router.map({
     '/customer/add': {
         component: require('./components/Customer/CustomerAdd.vue')
     },
-    '/customer/edit/:id': {
-        name: 'customer_edit',
-        component: require('./components/Customer/CustomerAdd.vue')
+    '/customer/info/:id': {
+        component: require('./components/Customer/CustomerInfo.vue')
     },
     '/goods_supplier/add/:goods_id': {
         name: 'goods_supplier_add',

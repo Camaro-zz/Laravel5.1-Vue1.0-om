@@ -100,11 +100,7 @@
     </div>
 </template>
 <script>
-    import Goodstabs from './GoodsTabs.vue'
 export default{
-    components:{
-        Goodstabs
-    },
     ready(){
         this.getCats();
         var __this = this;

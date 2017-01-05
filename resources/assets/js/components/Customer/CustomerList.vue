@@ -29,28 +29,24 @@
                     <table class="footable table table-stripped toggle-arrow-tiny" v-bind:data-page-size="page_size" v-bind:data-navigation="page_count">
                         <thead>
                         <tr>
-                            <th data-toggle="true" data-sort-ignore="true">客户名称</th>
-                            <th data-sort-ignore="true">客户编号</th>
-                            <th data-sort-ignore="true">联系人</th>
-                            <th data-sort-ignore="true">电话</th>
-                            <th data-sort-ignore="true">手机</th>
-                            <th data-sort-ignore="true">邮箱</th>
-                            <th data-sort-ignore="true">操作</th>
+                            <th>客户名片</th>
+                            <th>客户名称</th>
+                            <th>客户编号</th>
+                            <th>联系人</th>
+                            <th>电话</th>
+                            <th>手机</th>
+                            <th>邮箱</th>
                         </tr>
                         </thead>
                         <tbody v-if="all > 0">
-                        <tr v-for="customer in customers">
+                        <tr v-for="customer in customers" @click="goToInfo($event, customer.id)">
+                            <td><img class="goods_img" v-bind:src="customer.img"/></td>
                             <td>{{customer.name}}</td>
                             <td>{{customer.customer_sn}}</td>
                             <td>{{customer.contact}}</td>
                             <td>{{customer.tel}}</td>
                             <td>{{customer.mobile}}</td>
                             <td>{{customer.email}}</td>
-                            <td>
-                                <a v-link="{name:'customer_edit', params:{id:customer.id}}"><i class="fa fa-edit"></i> 编辑</a>
-                                <span class="delimiter">|</span>
-                                <a @click="deleteCustomer(customer.id)"><i class="fa fa-remove"></i>   删除</a>
-                            </td>
                         </tr>
                         </tbody>
                         <tbody v-else>
@@ -58,7 +54,7 @@
                         </tbody>
                         <tfoot v-if="all > 1">
                         <tr>
-                            <td colspan="8">
+                            <td colspan="7">
                                 <ul class="pagination pull-right">
                                     <li class="footable-page-arrow">
                                         <input type="text" class="go_page_class" v-model="go_page_class" number>
@@ -158,7 +154,14 @@
                     this.$dispatch('btn-click',data)
                     this.getCustomers()
                 }
-            }
+            },
+            goToInfo(event, customer_id){
+                alert(customer_id);
+                if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
+                    return false;
+                }
+                this.$route.router.go({path: '/customer/info/'+customer_id})
+            },
         },
         computed: {
             indexs: function(){

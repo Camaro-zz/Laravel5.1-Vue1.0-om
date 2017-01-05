@@ -120,6 +120,7 @@
 <script>
 export default{
     ready(){
+        this.cat_id = this.$route.query.cat_id;
         this.getGoodses()
         this.getCats()
     },
@@ -137,7 +138,8 @@ export default{
             all: 1,
             go_page_class: '',
             ids: [],
-            cats: {}
+            cats: {},
+            cat_id: ''
         }
     },
     methods:{
@@ -145,7 +147,7 @@ export default{
             var serch_data = this.search_data;
             var en_name = '';
             var cn_name = '';
-            var cat_id = this.search_data.cat_id;
+            var cat_id = this.cat_id;
             if(serch_data.type == 0){//按中文名搜索
                 cn_name = serch_data.keywords
             }else{
@@ -202,7 +204,11 @@ export default{
         }
     },
     watch:{
-        'goodses':function () {}
+        'goodses':function () {},
+        '$route.query.cat_id':function(){
+            this.cat_id = this.$route.query.cat_id;
+            this.getGoodses();
+        }
     },
     computed: {
         indexs: function(){

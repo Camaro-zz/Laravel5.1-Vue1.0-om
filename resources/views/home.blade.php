@@ -51,6 +51,7 @@
 <script src="{{asset('js/plugins/chosen/chosen.jquery.js')}}"></script>
 <script src="{{asset('js/plugins/toastr/toastr.min.js')}}"></script>
 <script src="{{asset('js/plugins/webuploader/webuploader.js')}}"></script>
+<script src="{{asset('js/plugins/dropzone/dropzone.js')}}"></script>
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <!-- Fancy box -->
 <script src="{{asset('js/plugins/fancybox/jquery.fancybox.js')}}"></script>

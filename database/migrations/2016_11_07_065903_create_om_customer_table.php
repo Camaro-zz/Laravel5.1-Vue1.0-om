@@ -16,6 +16,7 @@ class CreateOmCustomerTable extends Migration
             $table->increments('id');
             $table->integer('uid')->comment('添加人id')->default(0);
             $table->string('customer_sn',50)->comment('客户编号')->default('');
+            $table->string('img',50)->comment('客户名片')->default('');
             $table->string('name',50)->comment('客户名称')->default('');
             $table->string('country',50)->comment('国家')->default('');
             $table->string('contact',50)->comment('联系人')->default('');

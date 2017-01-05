@@ -43,48 +43,27 @@
                 </li>
                 <li>
                     <a class="J_menuItem">
-                        <i class="fa fa-th"></i>
-                        <span class="nav-label">产品</span>
+                        <i class="fa fa-th" @click="goGoodsList()"></i>
+                        <span class="nav-label" @click="goGoodsList()">产品</span>
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" v-link="{path:'/goods/list'}">产品列表</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" v-link="{path:'/goods/add'}">添加产品</a>
+                        <li v-for="cat in cats">
+                            <a class="J_menuItem" v-link="{path:'/goods/list',query:{cat_id:cat.id}}">{{cat.name}}</a>
                         </li>
                     </ul>
                 </li>
                 <li>
-                    <a class="J_menuItem">
+                    <a v-link="{path:'/supplier/list'}">
                         <i class="fa fa-columns"></i>
                         <span class="nav-label">供应商</span>
-                        <span class="fa arrow"></span>
                     </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" v-link="{path:'/supplier/list'}">供应商列表</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" v-link="{path:'/supplier/add'}">添加供应商</a>
-                        </li>
-                    </ul>
                 </li>
                 <li>
-                    <a class="J_menuItem">
+                    <a v-link="{path:'/customer/list'}">
                         <i class="fa fa-group"></i>
                         <span class="nav-label">客户</span>
-                        <span class="fa arrow"></span>
                     </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" v-link="{path:'/customer/list'}">客户列表</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" v-link="{path:'/customer/add'}">添加客户</a>
-                        </li>
-                    </ul>
                 </li>
 
             </ul>
@@ -95,10 +74,12 @@
     export default{
         ready(){
             this.getUserInfo();
+            this.getCats();
         },
         data(){
             return{
-                user:_global.user
+                user:_global.user,
+                cats: {}
             }
         },
         methods: {
@@ -106,6 +87,14 @@
                 this.$http({url: '/user/me.json', method: 'GET'}).then(function (response) {
                     this.$set('user', response.data.account)
                 })
+            },
+            getCats(){
+                this.$http.get('/cats.json').then(function (response) {
+                    this.$set('cats', response.data.data);
+                });
+            },
+            goGoodsList(){
+                this.$route.router.go({path: '/goods/list'})
             }
         },
     }
