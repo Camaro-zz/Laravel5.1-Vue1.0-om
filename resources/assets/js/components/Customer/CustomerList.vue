@@ -156,7 +156,6 @@
                 }
             },
             goToInfo(event, customer_id){
-                alert(customer_id);
                 if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
                     return false;
                 }

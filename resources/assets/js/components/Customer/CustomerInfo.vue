@@ -88,8 +88,8 @@
                                 </div>
                             </div>
                             <div class="col-sm-5 goods_info_edit" style="display:none !important;">
-                                <a id="dropz" class="btn btn-info btn-xs pull-right">重新上传</a>
-                                <img alt="image" class="img-responsive info_bigimg" v-bind:src="customer.img">
+                                <a id="dropz" class="dropz btn btn-info btn-xs pull-right">重新上传</a>
+                                <img alt="image" class="dropz img-responsive info_bigimg" v-bind:src="customer.img">
                             </div>
                             <div class="col-sm-7 form-horizontal goods_info_edit" style="display:none !important;">
                                 <div class="form-group">
@@ -162,7 +162,7 @@
                         <div class="hr-line-dashed"></div>
                         <div class="row m-t-sm">
                             <div class="col-sm-12">
-                                <!--<Customertabs :goods_id="goods_id"></Customertabs>-->
+                                <Customertabs :customer_id="customer_id"></Customertabs>
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
     </div>
 </template>
 <script>
-    //import Customertabs from './CustomerTabs.vue'
+    import Customertabs from './CustomerTabs.vue'
     export default{
         created(){
             this.customer_id = this.$route.params.id;
@@ -193,7 +193,7 @@
             }
         },
         components:{
-            //Customertabs
+            Customertabs
         },
         methods:{
             getCustomer(){

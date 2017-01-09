@@ -85,6 +85,8 @@ Route::group(['prefix' => 'customer','middleware'=>$authApiMiddleware],function(
     Route::put('{id}.json', 'Customer\CustomerController@putCustomer');//修改客户
     Route::get('{id}.json', 'Customer\CustomerController@getCustomer');//客户详情
     Route::delete('batch.json', 'Customer\CustomerController@deleteCustomer');//客户删除
+    Route::get('xjs/{id}.json', 'Order\OrderController@getXjs');//单个客户询价记录
+    Route::get('orders/{id}.json', 'Order\OrderController@getCustomerOrders');//单个客户采购记录
 });
 
 //生产商模块

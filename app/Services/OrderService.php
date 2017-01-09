@@ -2,9 +2,11 @@
 namespace App\Services;
 
 
+use App\Models\OmCarType;
 use App\Models\OmGoods;
 use App\Models\OmOrder;
 use App\Models\OmOrderGoods;
+use App\Models\OmSupplier;
 use Illuminate\Support\Facades\Auth;
 
 class OrderService extends BaseService {
@@ -137,4 +139,30 @@ class OrderService extends BaseService {
         $res = $this->doValidate($data,$rule,$message);
         return $res;
     }
+
+    public function getXjs($customer_id){
+        $xjs = OmOrderGoods::leftJoin('om_goods','om_goods.id','=','om_order_goods.goods_id')
+                           ->select('om_goods.img','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.fob_price','om_order_goods.*')
+                           ->where('om_order_goods.customer_id',$customer_id)
+                           ->where('om_order_goods.is_deleted',0)
+                           ->where('om_order_goods.customer_id',0)
+                           ->get();
+        foreach ($xjs as $k=>$v){
+            $car_types = OmCarType::where('goods_id',$v['goods_id'])->lists('car_type');
+            if($car_types){
+                $car_types = $car_types->toArray();
+                $xjs[$k]['car_type'] = implode(',',$car_types);
+            }else{
+                $xjs[$k]['car_type'] = '';
+            }
+            $xjs[$k]['supplier'] = OmSupplier::where('id',$v['supplier_id'])->pluck('name');
+        }
+        return $xjs;
+    }
+
+    public function getCustomerOrders($customer_id){
+        $orders = OmOrder::select('customer_id','contract_sn','price','manager','mark')->where(['customer_id'=>$customer_id,'is_deleted'=>0])->get();
+        return $orders;
+    }
+
 }

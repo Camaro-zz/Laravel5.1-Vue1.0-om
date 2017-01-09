@@ -34,4 +34,14 @@ class OrderController extends Controller
         $res = $this->orderService->getOrders($request->all());
         return Response::json($res,200);
     }
+
+    public function getXjs($id){
+        $res = $this->orderService->getXjs($id);
+        return Response::json($res,200);
+    }
+
+    public function getCustomerOrders($id){
+        $res = $this->orderService->getCustomerOrders($id);
+        return Response::json($res,200);
+    }
 }
