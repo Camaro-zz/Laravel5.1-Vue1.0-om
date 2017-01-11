@@ -44,9 +44,9 @@ router.map({
     '/supplier/add': {
         component: require('./components/Supplier/SupplierAdd.vue')
     },
-    '/supplier/edit/:id': {
-        name: 'supplier_edit',
-        component: require('./components/Supplier/SupplierAdd.vue')
+    '/supplier/info/:id': {
+        name: 'supplier_info',
+        component: require('./components/Supplier/SupplierInfo.vue')
     },
     '/customer/list': {
         component: require('./components/Customer/CustomerList.vue')

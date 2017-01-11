@@ -2,6 +2,7 @@
 namespace App\Services;
 
 
+use App\Models\OmGoodsMfrs;
 use App\Models\OmGoodsSupplier;
 use App\Models\OmSupplier;
 use Illuminate\Support\Facades\Auth;
@@ -161,6 +162,20 @@ class SupplierService extends BaseService {
             $sup = explode('_',$v['id']);
             OmGoodsSupplier::where(array('id'=>$sup[1],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
         }
+    }
+
+    public function getSupplierGoods($id){
+        $goods = OmGoodsSupplier::leftJoin('om_goods as goods', 'goods.id', '=', 'om_goods_supplier.goods_id')
+                                ->select('om_goods_supplier.*','goods.cn_name','goods.en_name','goods.img','goods.product_sn')
+                                ->where('goods.is_deleted',0)
+                                ->where('om_goods_supplier.supplier_id',$id)
+                                ->get();
+
+        foreach ($goods as $k=>$v){
+            $mfrs = OmGoodsMfrs::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->first();
+            $goods[$k]['mfrs_sn'] = $mfrs['mfrs_sn'];
+        }
+        return $goods;
     }
 
 }

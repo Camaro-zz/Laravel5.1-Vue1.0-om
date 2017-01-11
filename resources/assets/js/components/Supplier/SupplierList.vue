@@ -40,7 +40,7 @@
                         </tr>
                         </thead>
                         <tbody v-if="all > 0">
-                        <tr v-for="supplier in suppliers">
+                        <tr v-for="supplier in suppliers" @click="goToInfo($event, supplier.id)">
                             <td>{{supplier.name}}</td>
                             <td>{{supplier.supplier_sn}}</td>
                             <td>{{supplier.contacts}}</td>
@@ -160,7 +160,13 @@
                     this.$dispatch('btn-click',data)
                     this.getSuppliers()
                 }
-            }
+            },
+            goToInfo(event, supplier_id){
+                if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
+                    return false;
+                }
+                this.$route.router.go({path: '/supplier/info/'+supplier_id})
+            },
         },
         watch:{
             'suppliers':function () {}

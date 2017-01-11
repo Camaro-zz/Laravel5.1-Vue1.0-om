@@ -22,7 +22,7 @@
                             <tbody class="xj-sortable-list connectList">
                                 <tr id="xj_{{x.id}}" v-for="x in xjs">
                                     <td>{{x.product_sn}}</td>
-                                    <td>{{x.img}}</td>
+                                    <td><img class="goods_img"  v-bind:src="x.img"></td>
                                     <td>{{x.mfrs_sn}}</td>
                                     <td>{{x.en_name}}</td>
                                     <td>{{x.car_type}}</td>

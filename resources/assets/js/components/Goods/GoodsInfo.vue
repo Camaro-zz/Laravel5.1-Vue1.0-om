@@ -24,35 +24,35 @@
                             </div>
                             <div class="col-sm-7 form-horizontal goods_info_show">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">中文品名：</label>
+                                    <label class="col-sm-default control-label">中文品名：</label>
 
                                     <div class="col-sm-4">
                                         <p>{{goods.cn_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">英文品名：</label>
+                                    <label class="col-sm-default control-label">英文品名：</label>
 
                                     <div class="col-sm-4">
                                         <p>{{goods.en_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">产品类目：</label>
+                                    <label class="col-sm-default control-label">产品类目：</label>
 
                                     <div class="col-sm-4">
                                         <p>{{goods.cn_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">FOB价格：</label>
+                                    <label class="col-sm-default control-label">FOB价格：</label>
 
                                     <div class="col-sm-4">
                                         <p>${{goods.fob_price}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">备注：</label>
+                                    <label class="col-sm-default control-label">备注：</label>
 
                                     <div class="col-sm-6">
                                         <p>{{goods.mark}}</p>
@@ -61,21 +61,21 @@
                             </div>
                             <div class="col-sm-7 form-horizontal goods_info_edit" style="display:none !important;">
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">中文品名：</label>
+                                    <label class="col-sm-default control-label">中文品名：</label>
 
                                     <div class="col-sm-4">
                                         <input type="text" v-model="goods.cn_name" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">英文品名：</label>
+                                    <label class="col-sm-default control-label">英文品名：</label>
 
                                     <div class="col-sm-4">
                                         <input type="text" v-model="goods.en_name" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">产品类目：</label>
+                                    <label class="col-sm-default control-label">产品类目：</label>
 
                                     <div class="col-sm-3">
                                         <select v-model="goods.cat_id" data-placeholder="请选择类目..." class="chosen-select" style="width:100%;" tabindex="2">
@@ -90,7 +90,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">FOB价格：</label>
+                                    <label class="col-sm-default control-label">FOB价格：</label>
 
                                     <div class="col-sm-4">
                                         <div class="input-group">
@@ -100,7 +100,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-2 control-label">备注：</label>
+                                    <label class="col-sm-default control-label">备注：</label>
 
                                     <div class="col-sm-6">
                                         <textarea class="form-control" rows="10" v-model="goods.mark">
