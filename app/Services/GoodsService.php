@@ -252,12 +252,25 @@ class GoodsService extends BaseService {
             'product_sn.unique' => '产品编号已存在',
             'en_name.required' => '英文品名不.能为空',
             'cn_name.required' => '中文品名不能为空',
+            'num.required' => '装箱数不能为空',
+            'num.integer' => '装箱数只能是整数',
+            'length.numeric' => '规格长只能是数值',
+            'width.numeric' => '规格宽只能是数值',
+            'height.numeric' => '规格高只能是数值',
+            'gw.numeric' => '毛重只能是数值',
+            'nw.numeric' => '净重长只能是数值',
         ];
 
         $rule = [
             'product_sn' => 'required|unique:om_goods,product_sn,'.$id,
             'en_name' => 'required',
             'cn_name' => 'required',
+            'num' => 'required|integer',
+            'length' => 'numeric',
+            'width' => 'numeric',
+            'height' => 'numeric',
+            'gw' => 'numeric',
+            'nw' => 'numeric',
         ];
         $res = $this->doValidate($data,$rule,$message);
         return $res;
@@ -270,24 +283,11 @@ class GoodsService extends BaseService {
             'price.numeric' => '采购价只能为数值',
             'tax.required' => '税不能为空',
             'tax.numeric' => '税只能为数值',
-            'num.required' => '装箱数不能为空',
-            'num.integer' => '装箱数只能是整数',
-            'length.numeric' => '规格长只能是数值',
-            'width.numeric' => '规格宽只能是数值',
-            'height.numeric' => '规格高只能是数值',
-            'gw.numeric' => '毛重只能是数值',
-            'nw.numeric' => '净重长只能是数值',
         ];
 
         $rule = [
             'price' => 'required|numeric',
             'tax' => 'required|numeric',
-            'num' => 'required|integer',
-            'length' => 'numeric',
-            'width' => 'numeric',
-            'height' => 'numeric',
-            'gw' => 'numeric',
-            'nw' => 'numeric',
         ];
 
         $res = $this->doValidate($data,$rule,$message);

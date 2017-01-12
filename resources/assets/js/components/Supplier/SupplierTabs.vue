@@ -18,7 +18,7 @@
                                 <th>L W H</th>
                                 <th>G.W</th>
                                 <th>N.W</th>
-                                <th><a @click="addGoods()" class="btn btn-info btn-xs">添加询价记录</a></th>
+                                <th><a v-link="{path:'/goods/add',query:{supplier_id:supplier_id}}" class="btn btn-info btn-xs">添加产品</a></th>
                             </thead>
                             <tbody class="xj-sortable-list connectList">
                                 <tr id="goods_{{g.id}}" v-for="g in goodses">
@@ -32,9 +32,7 @@
                                     <td>{{g.gw}}</td>
                                     <td>{{g.nw}}</td>
                                     <td>
-                                        <a @click=""><i class="fa fa-edit"></i> 编辑</a>
-                                        <span class="delimiter">|</span>
-                                        <a @click=""><i class="fa fa-remove"></i>   删除</a>
+                                        <a v-link="{name: 'goods_info',params:{id:g.id}}"><i class="fa fa-edit"></i> 编辑</a>
                                     </td>
                                 </tr>
                             </tbody>

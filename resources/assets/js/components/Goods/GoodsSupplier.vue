@@ -41,32 +41,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">装箱数</label>
-
-                            <div class="col-sm-4">
-                                <input type="text" v-model="supplier.num" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">规格</label>
-
-                            <div class="col-sm-1">
-                                长：<input type="text" v-model="supplier.length" class="form-control">
-                            </div>
-                            <div class="col-sm-1">
-                                宽：<input type="text" v-model="supplier.width" class="form-control">
-                            </div>
-                            <div class="col-sm-1">
-                                高：<input type="text" v-model="supplier.height" class="form-control">
-                            </div>
-                            <div class="col-sm-1">
-                                毛重：<input type="text" v-model="supplier.gw" class="form-control">
-                            </div>
-                            <div class="col-sm-1">
-                                净重：<input type="text" v-model="supplier.nw" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="col-sm-2 control-label">生产商名称</label>
 
                             <div class="col-sm-4">

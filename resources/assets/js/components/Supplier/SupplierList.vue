@@ -49,8 +49,6 @@
                             <td>{{supplier.qq}}</td>
                             <td>{{supplier.website}}</td>
                             <td>
-                                <a v-link="{name:'supplier_edit', params:{id:supplier.id}}"><i class="fa fa-edit"></i> 编辑</a>
-                                <span class="delimiter">|</span>
                                 <a @click="deleteSupplier(supplier.id)"><i class="fa fa-remove"></i>   删除</a>
                             </td>
                         </tr>

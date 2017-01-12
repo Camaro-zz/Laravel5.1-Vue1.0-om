@@ -22,6 +22,12 @@ class CreateOmGoodsTable extends Migration
             $table->string('cn_name',50)->comment('中文品名')->default('');
             $table->decimal('fob_price',10,2)->comment('fob价格')->default(0);
             $table->text('car_types')->comment('适用车型');
+            $table->integer('num')->comment('装箱数')->default(0);
+            $table->decimal('length',10,2)->comment('规格：长')->default(0);
+            $table->decimal('width',10,2)->comment('规格：宽')->default(0);
+            $table->decimal('height',10,2)->comment('规格：高度')->default(0);
+            $table->decimal('gw',10,2)->comment('毛重')->default(0);
+            $table->decimal('nw',10,2)->comment('净重')->default(0);
             $table->text('mark')->comment('备注');
             $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
             $table->timestamps();
