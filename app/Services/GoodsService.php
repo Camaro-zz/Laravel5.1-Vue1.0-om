@@ -38,6 +38,9 @@ class GoodsService extends BaseService {
         $goods = OmGoods::create($goods_data);
         if($goods->id){
             isset($data['imgs']) && $this->setGoodsImgs($goods, $data['imgs']);
+            if(isset($data['supplier_id']) && $data['supplier_id'] > 0){
+                
+            }
             return ['status'=>true, 'data'=>$goods];
         }else{
             return ['status'=>false, 'msg'=>'产品添加失败'];

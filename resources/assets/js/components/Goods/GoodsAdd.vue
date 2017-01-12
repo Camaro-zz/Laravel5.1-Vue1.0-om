@@ -68,6 +68,32 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">装箱数</label>
+
+                            <div class="col-sm-4">
+                                <input type="text" v-model="goods.num" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">规格</label>
+
+                            <div class="col-sm-1">
+                                长：<input type="text" v-model="goods.length" class="form-control">
+                            </div>
+                            <div class="col-sm-1">
+                                宽：<input type="text" v-model="goods.width" class="form-control">
+                            </div>
+                            <div class="col-sm-1">
+                                高：<input type="text" v-model="goods.height" class="form-control">
+                            </div>
+                            <div class="col-sm-1">
+                                毛重：<input type="text" v-model="goods.gw" class="form-control">
+                            </div>
+                            <div class="col-sm-1">
+                                净重：<input type="text" v-model="goods.nw" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
 
                             <div class="col-sm-4">
@@ -102,6 +128,9 @@
 <script>
 export default{
     ready(){
+        if(this.$route.query.supplier_id){
+            this.supplier_id = this.$route.query.supplier_id;
+        }
         this.getCats();
         var __this = this;
         var $ = jQuery,    // just in case. Make sure it's not an other libaray.
@@ -404,7 +433,8 @@ export default{
                 cat_id:0,
                 imgs: []
             },
-            goods_id: 0
+            goods_id: 0,
+            supplier_id: 0
         }
     },
     methods:{
@@ -450,6 +480,7 @@ export default{
                 toastr.error("请上传至少一张图片");
                 return false;
             }
+            this.goods.supplier_id = this.supplier_id
             this.$http.post('/goods/add.json',this.goods).then(function(response){
                 if(response.data.status == true){
                     this.$route.router.go({path: '/goods/list'})
