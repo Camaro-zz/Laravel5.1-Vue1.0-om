@@ -5,7 +5,7 @@
                 <div class="ibox-title">
                     <h5>所有产品</h5>
                     <div class="ibox-tools">
-                        <a v-link="{path:'/goods/add'}" class="btn btn-primary btn-xs">添加产品</a>
+                        <a @click="addGoods()" class="btn btn-primary btn-xs">添加产品</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -55,12 +55,12 @@
                             <tbody v-if="all > 0">
                             <tr class="goods_list_css" v-for="goods in goodses" @click="goToInfo($event, goods.id)">
                                 <td><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
+                                <td>{{goods.product_sn}}</td>
+                                <td><img class="goods_img" v-bind:src="goods.img"/></td>
                                 <td v-if="goods.mfrs != ''">
                                     <a v-link="{name:'goods_info', params:{id:goods.id}}">{{goods.mfrs.mfrs_sn}}</a>
                                 </td>
                                 <td v-else>暂无</td>
-                                <td><img class="goods_img" v-bind:src="goods.img"/></td>
-                                <td>{{goods.product_sn}}</td>
                                 <td>{{goods.cn_name}}</td>
                                 <td>{{goods.en_name}}</td>
                                 <td>{{goods.cat_name}}</td>
@@ -118,6 +118,7 @@
     </div>
 </template>
 <script>
+    import GoodsAdd from './GoodsAdd.vue'
 export default{
     ready(){
         this.cat_id = this.$route.query.cat_id;
@@ -141,6 +142,9 @@ export default{
             cats: {},
             cat_id: ''
         }
+    },
+    components:{
+        GoodsAdd
     },
     methods:{
         getGoodses(){
@@ -200,6 +204,38 @@ export default{
         getCats(){
             this.$http.get('/cats.json').then(function (response) {
                 this.$set('cats', response.data.data);
+            });
+        },
+        addGoods(){
+            var _this = this;
+            layer.open({
+                type: 1,
+                shade: false,
+                area: ['600px', '230px'], //宽高
+                title: '添加产品',
+                btn: ['保存','取消'],
+                yes: function (index) {
+                    var new_goods = {};
+                    new_goods.product_sn = $('.form-product-sn').val();
+                    new_goods.en_name = $('.form-product-enname').val();
+                    _this.postGoods(new_goods,index);
+
+                },
+                content: GoodsAdd.template
+            });
+        },
+        postGoods(new_goods,index){
+            if(this.cat_id > 0){
+                new_goods.cat_id = this.cat_id
+            }
+            console.log(new_goods);
+            this.$http.post('/goods/add.json',new_goods).then(function (response) {
+                if(response.data.status == true){
+                    layer.close(index);
+                    this.$route.router.go({path: '/goods/info/'+response.data.data.id,query:{type:1}})
+                }else{
+                    toastr.error(response.data.msg);
+                }
             });
         }
     },

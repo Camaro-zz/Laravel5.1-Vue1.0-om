@@ -20,7 +20,9 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                <img alt="image" class="img-responsive info_bigimg" v-bind:src="goods.img">
+                                <template v-if="goods.img != ''">
+                                    <img alt="image" class="img-responsive info_bigimg" v-bind:src="goods.img">
+                                </template>
                             </div>
                             <div class="col-sm-8 form-horizontal goods_info_show">
                                 <div class="form-group">
@@ -182,12 +184,17 @@
         },
         ready(){
             this.getGoods();
+            this.type = this.$route.query.type ? this.$route.query.type : 0;
+            if(this.type == 1){
+                this.showEditInfo();
+            }
         },
         data(){
             return{
                 goods: {},
                 goods_id: 0,
-                cats: {}
+                cats: {},
+                type: 0
             }
         },
         components:{
@@ -234,6 +241,9 @@
                 this.$http.put('/goods/'+this.goods_id+'.json',goods_data).then(function(response){
                     if(response.data.status == true){
                         this.$set('goods', response.data.data);
+                        if(this.type == 1){
+                            this.$route.router.go({path: '/goods/info/'+this.goods_id})
+                        }
                         this.hideEditInfo();
                     }else{
                         toastr.error(response.data.msg);
@@ -250,6 +260,10 @@
                 $('.goods_info_edit').hide();
             },
             cancelEditInfo(){
+                if(this.type == 1){//添加产品
+                    toastr.error('请先添加完善产品');
+                    return false;
+                }
                 this.getGoods();
                 this.hideEditInfo();
             }

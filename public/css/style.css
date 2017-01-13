@@ -8311,3 +8311,12 @@ span.delimiter {
     max-width:80px;
     max-height:80px;
 }
+.add-imgs{
+    background: url("../img/webuploader.png") no-repeat;
+    width: 160px;
+    height: 160px;
+    display: block;
+    border: dashed 2px #ccc;
+    margin-top: 20px;
+    background-size: contain;
+}

@@ -23,7 +23,7 @@ class GoodsService extends BaseService {
     /**
      * 添加商品
      */
-    public function addGoods($data){
+    /*public function addGoods($data){
         $v = $this->goodsValidator($data);
         if(!$v['status']){
             return $v;
@@ -41,6 +41,30 @@ class GoodsService extends BaseService {
             if(isset($data['supplier_id']) && $data['supplier_id'] > 0){
                 
             }
+            return ['status'=>true, 'data'=>$goods];
+        }else{
+            return ['status'=>false, 'msg'=>'产品添加失败'];
+        }
+    }*/
+    public function addGoods($data){
+        $goods_data['product_sn'] = isset($data['product_sn']) ? $data['product_sn'] : '';
+        $goods_data['en_name'] = isset($data['en_name']) ? $data['en_name'] : '';
+        $goods_data['cat_id'] = isset($data['cat_id']) ? $data['cat_id'] : 0;
+        $message = [
+            'product_sn.required' => '产品编号不能为空',
+            'product_sn.unique' => '产品编号已存在',
+            'en_name.required' => '产品英文名称不能为空'
+        ];
+        $rule = [
+            'en_name' => 'required',
+            'product_sn' => 'required|unique:om_goods,product_sn',
+        ];
+        $res = $this->doValidate($goods_data,$rule,$message);
+        if(!$res['status']){
+            return $res;
+        }
+        $goods = OmGoods::create($goods_data);
+        if($goods->id){
             return ['status'=>true, 'data'=>$goods];
         }else{
             return ['status'=>false, 'msg'=>'产品添加失败'];
@@ -251,11 +275,8 @@ class GoodsService extends BaseService {
     //验证规则
     public function goodsValidator($data, $id=''){
         $message = [
-            'product_sn.required' => '产品编号不能为空',
-            'product_sn.unique' => '产品编号已存在',
             'en_name.required' => '英文品名不.能为空',
             'cn_name.required' => '中文品名不能为空',
-            'num.required' => '装箱数不能为空',
             'num.integer' => '装箱数只能是整数',
             'length.numeric' => '规格长只能是数值',
             'width.numeric' => '规格宽只能是数值',
@@ -265,10 +286,9 @@ class GoodsService extends BaseService {
         ];
 
         $rule = [
-            'product_sn' => 'required|unique:om_goods,product_sn,'.$id,
             'en_name' => 'required',
             'cn_name' => 'required',
-            'num' => 'required|integer',
+            'num' => 'integer',
             'length' => 'numeric',
             'width' => 'numeric',
             'height' => 'numeric',
@@ -322,15 +342,8 @@ class GoodsService extends BaseService {
     }
 
     protected  function getImgs($goods_id){
-        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
-        $imgs_arr = [];
-        if($imgs){
-            foreach ($imgs as $k=>$v){
-                $imgs_arr[$k]['id'] = 'WU_FILE_'.$v['id'];
-                $imgs_arr[$k]['path'] = $v['img'];
-            }
-        }
-        return $imgs_arr;
+        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->lists('img');
+        return $imgs;
     }
 
     public function getMfrsByGoods($goods_id){

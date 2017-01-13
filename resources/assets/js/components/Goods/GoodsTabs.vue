@@ -11,9 +11,10 @@
             <div id="tab-1" class="tab-pane active">
                 <div class="full-height-scroll">
                     <div class="table-responsive">
+                        <a class="add-imgs" id="dropz"></a>
                         <template v-for="img in imgs">
-                        <a class="fancybox" href="{{img.img}}">
-                            <img alt="image" v-bind:src="img.img" />
+                        <a class="fancybox" href="{{img}}">
+                            <img alt="image" v-bind:src="img" />
                         </a>
                         </template>
                     </div>
@@ -164,6 +165,19 @@
             $('.fancybox').fancybox({
                 openEffect: 'none',
                 closeEffect: 'none'
+            });
+            $("#dropz").dropzone({
+                url: "/upload.json",
+                maxFiles: 10,
+                maxFilesize: 512,
+                acceptedFiles: ".png,.jpg,.jpeg,.gif",
+                previewTemplate: '<div></div>',
+                success:function (file, response, e) {
+                    if(response.status == true){
+                        _this.imgs.push(response.path);
+                        console.log(_this.imgs);
+                    }
+                }
             });
         },
         data(){
