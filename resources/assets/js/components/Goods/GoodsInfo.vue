@@ -47,17 +47,10 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">FOB价格：</label>
-
-                                    <div class="col-sm-4">
-                                        <p>${{goods.fob_price}}</p>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-sm-3 control-label">装箱数：</label>
 
                                     <div class="col-sm-4">
-                                        <p>${{goods.num}}</p>
+                                        <p>{{goods.num}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -118,16 +111,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">FOB价格：</label>
-
-                                    <div class="col-sm-4">
-                                        <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input v-model="goods.fob_price" type="number" step="0.01" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-sm-3 control-label">装箱数</label>
 
                                     <div class="col-sm-4">
@@ -137,20 +120,22 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">规格</label>
 
-                                    <div class="col-sm-1">
-                                        长：<input v-model="goods.length" type="number" step="0.01" class="form-control">
-                                    </div>
-                                    <div class="col-sm-1">
-                                        宽：<input v-model="goods.width" type="number" step="0.01" class="form-control">
-                                    </div>
-                                    <div class="col-sm-1">
-                                        高：<input v-model="goods.height" type="number" step="0.01" class="form-control">
-                                    </div>
-                                    <div class="col-sm-1">
-                                        毛重：<input v-model="goods.gw" type="number" step="0.01" class="form-control">
-                                    </div>
-                                    <div class="col-sm-1">
-                                        净重：<input v-model="goods.nw" type="number" step="0.01" class="form-control">
+                                    <div class="col-sm-9">
+                                        <div class="guige-css">
+                                            长：<input v-model="goods.length" type="number" step="0.01" class="form-control">
+                                        </div>
+                                        <div class="guige-css">
+                                            宽：<input v-model="goods.width" type="number" step="0.01" class="form-control">
+                                        </div>
+                                        <div class="guige-css">
+                                            高：<input v-model="goods.height" type="number" step="0.01" class="form-control">
+                                        </div>
+                                        <div class="guige-css">
+                                            毛重：<input v-model="goods.gw" type="number" step="0.01" class="form-control">
+                                        </div>
+                                        <div class="guige-css">
+                                            净重：<input v-model="goods.nw" type="number" step="0.01" class="form-control">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -236,8 +221,15 @@
                 goods_data.en_name = this.goods.en_name;
                 goods_data.fob_price = this.goods.fob_price;
                 goods_data.mark = this.goods.mark;
-                goods_data.cat_id = this.goods.cat_id;
+                goods_data.cat_id = this.goods.cat_id = $(".chosen-select").val();
                 goods_data.product_sn = this.goods.product_sn;
+                goods_data.num = this.goods.num;
+                goods_data.height = this.goods.height;
+                goods_data.length = this.goods.length;
+                goods_data.width = this.goods.width;
+                goods_data.gw = this.goods.gw;
+                goods_data.nw = this.goods.nw;
+                console.log(this.goods);
                 this.$http.put('/goods/'+this.goods_id+'.json',goods_data).then(function(response){
                     if(response.data.status == true){
                         this.$set('goods', response.data.data);

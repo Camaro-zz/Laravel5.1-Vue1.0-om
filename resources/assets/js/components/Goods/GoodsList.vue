@@ -43,11 +43,9 @@
                                 <th>原厂编号</th>
                                 <th>中文品名</th>
                                 <th>英文品名</th>
-                                <th>类目</th>
                                 <th>含税采购价</th>
                                 <th>不含税采购价</th>
                                 <th>适用车型</th>
-                                <th>FOB价格</th>
                                 <th>供应商</th>
                                 <th>备注</th>
                             </tr>
@@ -63,13 +61,11 @@
                                 <td v-else>暂无</td>
                                 <td>{{goods.cn_name}}</td>
                                 <td>{{goods.en_name}}</td>
-                                <td>{{goods.cat_name}}</td>
                                 <td v-if="goods.prop != ''">{{(parseFloat(goods.prop.price) + parseFloat(goods.prop.tax)).toFixed(2)}}</td>
                                 <td v-else>暂无</td>
                                 <td v-if="goods.prop != ''">{{goods.prop.price}}</td>
                                 <td v-else>暂无</td>
                                 <td>{{goods.car_type}}</td>
-                                <td>{{goods.fob_price}}</td>
                                 <td v-if="goods.prop != ''">{{goods.prop.name}}</td>
                                 <td v-else>暂无</td>
                                 <td>{{goods.mark}}</td>
@@ -83,7 +79,7 @@
                                 <td colspan="3">
                                     <button type="button" v-on:click="deleteGoods(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
                                 </td>
-                                <td colspan="10" v-if="all > 1">
+                                <td colspan="8" v-if="all > 1">
                                     <ul class="pagination pull-right">
                                         <li class="footable-page-arrow">
                                             <input type="text" class="go_page_class" v-model="go_page_class" number>

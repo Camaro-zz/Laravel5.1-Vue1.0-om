@@ -8324,8 +8324,8 @@ span.delimiter {
 }
 .add-imgs{
     background: url("../img/webuploader.png") no-repeat;
-    width: 150px;
-    height: 150px;
+    width: 155px;
+    height: 155px;
     border: dashed 2px #ccc;
     background-size: contain;
     display: inline-block;
@@ -8353,4 +8353,13 @@ span.delimiter {
     margin: 5px 1px 1px;
     cursor: pointer;
     background-position: -48px -24px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0;
+}
+.guige-css{
+    max-width: 100px;
+    display: inline-block;
 }

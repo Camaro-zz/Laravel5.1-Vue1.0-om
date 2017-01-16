@@ -183,25 +183,12 @@ class GoodsService extends BaseService {
     }
 
     public function getGoods($id){
-        $goods = OmGoods::select('id','cat_id','product_sn','img','en_name','cn_name','fob_price','car_types','mark')->where('id',$id)->first();
+        $goods = OmGoods::select('id','cat_id','product_sn','img','en_name','cn_name','fob_price','car_types','mark','length','num','width','height','gw','nw')->where('id',$id)->first();
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
-        $goods['supplier_goods'] = OmGoodsSupplier::where(array('goods_id'=>$id))->orderBy('sort','DESC')->get();
-        $goods['supplier_goods_count'] = count($goods['supplier_goods']);
-        if(isset($goods['supplier_goods'][0])){
-            $goods['price'] = $goods['supplier_goods'][0]['price'];
-            $goods['tax'] = $goods['supplier_goods'][0]['tax'];
-            $goods['num'] = $goods['supplier_goods'][0]['num'];
-            $goods['length'] = $goods['supplier_goods'][0]['length'];
-            $goods['width'] = $goods['supplier_goods'][0]['width'];
-            $goods['height'] = $goods['supplier_goods'][0]['height'];
-            $goods['gw'] = $goods['supplier_goods'][0]['gw'];
-            $goods['nw'] = $goods['supplier_goods'][0]['nw'];
-            $goods['mfrs_name'] = $goods['supplier_goods'][0]['mfrs_name'];
-        }
-        $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->pluck('name');
-        $goods['imgs'] = $this->getImgs($id, 0);
+        $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->value('name');
+        //dd($goods);
         return ['status'=>true,'data'=>$goods];
     }
 
