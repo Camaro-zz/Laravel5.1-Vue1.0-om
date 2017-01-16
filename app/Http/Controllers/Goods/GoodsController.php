@@ -83,6 +83,15 @@ class GoodsController extends Controller
         return Response::json($data,200);
     }
 
+    public function postGoodsImgs($id, Request $request){
+        $data = $this->goodsService->postGoodsImgs($id, $request->all());
+        return Response::json($data,200);
+    }
+    public function postGoodsImg($id, Request $request){
+        $data = $this->goodsService->postGoodsImg($id, $request->all());
+        return Response::json($data,200);
+    }
+
     public function getGoodsCarTypes($id){
         $data = $this->goodsService->getGoodsCarTypes($id);
         return Response::json($data,200);

@@ -200,6 +200,7 @@ class GoodsService extends BaseService {
             $goods['nw'] = $goods['supplier_goods'][0]['nw'];
             $goods['mfrs_name'] = $goods['supplier_goods'][0]['mfrs_name'];
         }
+        $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->pluck('name');
         $goods['imgs'] = $this->getImgs($id, 0);
         return ['status'=>true,'data'=>$goods];
     }
@@ -335,7 +336,11 @@ class GoodsService extends BaseService {
         $goods->imgs()->delete();
         $imgsData = array();
         foreach ($imgs as $key => &$_img) {
-            $img_arr['img'] = $_img['path'];
+            if($key == 0 && $_img != $goods->img){
+                $goods->img = $_img;
+                $goods->update();
+            }
+            $img_arr['img'] = $_img;
             $imgsData[] = new OmGoodsImg($img_arr);
         }
         $goods->imgs()->saveMany($imgsData);
@@ -377,8 +382,19 @@ class GoodsService extends BaseService {
     }
 
     public function getGoodsImgs($goods_id){
-        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
+        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->lists('img');
         return $imgs;
+    }
+
+    public function postGoodsImgs($goods_id,$imgs){
+        //dd($imgs);
+        $goods = OmGoods::where('id',$goods_id)->first();
+        isset($imgs) && count($imgs)>0 && $this->setGoodsImgs($goods, $imgs);
+    }
+
+    public function postGoodsImg($goods_id,$img){
+        OmGoods::where('id',$goods_id)->update(['img'=>$img['img']]);
+
     }
 
     public function getGoodsCarTypes($goods_id){

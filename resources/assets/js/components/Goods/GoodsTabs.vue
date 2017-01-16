@@ -10,14 +10,22 @@
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
                 <div class="full-height-scroll">
-                    <div class="table-responsive">
-                        <a class="add-imgs" id="dropz"></a>
+                    <div class="table-responsive" style="margin-top:10px">
+                        <a @click="updateGoodsImgs()" class="btn btn-info" style="float:right">保存图片</a>
+                    </div>
+                    <div class="table-responsive imgs-sortable-list" style="margin-top:10px;display:inline-block">
                         <template v-for="img in imgs">
-                        <a class="fancybox" href="{{img}}">
-                            <img alt="image" v-bind:src="img" />
-                        </a>
+                        <div id="{{img}}" class="fancybox-box ui-sortable-handle" >
+                            <div class="file-panel">
+                                <span class="cancel" @click="removeImg($index)">删除</span>
+                            </div>
+                            <a class="fancybox" href="{{img}}">
+                                <img  alt="image" v-bind:src="img" />
+                            </a>
+                        </div>
                         </template>
                     </div>
+                    <a class="add-imgs" id="dropz"></a>
                 </div>
             </div>
             <div id="tab-2" class="tab-pane">
@@ -140,7 +148,7 @@
     import Goodsmfrs from './GoodsMfrs.vue'
     import GoodsCarType from './GoodsCarType.vue'
     export default{
-        props: ['goods_id'],
+        props: ['goods_id','goods'],
         ready(){
             this.getMfrses();
             this.getGoodsSuppliers();
@@ -162,20 +170,25 @@
                     _this.sortSuppliers($(this).sortable("toArray"));
                 }
             }).disableSelection();
+            $(".imgs-sortable-list").sortable({
+                update: function (event, ui) {
+                    _this.sortImgs($(this).sortable("toArray"))
+                }
+            }).disableSelection();
             $('.fancybox').fancybox({
                 openEffect: 'none',
                 closeEffect: 'none'
             });
             $("#dropz").dropzone({
                 url: "/upload.json",
-                maxFiles: 10,
+                //maxFiles: 10,
                 maxFilesize: 512,
                 acceptedFiles: ".png,.jpg,.jpeg,.gif",
                 previewTemplate: '<div></div>',
                 success:function (file, response, e) {
                     if(response.status == true){
                         _this.imgs.push(response.path);
-                        console.log(_this.imgs);
+                        _this.goods.img = _this.imgs[0]
                     }
                 }
             });
@@ -303,6 +316,24 @@
             getGoodsImgs(){
                 this.$http.get('/goods/imgs/'+this.goods_id+'.json').then(function(response){
                     this.$set('imgs',response.data);
+                });
+            },
+            updateGoodsImgs(){
+                this.$http.post('/goods/imgs/'+this.goods_id+'.json',this.imgs).then(function(response){
+
+                });
+            },
+            removeImg(index){
+                this.imgs.splice(index,1)
+                if(index == 0){
+                    this.goods.img = this.imgs[0]
+                }
+            },
+            sortImgs(sort){
+                console.log(sort);
+                this.goods.img = sort[0];
+                this.$http.post('/goods/img/'+this.goods_id+'.json',{img:sort[0]}).then(function(response){
+
                 });
             },
             getMfrs(){

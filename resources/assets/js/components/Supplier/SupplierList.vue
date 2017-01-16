@@ -29,18 +29,21 @@
                     <table class="footable table table-stripped toggle-arrow-tiny" v-bind:data-page-size="page_size" v-bind:data-navigation="page_count">
                         <thead>
                         <tr>
-                            <th data-toggle="true" data-sort-ignore="true">供应商名称</th>
-                            <th data-sort-ignore="true">供应商编号</th>
-                            <th data-sort-ignore="true">联系人</th>
-                            <th data-sort-ignore="true">电话</th>
-                            <th data-sort-ignore="true">手机</th>
-                            <th data-sort-ignore="true">QQ</th>
-                            <th data-sort-ignore="true">网站</th>
-                            <th data-sort-ignore="true">操作</th>
+                            <th></th>
+                            <th>供应商名片</th>
+                            <th>供应商名称</th>
+                            <th>供应商编号</th>
+                            <th>联系人</th>
+                            <th>电话</th>
+                            <th>手机</th>
+                            <th>QQ</th>
+                            <th>网站</th>
                         </tr>
                         </thead>
                         <tbody v-if="all > 0">
                         <tr v-for="supplier in suppliers" @click="goToInfo($event, supplier.id)">
+                            <td><input type="checkbox" value="{{supplier.id}}" v-model="ids"></td>
+                            <td><img class="goods_img" v-bind:src="supplier.img"/></td>
                             <td>{{supplier.name}}</td>
                             <td>{{supplier.supplier_sn}}</td>
                             <td>{{supplier.contacts}}</td>
@@ -48,17 +51,17 @@
                             <td>{{supplier.mobile}}</td>
                             <td>{{supplier.qq}}</td>
                             <td>{{supplier.website}}</td>
-                            <td>
-                                <a @click="deleteSupplier(supplier.id)"><i class="fa fa-remove"></i>   删除</a>
-                            </td>
                         </tr>
                         </tbody>
                         <tbody v-else>
                         <tr class="no-records-found"><td colspan="4">没有找到匹配的记录</td></tr>
                         </tbody>
-                        <tfoot v-if="all > 0">
+                        <tfoot >
                         <tr>
-                            <td colspan="8">
+                            <td colspan="3">
+                                <button type="button" v-on:click="deleteSupplier(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
+                            </td>
+                            <td colspan="8" v-if="all > 1">
                                 <ul class="pagination pull-right">
                                     <li class="footable-page-arrow">
                                         <input type="text" class="go_page_class" v-model="go_page_class" number>
@@ -108,7 +111,8 @@
                 cur: 1,
                 all: 1,
                 go_page_class: '',
-                search_tag: '请输入供应商名称'
+                search_tag: '请输入供应商名称',
+                ids: []
             }
         },
         methods:{

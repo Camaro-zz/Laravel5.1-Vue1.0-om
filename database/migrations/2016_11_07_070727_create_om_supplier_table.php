@@ -16,7 +16,7 @@ class CreateOmSupplierTable extends Migration
             $table->increments('id');
             $table->integer('uid')->comment('添加人id')->default(0);
             $table->string('supplier_sn')->comment('供应商编号')->default('');
-            $table->string('name',50)->comment('供应商名称')->default('');
+            $table->string('img',50)->comment('供应商名片')->default('');
             $table->string('name',50)->comment('供应商名称')->default('');
             $table->string('contacts',50)->comment('联系人')->default('');
             $table->string('tel',50)->comment('电话')->default('');

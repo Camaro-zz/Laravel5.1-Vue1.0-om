@@ -43,7 +43,7 @@
                                     <label class="col-sm-3 control-label">产品类目：</label>
 
                                     <div class="col-sm-4">
-                                        <p>{{goods.cn_name}}</p>
+                                        <p>{{goods.cat_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -131,26 +131,26 @@
                                     <label class="col-sm-3 control-label">装箱数</label>
 
                                     <div class="col-sm-4">
-                                        <input type="text" v-model="goods.num" class="form-control">
+                                        <input v-model="goods.num" type="number" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">规格</label>
 
                                     <div class="col-sm-1">
-                                        长：<input type="text" v-model="goods.length" class="form-control">
+                                        长：<input v-model="goods.length" type="number" step="0.01" class="form-control">
                                     </div>
                                     <div class="col-sm-1">
-                                        宽：<input type="text" v-model="goods.width" class="form-control">
+                                        宽：<input v-model="goods.width" type="number" step="0.01" class="form-control">
                                     </div>
                                     <div class="col-sm-1">
-                                        高：<input type="text" v-model="goods.height" class="form-control">
+                                        高：<input v-model="goods.height" type="number" step="0.01" class="form-control">
                                     </div>
                                     <div class="col-sm-1">
-                                        毛重：<input type="text" v-model="goods.gw" class="form-control">
+                                        毛重：<input v-model="goods.gw" type="number" step="0.01" class="form-control">
                                     </div>
                                     <div class="col-sm-1">
-                                        净重：<input type="text" v-model="goods.nw" class="form-control">
+                                        净重：<input v-model="goods.nw" type="number" step="0.01" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -167,7 +167,7 @@
                         <div class="hr-line-dashed"></div>
                         <div class="row m-t-sm">
                             <div class="col-sm-12">
-                                <Goodstabs :goods_id="goods_id"></Goodstabs>
+                                <Goodstabs :goods_id="goods_id" :goods="goods"></Goodstabs>
                             </div>
                         </div>
                     </div>

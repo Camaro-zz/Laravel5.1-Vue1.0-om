@@ -3,7 +3,7 @@
         <div class="col-sm-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>所有供应商</h5>
+                    <h5>客户</h5>
                     <div class="ibox-tools">
                         <a v-link="{path:'/customer/add'}" class="btn btn-primary btn-xs">添加客户</a>
                     </div>
@@ -29,6 +29,7 @@
                     <table class="footable table table-stripped toggle-arrow-tiny" v-bind:data-page-size="page_size" v-bind:data-navigation="page_count">
                         <thead>
                         <tr>
+                            <th></th>
                             <th>客户名片</th>
                             <th>客户名称</th>
                             <th>客户编号</th>
@@ -40,6 +41,7 @@
                         </thead>
                         <tbody v-if="all > 0">
                         <tr v-for="customer in customers" @click="goToInfo($event, customer.id)">
+                            <td><input type="checkbox" value="{{customer.id}}" v-model="ids"></td>
                             <td><img class="goods_img" v-bind:src="customer.img"/></td>
                             <td>{{customer.name}}</td>
                             <td>{{customer.customer_sn}}</td>
@@ -52,9 +54,12 @@
                         <tbody v-else>
                         <tr class="no-records-found"><td colspan="4">没有找到匹配的记录</td></tr>
                         </tbody>
-                        <tfoot v-if="all > 1">
+                        <tfoot>
                         <tr>
-                            <td colspan="7">
+                            <td colspan="3">
+                                <button type="button" v-on:click="deleteCustomer(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
+                            </td>
+                            <td colspan="5" v-if="all > 1">
                                 <ul class="pagination pull-right">
                                     <li class="footable-page-arrow">
                                         <input type="text" class="go_page_class" v-model="go_page_class" number>

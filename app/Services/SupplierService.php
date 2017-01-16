@@ -123,7 +123,7 @@ class SupplierService extends BaseService {
         $page = isset($data['page']) ? $data['page'] : 1;
         $limit = isset($data['limit']) ? $data['limit'] : 10;
         $offset = ($page-1)*$limit;
-        $query = $this->model->select('id','supplier_sn','name','contacts','sort','tel','mobile','qq','website');
+        $query = $this->model->select('id','supplier_sn','name','contacts','sort','tel','mobile','qq','website','img');
         $query->where('is_deleted',0);
 
         if(isset($data['name']) && $data['name']){

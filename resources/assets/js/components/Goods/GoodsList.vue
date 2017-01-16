@@ -78,12 +78,12 @@
                             <tbody v-else>
                                 <tr class="no-records-found"><td colspan="13">没有找到匹配的记录</td></tr>
                             </tbody>
-                            <tfoot v-if="all > 1">
+                            <tfoot>
                             <tr>
                                 <td colspan="3">
                                     <button type="button" v-on:click="deleteGoods(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
                                 </td>
-                                <td colspan="10">
+                                <td colspan="10" v-if="all > 1">
                                     <ul class="pagination pull-right">
                                         <li class="footable-page-arrow">
                                             <input type="text" class="go_page_class" v-model="go_page_class" number>

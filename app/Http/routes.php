@@ -61,6 +61,8 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::get('mfrs/goods/{id}.json', 'Goods\GoodsController@getMfrsByGoods');//通过产品获取生产商
 
     Route::get('imgs/{id}.json', 'Goods\GoodsController@getGoodsImgs');//获取图片
+    Route::post('imgs/{id}.json', 'Goods\GoodsController@postGoodsImgs');//保存图片
+    Route::post('img/{id}.json', 'Goods\GoodsController@postGoodsImg');//保存图片
 
     Route::get('car_type/{id}.json', 'Goods\GoodsController@getGoodsCarTypes');//获取车型
     Route::delete('car_type/batch.json', 'Goods\GoodsController@deleteGoodsCarTypes');//删除车型

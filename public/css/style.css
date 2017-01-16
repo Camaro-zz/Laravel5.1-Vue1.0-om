@@ -3450,11 +3450,11 @@ video {
     margin-bottom: 15px;
 }
 
-.fancybox img {
+/*.fancybox img {
     margin-bottom: 5px;
-    /* Only for demo */
+    !* Only for demo *!
     width: 24%;
-}
+}*/
 
 
 /* Summernote text editor  */
@@ -8288,9 +8288,20 @@ span.delimiter {
 .goods_list_css:hover{
     background-color: #e8e8e8 !important;
 }
-.fancybox img{
-    margin: 5px;
+.fancybox-box img{
+    margin: auto;
+    width: 150px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+.fancybox-box{
+    display: inline-block;
+    position: relative;
     width: 160px;
+    height:160px;
 }
 .info_bigimg{
     /*width: 50%;
@@ -8313,10 +8324,33 @@ span.delimiter {
 }
 .add-imgs{
     background: url("../img/webuploader.png") no-repeat;
-    width: 160px;
-    height: 160px;
-    display: block;
+    width: 150px;
+    height: 150px;
     border: dashed 2px #ccc;
-    margin-top: 20px;
     background-size: contain;
+    display: inline-block;
+    margin: 5px;
+}
+.file-panel {
+    position: absolute;
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr='#80000000', endColorstr='#80000000')\0;
+    background: rgba( 0, 0, 0, 0.5 );
+    width: 150px;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 300;
+    margin: 5px;
+}
+.file-panel span {
+    width: 24px;
+    height: 24px;
+    display: inline;
+    float: right;
+    text-indent: -9999px;
+    overflow: hidden;
+    background: url("../img/icons.png") no-repeat;
+    margin: 5px 1px 1px;
+    cursor: pointer;
+    background-position: -48px -24px;
 }
