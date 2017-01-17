@@ -107,6 +107,8 @@ class GoodsService extends BaseService {
             return $v;
         }
         $data['uid'] = $this->uid;
+        unset($data['edit']);
+        unset($data['id']);
         $res = OmGoodsMfrs::create($data);
         if($res->id){
             return ['status'=>true, 'data'=>$res];
@@ -125,6 +127,7 @@ class GoodsService extends BaseService {
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
+        unset($data['edit']);
         $v = $this->supplierGoodsValidator($data);
         if(!$v['status']){
             return $v;
@@ -156,7 +159,7 @@ class GoodsService extends BaseService {
 
         if($goods){
             $goods = OmGoods::where('id',$id)->first();
-            isset($data['imgs']) && $this->setGoodsImgs($goods, $data['imgs']);
+            $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->value('name');
             return ['status'=>true, 'data'=>$goods];
         }else{
             return ['status'=>false, 'msg'=>'产品更新失败'];
@@ -250,6 +253,11 @@ class GoodsService extends BaseService {
         if(!isset($data['mfrs_name']) || !$data['mfrs_name']){
             return ['status'=>false,'msg'=>'生产商名称不能为空'];
         }
+        if(OmGoodsMfrs::where('mfrs_sn',$data['mfrs_sn'])->first()){
+            return ['status'=>false,'msg'=>'原厂编号已存在'];
+        }
+        unset($data['id']);
+        unset($data['edit']);
         $data['goods_id'] = $id;
         $data['uid'] = $this->uid;
         $mfrs = OmGoodsMfrs::create($data);
@@ -323,18 +331,26 @@ class GoodsService extends BaseService {
         $goods->imgs()->delete();
         $imgsData = array();
         foreach ($imgs as $key => &$_img) {
-            if($key == 0 && $_img != $goods->img){
-                $goods->img = $_img;
-                $goods->update();
+            if(isset($_img['sort'])){
+                if($key == 0 && $_img != $goods->img){
+                    $goods->img = $_img['img'];
+                }
+                $img_arr['img'] = $_img['img'];
+                $img_arr['sort'] = $_img['sort'];
+            }else{
+                if($key == 0 && $_img != $goods->img){
+                    $goods->img = $_img;
+                }
+                $img_arr['img'] = $_img;
             }
-            $img_arr['img'] = $_img;
+            $goods->update();
             $imgsData[] = new OmGoodsImg($img_arr);
         }
         $goods->imgs()->saveMany($imgsData);
     }
 
-    protected  function getImgs($goods_id){
-        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->lists('img');
+    public function getImgs($goods_id){
+        $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->orderBy('sort','DESC')->lists('img');
         return $imgs;
     }
 
@@ -342,6 +358,9 @@ class GoodsService extends BaseService {
         $mfrs = OmGoodsMfrs::select('id','mfrs_sn','mfrs_name','sort')->where(array('goods_id'=>intval($goods_id),'is_deleted'=>0))->orderBy('sort', 'DESC')->get();
         if(!$mfrs){
             $mfrs = '';
+        }
+        foreach ($mfrs as $k=>$v){
+            $mfrs[$k]['edit'] = false;
         }
 
         return $mfrs;
@@ -368,6 +387,14 @@ class GoodsService extends BaseService {
         return ['status'=>true, 'data'=>$supplier, 'goods_name'=>$goods_name];
     }
 
+    public function deleteGoodsSupplier($id){
+        $del = OmGoodsSupplier::where('id',$id)->delete();
+        if(!$del){
+            return ['status'=>false, 'msg'=>'删除失败'];
+        }
+        return ['status'=>true];
+    }
+
     public function getGoodsImgs($goods_id){
         $imgs = OmGoodsImg::where(['goods_id'=>$goods_id,'is_deleted'=>0])->lists('img');
         return $imgs;
@@ -379,13 +406,24 @@ class GoodsService extends BaseService {
         isset($imgs) && count($imgs)>0 && $this->setGoodsImgs($goods, $imgs);
     }
 
-    public function postGoodsImg($goods_id,$img){
-        OmGoods::where('id',$goods_id)->update(['img'=>$img['img']]);
+    public function postGoodsImg($goods_id,$imgs){
+        $goods = OmGoods::where('id',$goods_id)->first();
+        $this->setGoodsImgs($goods,$imgs);
+    }
 
+    public function deleteGoodsImg($goods_id,$img){
+        OmGoodsImg::where(['goods_id'=>$goods_id,'img'=>$img])->delete();
+        $first_img = OmGoodsImg::where('goods_id',$goods_id)->orderBy('sort','DESC')->first();
+        if($first_img){
+            OmGoods::where('id',$goods_id)->update(['img'=>$first_img['img']]);
+        }
     }
 
     public function getGoodsCarTypes($goods_id){
-        $car_types = OmCarType::where(['goods_id'=>$goods_id,'is_deleted'=>0])->get();
+        $car_types = OmCarType::where(['goods_id'=>$goods_id,'is_deleted'=>0])->orderBy('sort','DESC')->get();
+        foreach ($car_types as $k=>$v){
+            $car_types[$k]['edit'] = false;
+        }
         return $car_types;
     }
 
@@ -400,6 +438,8 @@ class GoodsService extends BaseService {
             return ['status'=>false,'msg'=>'车型不能为空'];
         }
         $car_type['goods_id'] = $goods_id;
+        unset($car_type['id']);
+        unset($car_type['edit']);
         $save = OmCarType::create($car_type);
         if($save){
             return ['status'=>true,'data'=>$save];
@@ -428,12 +468,20 @@ class GoodsService extends BaseService {
             return ['status'=>false,'msg'=>'车型不能为空'];
         }
 
+        unset($car_type['edit']);
         $car_type_id = OmCarType::where('id', $id)->update($car_type);
         if($car_type_id){
             $res = OmCarType::where('id',$car_type_id)->first();
             return ['status'=>true, 'data'=>$res];
         }else{
             return ['status'=>false, 'msg'=>'车型编辑失败'];
+        }
+    }
+
+    public function sortGoodsCarType($data,$goods_id){
+        foreach ($data as $k=>$v) {
+            $c = explode('_',$v['id']);
+            OmCarType::where(array('id'=>$c[1],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
         }
     }
 }

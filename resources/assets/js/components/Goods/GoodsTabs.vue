@@ -6,112 +6,20 @@
             <li class=""><a data-toggle="tab" href="#tab-3"><i class="fa fa-briefcase"></i> 供应商</a></li>
             <li class=""><a data-toggle="tab" href="#tab-4"><i class="fa fa-briefcase"></i> 适用车型</a></li>
             <li class=""><a data-toggle="tab" href="#tab-5"><i class="fa fa-briefcase"></i> 报价记录</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-6"><i class="fa fa-briefcase"></i> 包装细节</a></li>
         </ul>
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
-                <div class="full-height-scroll">
-                    <div class="table-responsive" style="margin-top:10px">
-                        <a @click="updateGoodsImgs()" class="btn btn-info" style="float:right">保存图片</a>
-                    </div>
-                    <div class="table-responsive imgs-sortable-list" style="margin-top:10px;display:inline-block">
-                        <template v-for="img in imgs">
-                        <div id="{{img}}" class="fancybox-box ui-sortable-handle" >
-                            <div class="file-panel">
-                                <span class="cancel" @click="removeImg($index)">删除</span>
-                            </div>
-                            <a class="fancybox" href="{{img}}">
-                                <img  alt="image" v-bind:src="img" />
-                            </a>
-                        </div>
-                        </template>
-                    </div>
-                    <a class="add-imgs" id="dropz"></a>
-                </div>
+                <Goodsimgs :goods_id="goods_id" :goods="goods"></Goodsimgs>
             </div>
             <div id="tab-2" class="tab-pane">
-                <div class="full-height-scroll">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <th>原厂商</th>
-                                <th>原厂编号</th>
-                                <th><a @click="addMfrs()" class="btn btn-info btn-xs">添加原厂编号</a></th>
-                            </thead>
-                            <tbody class="mfrs-sortable-list connectList">
-                                <tr id="mfrs_{{m.id}}" v-for="m in mfrs">
-                                    <td>{{m.mfrs_name}}</td>
-                                    <td>{{m.mfrs_sn}}</td>
-                                    <td>
-                                        <a @click="editMfrs(m)"><i class="fa fa-edit"></i> 编辑</a>
-                                        <span class="delimiter">|</span>
-                                        <a @click="deleteMfrs(m.id)"><i class="fa fa-remove"></i>   删除</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <Goodsmfrs :goods_id="goods_id" :goods="goods"></Goodsmfrs>
             </div>
             <div id="tab-3" class="tab-pane">
-                <div class="full-height-scroll">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <th>供应商编号</th>
-                                <th>供应商名称</th>
-                                <th>采购价(含税)</th>
-                                <th>采购价(不含税)</th>
-                                <th>其他</th>
-                                <th>
-                                    <a v-link="{path:'/supplier/add'}" class="btn btn-info btn-xs">添加供应商</a>
-                                    <span class="delimiter">|</span>
-                                    <a v-link="{name:'goods_supplier_add', params:{goods_id:goods_id}}" class="btn btn-info btn-xs">关联供应商</a></th>
-                            </thead>
-                            <tbody class="supplier-sortable-list connectList">
-                                <tr id="supplier_{{s.id}}" v-for="s in suppliers">
-                                    <td>{{s.supplier_sn}}</td>
-                                    <td>{{s.name}}</td>
-                                    <td>{{(parseFloat(s.price) + parseFloat(s.tax)).toFixed(2)}}</td>
-                                    <td>{{s.price}}</td>
-                                    <td>{{s.price}}</td>
-                                    <td>
-                                        <a v-link="{name:'goods_supplier_edit', params:{id:s.id}}"><i class="fa fa-edit"></i> 编辑</a>
-                                        <span class="delimiter">|</span>
-                                        <a @click="deleteSupplier(s.id)"><i class="fa fa-remove"></i>   删除</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <Goodssuppliers :goods_id="goods_id" :goods="goods"></Goodssuppliers>
             </div>
             <div id="tab-4" class="tab-pane">
-                <div class="full-height-scroll">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                            <th>品牌</th>
-                            <th>车型</th>
-                            <th>发动机</th>
-                            <th>年份</th>
-                            <th><a @click="addCarType()" class="btn btn-info btn-xs">添加适用车型</a></th>
-                            </thead>
-                            <tbody class="car-type-sortable-list connectList">
-                            <tr id="cartype_{{c.id}}" v-for="c in car_types">
-                                <td>{{c.brand}}</td>
-                                <td>{{c.car_type}}</td>
-                                <td>{{c.engine}}</td>
-                                <td>{{c.year}}</td>
-                                <td>
-                                    <a @click="editCarType(c)"><i class="fa fa-edit"></i> 编辑</a>
-                                    <span class="delimiter">|</span>
-                                    <a @click="deleteCartype(c.id)"><i class="fa fa-remove"></i>   删除</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <Goodscartypes :goods_id="goods_id" :goods="goods"></Goodscartypes>
             </div>
             <div id="tab-5" class="tab-pane">
                 <div class="full-height-scroll">
@@ -138,6 +46,36 @@
                     </div>
                 </div>
             </div>
+            <div id="tab-6" class="tab-pane">
+                <div class="full-height-scroll">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <th>长</th>
+                            <th>宽</th>
+                            <th>高</th>
+                            <th>毛重</th>
+                            <th>净重</th>
+                            <th>装箱数</th>
+                            <th>包装类型</th>
+                            <th>备注</th>
+                            </thead>
+                            <tbody class="sortable-list connectList">
+                            <tr>
+                                <td>{{goods.length}}</td>
+                                <td>{{goods.width}}</td>
+                                <td>{{goods.height}}</td>
+                                <td>{{goods.gw}}</td>
+                                <td>{{goods.nw}}</td>
+                                <td>{{goods.num}}</td>
+                                <td>{{goods.gw}}</td>
+                                <td>{{goods.gw}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -145,281 +83,32 @@
 
 </style>
 <script>
-    import Goodsmfrs from './GoodsMfrs.vue'
-    import GoodsCarType from './GoodsCarType.vue'
+    import Goodsimgs from './GoodsTabsImgs.vue'
+    import Goodsmfrs from './GoodsTabsMfrs.vue'
+    import Goodssuppliers from './GoodsTabsSuppliers.vue'
+    import Goodscartypes from './GoodsTabsCartypes.vue'
     export default{
         props: ['goods_id','goods'],
         ready(){
-            this.getMfrses();
-            this.getGoodsSuppliers();
-            this.getGoodsImgs();
-            this.getCarTypes();
-            var _this = this;
-            $(".mfrs-sortable-list").sortable({
-                update: function (event, ui) {
-                    _this.sortMfrses($(this).sortable("toArray"));
-                }
-            }).disableSelection();
-            $(".supplier-sortable-list").sortable({
-                update: function (event, ui) {
-                    _this.sortSuppliers($(this).sortable("toArray"));
-                }
-            }).disableSelection();
-            $(".car-type-sortable-list").sortable({
-                update: function (event, ui) {
-                    _this.sortSuppliers($(this).sortable("toArray"));
-                }
-            }).disableSelection();
-            $(".imgs-sortable-list").sortable({
-                update: function (event, ui) {
-                    _this.sortImgs($(this).sortable("toArray"))
-                }
-            }).disableSelection();
-            $('.fancybox').fancybox({
-                openEffect: 'none',
-                closeEffect: 'none'
-            });
-            $("#dropz").dropzone({
-                url: "/upload.json",
-                //maxFiles: 10,
-                maxFilesize: 512,
-                acceptedFiles: ".png,.jpg,.jpeg,.gif",
-                previewTemplate: '<div></div>',
-                success:function (file, response, e) {
-                    if(response.status == true){
-                        _this.imgs.push(response.path);
-                        _this.goods.img = _this.imgs[0]
-                    }
-                }
-            });
+
         },
         data(){
             return{
-                mfrs: {},
-                mfrs_sort: [],
-                suppliers: {},
-                sup_sort:[],
-                imgs:{},
-                edit_mfrs_id: 0,
-                car_types:{}
+
             }
         },
         components:{
+            Goodsimgs,
             Goodsmfrs,
-            GoodsCarType,
+            Goodssuppliers,
+            Goodscartypes
         },
         methods:{
-            getMfrses(){
-                this.$http.get('/goods/mfrs/goods/'+this.goods_id+'.json').then(function (response) {
-                    this.$set('mfrs', response.data);
-                });
-            },
-            sortMfrses(sort){
-                var mfrs_length = this.mfrs.length;
-                var _this = this;
-                $.each(sort,function (n, i) {
-                    var m = {};
-                    m.sort = mfrs_length - n;
-                    m.id = i;
-                    _this.mfrs_sort.push(m);
-                });
-                this.$http.put('/mfrs/sort/'+this.goods_id+'.json', this.mfrs_sort).then(function(response){
-                    this.$set('mfrs_sort',[]);
-                });
-            },
-            deleteMfrs(id){
-                this.$http.delete('/mfrs/'+id+'.json').then(function(response){
-                    if(response.data.status == true){
-                        this.getMfrses();
-                    }else{
-                        toastr.error(response.data.msg);
-                    }
-                });
-            },
-            addMfrs(){
-                var _this = this;
-                layer.open({
-                    type: 1,
-                    shade: false,
-                    area: ['600px', '230px'], //宽高
-                    title: '添加原厂编号',
-                    btn: ['保存','取消'],
-                    yes: function (index) {
-                        var mfrs = {};
-                        mfrs.mfrs_sn = $('.form-mfrs-sn').val();
-                        mfrs.mfrs_name = $('.form-mfrs-name').val();
-                        _this.postMfrs(mfrs,index);
-
-                    },
-                    content: Goodsmfrs.template,
-                });
-            },
-            editMfrs(mfrs){
-                var _this = this;
-                layer.open({
-                    type: 1,
-                    shade: false,
-                    area: ['600px', '230px'], //宽高
-                    title: '编辑原厂编号',
-                    btn: ['保存','取消'],
-                    yes: function (index) {
-                        mfrs.mfrs_sn = $('.form-mfrs-sn').val();
-                        mfrs.mfrs_name = $('.form-mfrs-name').val();
-                        _this.putMfrs(mfrs,index);
-
-                    },
-                    content: Goodsmfrs.template,
-                    success: function(){
-                        $('.form-mfrs-sn').val(mfrs.mfrs_sn);
-                        $('.form-mfrs-name').val(mfrs.mfrs_name);
-                    }
-                });
-            },
-            putMfrs(mfrs, index){
-                this.$http.put('/mfrs/'+mfrs.id+'.json', mfrs).then(function(response){
-                    if(response.data.status == false){
-                        toastr.error(response.data.msg);
-                    }else{
-                        layer.close(index);
-                        this.getMfrses();
-                    }
-                });
-            },
-            postMfrs(mfrs,index){
-                this.$http.post('/goods/mfrs/'+this.goods_id+'.json', mfrs).then(function(response){
-                    if(response.data.status == false){
-                        toastr.error(response.data.msg);
-                    }else{
-                        layer.close(index);
-                        this.getMfrses();
-                    }
-                });
-            },
-            getGoodsSuppliers(){
-                this.$http.get('/goods/suppliers/'+this.goods_id+'.json').then(function (response) {
-                    this.$set('suppliers', response.data);
-                });
-            },
-            sortSuppliers(sort){
-                var sup_length = this.suppliers.length;
-                var _this = this;
-                $.each(sort,function (n, i) {
-                    var m = {};
-                    m.sort = sup_length - n;
-                    m.id = i;
-                    _this.sup_sort.push(m);
-                });
-                this.$http.put('/supplier/sort/'+this.goods_id+'.json', this.sup_sort).then(function(response){
-                    this.$set('sup_sort',[]);
-                });
-            },
-            getGoodsImgs(){
-                this.$http.get('/goods/imgs/'+this.goods_id+'.json').then(function(response){
-                    this.$set('imgs',response.data);
-                });
-            },
-            updateGoodsImgs(){
-                this.$http.post('/goods/imgs/'+this.goods_id+'.json',this.imgs).then(function(response){
-
-                });
-            },
-            removeImg(index){
-                this.imgs.splice(index,1)
-                if(index == 0){
-                    this.goods.img = this.imgs[0]
-                }
-            },
-            sortImgs(sort){
-                console.log(sort);
-                this.goods.img = sort[0];
-                this.$http.post('/goods/img/'+this.goods_id+'.json',{img:sort[0]}).then(function(response){
-
-                });
-            },
             getMfrs(){
                 this.$http.get('/mfrs/'+this.id+'.json').then(function(response){
                     this.$set('mfrs', response.data.data);
                     this.$set('goods_name', response.data.goods_name);
                     this.$set('goods_id', response.data.goods_id);
-                });
-            },
-            addCarType(){
-                var _this = this;
-                layer.open({
-                    type: 1,
-                    shade: false,
-                    area: ['600px', '330px'], //宽高
-                    title: '添加适用车型',
-                    btn: ['保存','取消'],
-                    yes: function (index) {
-                        var car_type = {};
-                        car_type.car_type = $('.form-car-type-cx').val();
-                        car_type.year = $('.form-car-type-nf').val();
-                        car_type.brand = $('.form-car-type-pp').val();
-                        car_type.engine = $('.form-car-type-fdj').val();
-                        _this.postCarType(car_type,index);
-
-                    },
-                    content: GoodsCarType.template,
-                });
-            },
-            editCarType(car_type){
-                var _this = this;
-                layer.open({
-                    type: 1,
-                    shade: false,
-                    area: ['600px', '330px'], //宽高
-                    title: '编辑适用车型',
-                    btn: ['保存','取消'],
-                    yes: function (index) {
-                        car_type.car_type = $('.form-car-type-cx').val();
-                        car_type.year = $('.form-car-type-nf').val();
-                        car_type.brand = $('.form-car-type-pp').val();
-                        car_type.engine = $('.form-car-type-fdj').val();
-                        _this.putCarType(car_type,index);
-
-                    },
-                    content: GoodsCarType.template,
-                    success: function(){
-                        $('.form-car-type-cx').val(car_type.car_type);
-                        $('.form-car-type-nf').val(car_type.year);
-                        $('.form-car-type-pp').val(car_type.brand);
-                        $('.form-car-type-fdj').val(car_type.engine);
-                    }
-                });
-            },
-            getCarTypes(){
-                this.$http.get('/goods/car_type/'+this.goods_id+'.json').then(function(response){
-                    this.$set('car_types',response.data);
-                });
-            },
-            postCarType(car_type,index){
-                this.$http.post('/goods/car_type/'+this.goods_id+'.json', car_type).then(function(response){
-                    if(response.data.status == false){
-                        toastr.error(response.data.msg);
-                    }else{
-                        layer.close(index);
-                        this.getCarTypes();
-                    }
-                });
-            },
-            putCarType(car_type, index){
-                this.$http.put('/goods/car_type/'+car_type.id+'.json', car_type).then(function(response){
-                    if(response.data.status == false){
-                        toastr.error(response.data.msg);
-                    }else{
-                        layer.close(index);
-                        this.getCarTypes();
-                    }
-                });
-            },
-            deleteCartype(id){
-                this.$http.delete('/goods/car_type/'+id+'.json').then(function(response){
-                    if(response.data.status == true){
-                        this.getCarTypes();
-                    }else{
-                        toastr.error(response.data.msg);
-                    }
                 });
             }
         }

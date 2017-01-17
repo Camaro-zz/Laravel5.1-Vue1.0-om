@@ -29,6 +29,7 @@ class MfrsService extends BaseService {
     }
 
     public function putMfrs($id, $data){
+        unset($data['edit']);
         $update = $this->model->where('id',$id)->update($data);
         if(!$update){
             return ['status'=>false, '更新失败'];

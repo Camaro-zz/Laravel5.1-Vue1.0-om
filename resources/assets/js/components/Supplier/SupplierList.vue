@@ -5,7 +5,7 @@
                 <div class="ibox-title">
                     <h5>所有供应商</h5>
                     <div class="ibox-tools">
-                        <a v-link="{path:'/supplier/add'}" class="btn btn-primary btn-xs">添加供应商</a>
+                        <a @click="addSupplier()" class="btn btn-primary btn-xs">添加供应商</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -169,6 +169,19 @@
                 }
                 this.$route.router.go({path: '/supplier/info/'+supplier_id})
             },
+            addSupplier(){
+                var _this = this;
+                layer.prompt({title: '输入供应商编号', formType: 0}, function(supplier_sn, index){
+                    _this.$http.post('/supplier/add.json', {supplier_sn:supplier_sn}).then(function(response){
+                        if(response.data.status == true){
+                            _this.$route.router.go({path: '/supplier/info/'+response.data.data.id,query:{type:1}})
+                            layer.close(index);
+                        }else{
+                            toastr.error(response.data.msg);
+                        }
+                    });
+                });
+            }
         },
         watch:{
             'suppliers':function () {}

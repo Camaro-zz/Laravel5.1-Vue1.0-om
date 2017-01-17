@@ -48,4 +48,9 @@ class SupplierController extends Controller
         $data = $this->supplierService->getSupplierGoods($id);
         return Response::json($data,200);
     }
+
+    public function postSupplierGoods($id, Request $request){
+        $data = $this->supplierService->postSupplierGoods($id, $request->all());
+        return Response::json($data,200);
+    }
 }

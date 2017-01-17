@@ -31,20 +31,17 @@ class SupplierService extends BaseService {
      * $data['mark']
      */
     public function addSupplier($data){
-        /*$data = array(
-            'supplier_sn' => 'd123s',
-            'name' => '供应商名称',
-            'contacts' => '联系人',
-            'mobile' => '15168668353',
-            'tel' => '0571-12345645',
-            'qq' => '12121',
-            'website' => 'www.baidu.com',
-            'address' => '杭州',
-            'mark' => '备注'
-        );*/
-        $v = $this->supplierValidator($data);
-        if(!$v['status']){
-            return $v;
+        $message = [
+            'supplier_sn.required' => '供货商编号不能为空',
+            'supplier_sn.unique' => '供货商编号已存在',
+        ];
+
+        $rule = [
+            'supplier_sn' => 'required|unique:om_supplier,supplier_sn'
+        ];
+        $res = $this->doValidate($data,$rule,$message);
+        if(!$res['status']){
+            return $res;
         }
         $data['uid'] = $this->uid;
         $supplier = $this->model->create($data);
@@ -166,7 +163,7 @@ class SupplierService extends BaseService {
 
     public function getSupplierGoods($id){
         $goods = OmGoodsSupplier::leftJoin('om_goods as goods', 'goods.id', '=', 'om_goods_supplier.goods_id')
-                                ->select('om_goods_supplier.*','goods.cn_name','goods.en_name','goods.img','goods.product_sn')
+                                ->select('om_goods_supplier.*','goods.cn_name','goods.en_name','goods.img','goods.product_sn','goods.num','goods.length','goods.height','goods.width','goods.gw','goods.nw')
                                 ->where('goods.is_deleted',0)
                                 ->where('om_goods_supplier.supplier_id',$id)
                                 ->get();
@@ -174,8 +171,21 @@ class SupplierService extends BaseService {
         foreach ($goods as $k=>$v){
             $mfrs = OmGoodsMfrs::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->first();
             $goods[$k]['mfrs_sn'] = $mfrs['mfrs_sn'];
+            $goods[$k]['edit'] = false;
         }
         return $goods;
+    }
+
+    public function postSupplierGoods($id, $data){
+        $goods_data['product_sn'] = $data['product_sn'];
+        $goods_data['cn_name'] = $data['cn_name'];
+        $goods_data['en_name'] = $data['en_name'];
+        $goods_data['num'] = $data['num'];
+        $goods_data['length'] = $data['length'];
+        $goods_data['width'] = $data['width'];
+        $goods_data['height'] = $data['height'];
+        $goods_data['gw'] = $data['gw'];
+        $goods_data['nw'] = $data['nw'];
     }
 
 }

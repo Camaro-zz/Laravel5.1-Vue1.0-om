@@ -48,6 +48,7 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::put('supplier/{id}.json', 'Goods\GoodsController@putSupplierGoods');//添加供应商商品
     Route::get('supplier/{id}.json', 'Goods\GoodsController@getSupplierByGoods');//通过产品获取供应商
     Route::get('suppliers/{goods_id}.json', 'Goods\GoodsController@getSuppliersByGoods');//通过产品获取供应商
+    Route::delete('suppliers/{id}.json', 'Goods\GoodsController@deleteGoodsSupplier');//删除供应商关联
     Route::put('{id}.json', 'Goods\GoodsController@putGoods');//编辑商品
     Route::get('{id}.json', 'Goods\GoodsController@getGoods');//商品详情
     Route::delete('batch.json', 'Goods\GoodsController@deleteGoodses');//商品删除
@@ -63,11 +64,13 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::get('imgs/{id}.json', 'Goods\GoodsController@getGoodsImgs');//获取图片
     Route::post('imgs/{id}.json', 'Goods\GoodsController@postGoodsImgs');//保存图片
     Route::post('img/{id}.json', 'Goods\GoodsController@postGoodsImg');//保存图片
+    Route::delete('img/{id}.json', 'Goods\GoodsController@deleteGoodsImg');//删除图片
 
     Route::get('car_type/{id}.json', 'Goods\GoodsController@getGoodsCarTypes');//获取车型
     Route::delete('car_type/batch.json', 'Goods\GoodsController@deleteGoodsCarTypes');//删除车型
     Route::delete('car_type/{id}.json', 'Goods\GoodsController@deleteGoodsCarType');//删除车型
     Route::post('car_type/{id}.json', 'Goods\GoodsController@postGoodsCarType');//添加车型
+    Route::put('car_type/sort/{id}.json', 'Goods\GoodsController@sortGoodsCarType');//车型排序
     Route::put('car_type/{id}.json', 'Goods\GoodsController@putGoodsCarType');//编辑车型
 });
 
@@ -78,6 +81,8 @@ Route::group(['prefix' => 'supplier','middleware'=>$authApiMiddleware],function(
     Route::put('{id}.json', 'Supplier\SupplierController@putSupplier');//修改供应商
     Route::get('{id}.json', 'Supplier\SupplierController@getSupplier');//供应商详情
     Route::get('goods/{id}.json', 'Supplier\SupplierController@getSupplierGoods');//供应商供应的产品列表
+    Route::post('goods/{id}.json', 'Supplier\SupplierController@postSupplierGoods');//供应商供应的产品添加
+    Route::put('goods/{id}.json', 'Supplier\SupplierController@putSupplierGoods');//供应商供应的产品
     Route::delete('batch.json', 'Supplier\SupplierController@deleteSupplier');//供应商删除
 });
 

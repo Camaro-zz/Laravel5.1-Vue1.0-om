@@ -14,7 +14,7 @@
                                         <a @click="cancelEditInfo()" class="btn btn-xs btn-warning pull-right">取消编辑</a>
                                         <a @click="putGoods()" class="btn btn-primary btn-xs pull-right" style="margin-right:10px">保存产品</a>
                                     </div>
-                                    <h2>{{goods.product_sn}}</h2>
+                                    <h2>产品编号：{{goods.product_sn}}</h2>
                                 </div>
                             </div>
                         </div>

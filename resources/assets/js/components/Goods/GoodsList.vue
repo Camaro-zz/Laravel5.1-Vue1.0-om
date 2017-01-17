@@ -224,7 +224,6 @@ export default{
             if(this.cat_id > 0){
                 new_goods.cat_id = this.cat_id
             }
-            console.log(new_goods);
             this.$http.post('/goods/add.json',new_goods).then(function (response) {
                 if(response.data.status == true){
                     layer.close(index);

@@ -87,8 +87,14 @@ class GoodsController extends Controller
         $data = $this->goodsService->postGoodsImgs($id, $request->all());
         return Response::json($data,200);
     }
+
     public function postGoodsImg($id, Request $request){
         $data = $this->goodsService->postGoodsImg($id, $request->all());
+        return Response::json($data,200);
+    }
+
+    public function deleteGoodsImg($id, Request $request){
+        $data = $this->goodsService->deleteGoodsImg($id, $request->all());
         return Response::json($data,200);
     }
 
@@ -116,6 +122,16 @@ class GoodsController extends Controller
 
     public function putGoodsCarType(Request $request, $id){
         $data = $this->goodsService->putGoodsCarType($request->all(), $id);
+        return Response::json($data,200);
+    }
+
+    public function sortGoodsCarType(Request $request, $id){
+        $data = $this->goodsService->sortGoodsCarType($request->all(), $id);
+        return Response::json($data,200);
+    }
+
+    public function deleteGoodsSupplier($id){
+        $data = $this->goodsService->deleteGoodsSupplier($id);
         return Response::json($data,200);
     }
     
