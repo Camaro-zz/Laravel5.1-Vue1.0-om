@@ -14,8 +14,8 @@
                     </a>
                 </div>
             </template>
+            <a class="add-imgs" id="dropz"></a>
         </div>
-        <a class="add-imgs" id="dropz"></a>
     </div>
 </template>
 <style>
@@ -28,6 +28,9 @@
             this.getGoodsImgs();
             var _this = this;
             $(".imgs-sortable-list").sortable({
+                //handle: ".ui-sortable-handle",
+                items: "> div",
+                scroll: false,
                 update: function (event, ui) {
                     _this.sortImgs($(this).sortable("toArray"))
                 }

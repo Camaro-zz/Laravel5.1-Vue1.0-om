@@ -25,6 +25,9 @@
 		<Minichat></Minichat>
 		<!--mini聊天窗口结束-->
 	</div>
+	<div id="goods_list_popup">
+		<Goodslistpop v-if="popup"></Goodslistpop>
+	</div>
 </template>
 <script>
 	import Navbar from './components/Navbar.vue'
@@ -32,6 +35,7 @@
     import Minichat from './components/MiniChat.vue'
     import Content from './components/Content.vue'
 	import Topbar from './components/TopBar.vue'
+	import Goodslistpop from './components/Goods/GoodsListPop.vue'
 
     export default {
 		ready(){
@@ -57,11 +61,13 @@
             Content,
             Rightsidebar,
             Minichat,
-			Topbar
+			Topbar,
+			Goodslistpop
         },
         data(){
 			return{
-				route:''
+				popup: false,
+				goods_ids: []
 			}
         },
         replace: false

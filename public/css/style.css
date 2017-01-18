@@ -8363,3 +8363,7 @@ input::-webkit-inner-spin-button{
     max-width: 100px;
     display: inline-block;
 }
+.goods_img_pop{
+    width: 60px;
+    height: 60px;
+}

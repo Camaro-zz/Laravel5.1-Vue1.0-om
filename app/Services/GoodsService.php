@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\Validator;
 
 class GoodsService extends BaseService {
 
-    public function __construct(){
+    public function __construct(OmGoods $omGoods){
         $this->uid = Auth::user()->id;
+        $this->model = $omGoods;
     }
 
     /**
@@ -47,22 +48,8 @@ class GoodsService extends BaseService {
         }
     }*/
     public function addGoods($data){
-        $goods_data['product_sn'] = isset($data['product_sn']) ? $data['product_sn'] : '';
-        $goods_data['en_name'] = isset($data['en_name']) ? $data['en_name'] : '';
+        $goods_data['product_sn'] = $this->makeSn(1);
         $goods_data['cat_id'] = isset($data['cat_id']) ? $data['cat_id'] : 0;
-        $message = [
-            'product_sn.required' => '产品编号不能为空',
-            'product_sn.unique' => '产品编号已存在',
-            'en_name.required' => '产品英文名称不能为空'
-        ];
-        $rule = [
-            'en_name' => 'required',
-            'product_sn' => 'required|unique:om_goods,product_sn',
-        ];
-        $res = $this->doValidate($goods_data,$rule,$message);
-        if(!$res['status']){
-            return $res;
-        }
         $goods = OmGoods::create($goods_data);
         if($goods->id){
             return ['status'=>true, 'data'=>$goods];
@@ -154,6 +141,7 @@ class GoodsService extends BaseService {
         unset($goods_data['real_imgs']);
         unset($goods_data['supplier_goods']);
         unset($goods_data['supplier_goods_count']);
+        if(isset($goods_data['product_sn']))unset($goods_data['product_sn']);
         //dd($goods_data);
         $goods = OmGoods::where(array('id'=>$id,'is_deleted'=>0))->update($goods_data);
 

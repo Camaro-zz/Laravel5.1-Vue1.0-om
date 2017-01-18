@@ -16,8 +16,8 @@ class SupplierController extends Controller
     }
 
     //添加供应商
-    public function postSupplier(Request $request){
-        $data = $this->supplierService->addSupplier($request->all());
+    public function postSupplier(){
+        $data = $this->supplierService->addSupplier();
         return Response::json($data, 200);
     }
 

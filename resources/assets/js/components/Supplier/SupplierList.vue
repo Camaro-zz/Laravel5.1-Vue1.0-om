@@ -170,16 +170,12 @@
                 this.$route.router.go({path: '/supplier/info/'+supplier_id})
             },
             addSupplier(){
-                var _this = this;
-                layer.prompt({title: '输入供应商编号', formType: 0}, function(supplier_sn, index){
-                    _this.$http.post('/supplier/add.json', {supplier_sn:supplier_sn}).then(function(response){
-                        if(response.data.status == true){
-                            _this.$route.router.go({path: '/supplier/info/'+response.data.data.id,query:{type:1}})
-                            layer.close(index);
-                        }else{
-                            toastr.error(response.data.msg);
-                        }
-                    });
+                this.$http.post('/supplier/add.json').then(function(response){
+                    if(response.data.status == true){
+                        this.$route.router.go({path: '/supplier/info/'+response.data.data.id,query:{type:1}})
+                    }else{
+                        toastr.error(response.data.msg);
+                    }
                 });
             }
         },

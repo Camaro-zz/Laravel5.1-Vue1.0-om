@@ -30,20 +30,9 @@ class SupplierService extends BaseService {
      * $data['address']
      * $data['mark']
      */
-    public function addSupplier($data){
-        $message = [
-            'supplier_sn.required' => '供货商编号不能为空',
-            'supplier_sn.unique' => '供货商编号已存在',
-        ];
-
-        $rule = [
-            'supplier_sn' => 'required|unique:om_supplier,supplier_sn'
-        ];
-        $res = $this->doValidate($data,$rule,$message);
-        if(!$res['status']){
-            return $res;
-        }
+    public function addSupplier(){
         $data['uid'] = $this->uid;
+        $data['supplier_sn'] = $this->makeSn(2);
         $supplier = $this->model->create($data);
         if($supplier->id){
             return ['status'=>true, 'data'=>$supplier];
@@ -58,25 +47,15 @@ class SupplierService extends BaseService {
      * @param $data
      */
     public function editSupplier($id,$data){
-        /*$data = array(
-            'supplier_sn' => 'd123dsdsads',
-            'name' => '供应商名称sadsad',
-            'contacts' => '联系人',
-            'mobile' => '15168668353',
-            'tel' => '0571-12345645',
-            'qq' => '12121',
-            'website' => 'www.baidu.com',
-            'address' => '杭州',
-            'mark' => '备注'
-        );*/
         $supplier = OmSupplier::where('id',$id)->first();
         if(!$supplier){
             return ['status'=>false, 'msg'=>'供应商不存在'];
         }
-        $v = $this->supplierValidator($data,$id);
+        $v = $this->supplierValidator($data);
         if(!$v['status']){
             return $v;
         }
+        if(isset($data['supplier_sn']))unset($data['supplier_sn']);
         $supplier = $this->model->where(array('id'=>$id,'is_deleted'=>0))->update($data);
 
         if($supplier){
@@ -89,21 +68,18 @@ class SupplierService extends BaseService {
     }
 
     //验证规则
-    public function supplierValidator($data, $id=''){
+    public function supplierValidator($data){
         $message = [
-            'supplier_sn.required' => '供货商编号不能为空',
             'name.required' => '供货商名称不能为空',
             'contacts.required' => '供货商联系人不能为空',
             'tel.required' => '供货商电话不能为空',
             'mobile.required' => '供货商手机不能为空',
-            'supplier_sn.unique' => '供货商编号已存在',
             'tel.between' => '供货商电话长度必须在9-20位之间',
             'mobile.regex' => '供货商手机格式不正确',
             'address.required' => '供货商地址不能为空'
         ];
 
         $rule = [
-            'supplier_sn' => 'required|unique:om_supplier,supplier_sn,'.$id,
             'name' => 'required',
             'contacts' => 'required',
             'tel' => 'required|between:9,20',

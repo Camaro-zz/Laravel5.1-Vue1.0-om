@@ -180,4 +180,37 @@ abstract class BaseService {
         }
     }
 
+    public function makeSn($type){
+        switch ($type){
+            case 1://产品编号
+                $sn_tag = 'product_sn';
+                $letter = 'P';
+                break;
+            case 2://供应商编号
+                $sn_tag = 'supplier_sn';
+                $letter = 'S';
+                break;
+            case 3://客户编号
+                $sn_tag = 'customer_sn';
+                $letter = 'C';
+                break;
+            case 4://合同编号
+                $sn_tag = 'order_sn';
+                $letter = 'O';
+                break;
+            default:
+                $letter = 'P';
+                break;
+        }
+        mt_srand((double) microtime() * 1000000);
+        $dt = date('Ymdhis');
+        $sn = $letter . $dt . str_pad(mt_rand(1, 99999), 5, '0', 0);
+        $is_has_sn = $this->model->select($sn_tag)->where(array($sn_tag => $sn))->first();
+        if (!$is_has_sn) {
+            return $sn;
+        }
+        /* 如果有重复的，则重新生成 */
+        return $this->makeSn($type);
+
+    }
 }

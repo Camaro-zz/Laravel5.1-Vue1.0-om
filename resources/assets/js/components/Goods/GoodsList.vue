@@ -203,30 +203,12 @@ export default{
             });
         },
         addGoods(){
-            var _this = this;
-            layer.open({
-                type: 1,
-                shade: false,
-                area: ['600px', '230px'], //宽高
-                title: '添加产品',
-                btn: ['保存','取消'],
-                yes: function (index) {
-                    var new_goods = {};
-                    new_goods.product_sn = $('.form-product-sn').val();
-                    new_goods.en_name = $('.form-product-enname').val();
-                    _this.postGoods(new_goods,index);
-
-                },
-                content: GoodsAdd.template
-            });
-        },
-        postGoods(new_goods,index){
+            var new_goods = {};
             if(this.cat_id > 0){
                 new_goods.cat_id = this.cat_id
             }
             this.$http.post('/goods/add.json',new_goods).then(function (response) {
                 if(response.data.status == true){
-                    layer.close(index);
                     this.$route.router.go({path: '/goods/info/'+response.data.data.id,query:{type:1}})
                 }else{
                     toastr.error(response.data.msg);

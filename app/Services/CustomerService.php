@@ -13,12 +13,9 @@ class CustomerService extends BaseService {
     }
 
     //添加客户
-    public function addCustomer($data){
-        $v = $this->CustomerValidator($data);
-        if(!$v['status']){
-            return $v;
-        }
+    public function addCustomer(){
         $data['uid'] = $this->uid;
+        $data['customer_sn'] = $this->makeSn(3);
         $customer = $this->model->create($data);
         if($customer->id){
             return ['status'=>true, 'data'=>$customer];
@@ -33,10 +30,11 @@ class CustomerService extends BaseService {
         if(!$customer){
             return ['status'=>false, 'msg'=>'客户不存在'];
         }
-        $v = $this->CustomerValidator($data,$id);
+        $v = $this->CustomerValidator($data);
         if(!$v['status']){
             return $v;
         }
+        if(isset($data['customer_sn']))unset($data['customer_sn']);
         $customer = $this->model->where(array('id'=>$id,'is_deleted'=>0))->update($data);
 
         if($customer){
@@ -92,10 +90,8 @@ class CustomerService extends BaseService {
     }
 
     //验证规则
-    public function CustomerValidator($data,$id=''){
+    public function CustomerValidator($data){
         $message = [
-            'customer_sn.required' => '客户编号不能为空',
-            'customer_sn.unique' => '客户编号已存在',
             'contact.required' => '联系人不能为空',
             'tel.between' => '联系人电话长度必须在9-20位之间',
             'mobile.regex' => '联系人手机格式不正确',
@@ -105,7 +101,6 @@ class CustomerService extends BaseService {
         ];
 
         $rule = [
-            'customer_sn' => 'required|unique:om_customer,customer_sn,'.$id,
             'contact' => 'required',
             'tel' => 'required|between:9,20',
             'mobile' => 'required|regex:/^1[34578][0-9]{9}$/',

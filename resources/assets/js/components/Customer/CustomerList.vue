@@ -5,7 +5,7 @@
                 <div class="ibox-title">
                     <h5>客户</h5>
                     <div class="ibox-tools">
-                        <a v-link="{path:'/customer/add'}" class="btn btn-primary btn-xs">添加客户</a>
+                        <a @click="addCustomer()" class="btn btn-primary btn-xs">添加客户</a>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -166,6 +166,15 @@
                 }
                 this.$route.router.go({path: '/customer/info/'+customer_id})
             },
+            addCustomer(){
+                this.$http.post('/customer/add.json').then(function(response){
+                    if(response.data.status == true){
+                        this.$route.router.go({path: '/customer/info/'+response.data.data.id,query:{type:1}})
+                    }else{
+                        toastr.error(response.data.msg);
+                    }
+                });
+            }
         },
         computed: {
             indexs: function(){

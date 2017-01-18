@@ -81,6 +81,7 @@
                 openEffect: 'none',
                 closeEffect: 'none'
             });
+            //this.$root.popup = true;
         },
         data(){
             return{
@@ -109,6 +110,27 @@
             getOrders(){
                 this.$http.get('/customer/orders/'+this.customer_id+'.json').then(function (response) {
                     this.$set('orders', response.data);
+                });
+            },
+            addXj(){
+                var _this = this;
+                layer.open({
+                    type: 1,
+                    title: '选择产品', //不显示标题
+                    move: false,
+                    area: '600px',
+                    offset: '100px',
+                    zIndex: 1989101400,
+                    content: $('#goods_list_popup'), //捕获的元素，注意：最好该指定的元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    ready: function(){
+                        _this.$root.popup = true;
+                    },
+                    success: function () {
+                        _this.$root.popup = true;
+                    },
+                    cancel: function () {
+                        _this.$root.popup = false;
+                    }
                 });
             }
         }

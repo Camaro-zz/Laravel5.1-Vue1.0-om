@@ -14,13 +14,13 @@
                                         <a @click="cancelEditInfo()" class="btn btn-xs btn-warning pull-right">取消编辑</a>
                                         <a @click="putCustomer()" class="btn btn-primary btn-xs pull-right" style="margin-right:10px">保存客户</a>
                                     </div>
-                                    <h2>{{customer.customer_sn}}</h2>
+                                    <h2>客户编号：{{customer.customer_sn}}</h2>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4 goods_info_show">
-                                <img alt="image" class="img-responsive info_bigimg" v-bind:src="customer.img">
+                                <img alt="image" class="img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
                             </div>
                             <div class="col-sm-7 form-horizontal goods_info_show">
                                 <div class="form-group">
@@ -28,13 +28,6 @@
 
                                     <div class="col-sm-4">
                                         <p>{{customer.name}}</p>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">客户编号：</label>
-
-                                    <div class="col-sm-4">
-                                        <p>{{customer.customer_sn}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -89,7 +82,7 @@
                             </div>
                             <div class="col-sm-4 goods_info_edit" style="display:none !important;">
                                 <a id="dropz" class=" btn btn-info btn-xs pull-right">重新上传</a>
-                                <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="customer.img">
+                                <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
                             </div>
                             <div class="col-sm-7 form-horizontal goods_info_edit" style="display:none !important;">
                                 <div class="form-group">
@@ -97,13 +90,6 @@
 
                                     <div class="col-sm-4">
                                         <input type="text" v-model="customer.name" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">客户编号：</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" v-model="customer.customer_sn" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -180,6 +166,10 @@
         ready(){
             this.getCustomer();
             var _this = this;
+            this.type = this.$route.query.type ? this.$route.query.type : 0;
+            if(this.type == 1){
+                this.showEditInfo();
+            }
             $("#dropz").dropzone({
                 url: "/upload.json",
                 maxFiles: 10,
@@ -229,6 +219,9 @@
                 this.$http.put('/customer/'+this.customer_id+'.json',customer_data).then(function(response){
                     if(response.data.status == true){
                         this.$set('customer', response.data.data);
+                        if(this.type == 1){
+                            this.$route.router.go({path: '/customer/info/'+this.customer_id})
+                        }
                         this.hideEditInfo();
                     }else{
                         toastr.error(response.data.msg);

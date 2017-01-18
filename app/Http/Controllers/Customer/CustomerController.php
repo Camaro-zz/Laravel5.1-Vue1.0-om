@@ -15,8 +15,8 @@ class CustomerController extends Controller
         $this->customerService = $customerService;
     }
 
-    public function postCustomer(Request $request){
-        $res = $this->customerService->addCustomer($request->all());
+    public function postCustomer(){
+        $res = $this->customerService->addCustomer();
         return Response::json($res,200);
     }
 
