@@ -38,8 +38,8 @@
                             <thead>
                             <tr>
                                 <th></th>
-                                <th>产品编号</th>
                                 <th>图片</th>
+                                <th>产品编号</th>
                                 <th>原厂编号</th>
                                 <th>中文品名</th>
                                 <th>英文品名</th>
@@ -53,20 +53,28 @@
                             <tbody v-if="all > 0">
                             <tr class="goods_list_css" v-for="goods in goodses" @click="goToInfo($event, goods.id)">
                                 <td><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
+                                <td><div class="goods_list_img"><img v-if="goods.img" class="goods_img" v-bind:src="goods.img"/></div></td>
                                 <td>{{goods.product_sn}}</td>
-                                <td><img class="goods_img" v-bind:src="goods.img"/></td>
                                 <td v-if="goods.mfrs != ''">
-                                    <a v-link="{name:'goods_info', params:{id:goods.id}}">{{goods.mfrs.mfrs_sn}}</a>
+                                    {{goods.mfrs.mfrs_sn}}
                                 </td>
                                 <td v-else>暂无</td>
                                 <td>{{goods.cn_name}}</td>
                                 <td>{{goods.en_name}}</td>
-                                <td v-if="goods.prop != ''">{{(parseFloat(goods.prop.price) + parseFloat(goods.prop.tax)).toFixed(2)}}</td>
+                                <td v-if="goods.prop != ''">${{(parseFloat(goods.prop[0].price) + parseFloat(goods.prop[0].tax)).toFixed(2)}}</td>
                                 <td v-else>暂无</td>
-                                <td v-if="goods.prop != ''">{{goods.prop.price}}</td>
+                                <td v-if="goods.prop != ''">${{goods.prop[0].price}}</td>
                                 <td v-else>暂无</td>
-                                <td>{{goods.car_type}}</td>
-                                <td v-if="goods.prop != ''">{{goods.prop.name}}</td>
+                                <td>
+                                    <template v-for="c in goods.car_type">
+                                        {{c.brand}}-{{c.car_type}}<br>
+                                    </template>
+                                </td>
+                                <td v-if="goods.prop != ''">
+                                    <template v-for="p in goods.prop">
+                                        {{p.name}}<br>
+                                    </template>
+                                </td>
                                 <td v-else>暂无</td>
                                 <td>{{goods.mark}}</td>
                             </tr>

@@ -134,5 +134,20 @@ class GoodsController extends Controller
         $data = $this->goodsService->deleteGoodsSupplier($id);
         return Response::json($data,200);
     }
+
+    public function getGoodsPack($id){
+        $data = $this->goodsService->getGoodsPack($id);
+        return Response::json($data,200);
+    }
+
+    public function postGoodsPack($id, Request $request){
+        $data = $this->goodsService->postGoodsPack($id, $request->all());
+        return Response::json($data,200);
+    }
+
+    public function putGoodsPack($id, Request $request){
+        $data = $this->goodsService->putGoodsPack($id, $request->all());
+        return Response::json($data,200);
+    }
     
 }

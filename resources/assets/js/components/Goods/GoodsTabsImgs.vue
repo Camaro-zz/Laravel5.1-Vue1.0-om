@@ -5,7 +5,7 @@
         </div>
         <div class="table-responsive imgs-sortable-list" style="margin-top:10px;display:inline-block">
             <template v-for="img in imgs">
-                <div id="{{img}}" class="fancybox-box ui-sortable-handle" >
+                <div id="{{img}}" class="fancybox-box ui-sortable-handle" @mouseenter="showPanel($event)" @mouseleave="hidePanel($event)">
                     <div class="file-panel">
                         <span class="cancel" @click="removeImg($index,img)">删除</span>
                     </div>
@@ -92,6 +92,14 @@
                     this.$set('goods.img',sort[0])
                     this.$set('imgs_sort',[]);
                 });
+            },
+            showPanel(event){
+                $(event.target).find('.file-panel').stop().animate({height: 30});
+
+            },
+            hidePanel(event){
+                $(event.target).find('.file-panel').stop().animate({height: 0});
+
             }
         }
     }

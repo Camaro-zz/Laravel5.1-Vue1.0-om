@@ -7,80 +7,116 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="m-b-md">
-                                    <div class="goods_info_show">
-                                        <a @click="showEditInfo()" class="btn btn-info btn-xs pull-right">编辑产品</a>
-                                    </div>
-                                    <div class="goods_info_edit" style="display:none !important;">
-                                        <a @click="cancelEditInfo()" class="btn btn-xs btn-warning pull-right">取消编辑</a>
-                                        <a @click="putGoods()" class="btn btn-primary btn-xs pull-right" style="margin-right:10px">保存产品</a>
-                                    </div>
-                                    <h2>产品编号：{{goods.product_sn}}</h2>
+                                    <h2 style="display:inline-block">产品编号：{{goods.product_sn}}</h2>
+                                    <span class="goods_info_show">
+                                        <a @click="showEditInfo()" class="btn btn-info btn-sm">编辑产品</a>
+                                    </span>
+                                    <span class="goods_info_edit" style="display:none !important;">
+                                        <a @click="putGoods()" class="btn btn-primary btn-sm" style="margin-right:10px">保存产品</a>
+                                        <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4">
-                                <template v-if="goods.img != ''">
-                                    <img alt="image" class="img-responsive info_bigimg" v-bind:src="goods.img">
-                                </template>
-                            </div>
-                            <div class="col-sm-8 form-horizontal goods_info_show">
+                            <div class="col-sm-3 form-horizontal goods_info_show">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">中文品名：</label>
+                                    <label class="col-sm-3 control-label title_width">中文品名：</label>
 
                                     <div class="col-sm-4">
                                         <p>{{goods.cn_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">英文品名：</label>
+                                    <label class="col-sm-3 control-label title_width">英文品名：</label>
 
                                     <div class="col-sm-4">
                                         <p>{{goods.en_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">产品类目：</label>
+                                    <label class="col-sm-3 control-label title_width">产品类目：</label>
 
                                     <div class="col-sm-4">
                                         <p>{{goods.cat_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">装箱数：</label>
+                                    <label class="col-sm-3 control-label title_width">原厂编号：</label>
 
                                     <div class="col-sm-4">
-                                        <p>{{goods.num}}</p>
+                                        <p>{{goods.mfrs_sn}}</p>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-sm-3 form-horizontal goods_info_show">
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">规格：</label>
+                                    <label class="col-sm-3 control-label title_width">适用车型：</label>
 
-                                    <div class="col-sm-2">
-                                        长：{{goods.length}}
-                                    </div>
-                                    <div class="col-sm-2">
-                                        宽：{{goods.width}}
-                                    </div>
-                                    <div class="col-sm-2">
-                                        高：{{goods.height}}
-                                    </div>
-                                    <div class="col-sm-2">
-                                        毛重：{{goods.gw}}
-                                    </div>
-                                    <div class="col-sm-2">
-                                        净重：{{goods.nw}}
+                                    <div class="col-sm-4">
+                                        <p>{{goods.car_type.brand}} {{goods.car_type.car_type}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">备注：</label>
+                                    <label class="col-sm-3 control-label title_width">供应商名称：</label>
+
+                                    <div class="col-sm-4">
+                                        <p>{{goods.supplier.name}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label title_width">采购价(含)：</label>
+
+                                    <div class="col-sm-4">
+                                        <p>${{(parseFloat(goods.supplier.price) + parseFloat(goods.supplier.tax)).toFixed(2)}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label title_width">采购价(不含)：</label>
+
+                                    <div class="col-sm-4">
+                                        <p>${{(parseFloat(goods.supplier.price)).toFixed(2)}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 form-horizontal goods_info_show">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label title_width">HS编码：</label>
+
+                                    <div class="col-sm-4">
+                                        <p>{{goods.hs_code}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label title_width">出货状态：</label>
+
+                                    <div class="col-sm-4">
+                                        <p>{{goods.fyi_status}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label title_width">退税率：</label>
+
+                                    <div class="col-sm-4">
+                                        <p>{{goods.tax_rate}}%</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label title_width">报关要素：</label>
+
+                                    <div class="col-sm-6">
+                                        <p>{{goods.report_key}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label title_width">备注：</label>
 
                                     <div class="col-sm-6">
                                         <p>{{goods.mark}}</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-8 form-horizontal goods_info_edit" style="display:none !important;">
+                            <div class="col-sm-9 form-horizontal goods_info_edit" style="display:none !important;">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">中文品名：</label>
 
@@ -111,31 +147,36 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">装箱数</label>
+                                    <label class="col-sm-3 control-label">HS编码：</label>
 
                                     <div class="col-sm-4">
-                                        <input v-model="goods.num" type="number" class="form-control">
+                                        <input type="text" v-model="goods.hs_code" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">规格</label>
+                                    <label class="col-sm-3 control-label">退税率</label>
 
-                                    <div class="col-sm-9">
-                                        <div class="guige-css">
-                                            长：<input v-model="goods.length" type="number" step="0.01" class="form-control">
+                                    <div class="col-sm-4">
+                                        <div class="input-group">
+                                            <input v-model="goods.tax_rate" type="number" step="0.01" class="form-control">
+                                            <span class="input-group-addon">%</span>
                                         </div>
-                                        <div class="guige-css">
-                                            宽：<input v-model="goods.width" type="number" step="0.01" class="form-control">
-                                        </div>
-                                        <div class="guige-css">
-                                            高：<input v-model="goods.height" type="number" step="0.01" class="form-control">
-                                        </div>
-                                        <div class="guige-css">
-                                            毛重：<input v-model="goods.gw" type="number" step="0.01" class="form-control">
-                                        </div>
-                                        <div class="guige-css">
-                                            净重：<input v-model="goods.nw" type="number" step="0.01" class="form-control">
-                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">出货状态：</label>
+
+                                    <div class="col-sm-4">
+                                        <input type="text" v-model="goods.fyi_status" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">报关要素：</label>
+
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" rows="10" v-model="goods.report_key">
+
+                                        </textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -147,6 +188,11 @@
                                         </textarea>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <template v-if="goods.img != ''">
+                                    <img alt="image" class="img-responsive info_bigimg" v-bind:src="goods.img">
+                                </template>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
@@ -219,17 +265,13 @@
                 var goods_data = {};
                 goods_data.cn_name = this.goods.cn_name;
                 goods_data.en_name = this.goods.en_name;
-                goods_data.fob_price = this.goods.fob_price;
                 goods_data.mark = this.goods.mark;
                 goods_data.cat_id = this.goods.cat_id = $(".chosen-select").val();
-                goods_data.product_sn = this.goods.product_sn;
-                goods_data.num = this.goods.num;
-                goods_data.height = this.goods.height;
-                goods_data.length = this.goods.length;
-                goods_data.width = this.goods.width;
-                goods_data.gw = this.goods.gw;
-                goods_data.nw = this.goods.nw;
-                console.log(this.goods);
+                goods_data.hs_code = this.goods.hs_code;
+                goods_data.report_key = this.goods.report_key;
+                goods_data.tax_rate = this.goods.tax_rate;
+                goods_data.fyi_status = this.goods.fyi_status;
+                console.log(goods_data);
                 this.$http.put('/goods/'+this.goods_id+'.json',goods_data).then(function(response){
                     if(response.data.status == true){
                         this.$set('goods', response.data.data);

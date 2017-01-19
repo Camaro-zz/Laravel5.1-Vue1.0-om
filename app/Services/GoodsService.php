@@ -7,6 +7,7 @@ use App\Models\OmGoods;
 use App\Models\OmGoodsCat;
 use App\Models\OmGoodsImg;
 use App\Models\OmGoodsMfrs;
+use App\Models\OmGoodsPack;
 use App\Models\OmGoodsSupplier;
 use App\Models\OmSupplier;
 use Illuminate\Support\Facades\Auth;
@@ -24,34 +25,12 @@ class GoodsService extends BaseService {
     /**
      * 添加商品
      */
-    /*public function addGoods($data){
-        $v = $this->goodsValidator($data);
-        if(!$v['status']){
-            return $v;
-        }
-        $goods_data = $data;
-        if(count($data['imgs']) <= 0){
-            return ['status'=>false, 'msg'=>'请至少上传一张图片'];
-        }
-        unset($goods_data['imgs']);
-        $goods_data['uid'] = $this->uid;
-        $goods_data['img'] = $data['imgs'][0]['path'];
-        $goods = OmGoods::create($goods_data);
-        if($goods->id){
-            isset($data['imgs']) && $this->setGoodsImgs($goods, $data['imgs']);
-            if(isset($data['supplier_id']) && $data['supplier_id'] > 0){
-                
-            }
-            return ['status'=>true, 'data'=>$goods];
-        }else{
-            return ['status'=>false, 'msg'=>'产品添加失败'];
-        }
-    }*/
     public function addGoods($data){
-        $goods_data['product_sn'] = $this->makeSn(1);
         $goods_data['cat_id'] = isset($data['cat_id']) ? $data['cat_id'] : 0;
         $goods = OmGoods::create($goods_data);
         if($goods->id){
+            $goods->product_sn = $goods->id + 1500000;
+            $goods->update();
             return ['status'=>true, 'data'=>$goods];
         }else{
             return ['status'=>false, 'msg'=>'产品添加失败'];
@@ -174,13 +153,55 @@ class GoodsService extends BaseService {
     }
 
     public function getGoods($id){
-        $goods = OmGoods::select('id','cat_id','product_sn','img','en_name','cn_name','fob_price','car_types','mark','length','num','width','height','gw','nw')->where('id',$id)->first();
+        $goods = OmGoods::select('id','cat_id','product_sn','img','en_name','cn_name','mark','hs_code','tax_rate','report_key','fyi_status')->where('id',$id)->first();
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
         $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->value('name');
+        $goods['mfrs_sn'] = OmGoodsMfrs::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->pluck('mfrs_sn');
+        $goods['car_type'] = OmCarType::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->select('brand','car_type')->first();
+        $goods['supplier'] = OmGoodsSupplier::leftJoin('om_supplier as sup','sup.id','=','om_goods_supplier.supplier_id')
+                                            ->select('sup.name','sup.supplier_sn','om_goods_supplier.price','om_goods_supplier.tax')
+                                            ->where(['om_goods_supplier.goods_id'=>$id,'om_goods_supplier.is_deleted'=>0])
+                                            ->orderBy('om_goods_supplier.sort', 'DESC')->first();
         //dd($goods);
         return ['status'=>true,'data'=>$goods];
+    }
+
+    public function getGoodsPack($goods_id){
+        $pack =OmGoodsPack::where(['goods_id'=>$goods_id,'is_deleted'=>0])->select('id','num','length','width','height','gw','nw','mark','pack_type')->first();
+        if(!$pack){
+            $pack = array(
+                'id'=>0,
+                'length'=>'',
+                'width'=>'',
+                'height'=>'',
+                'gw'=>'',
+                'nw'=>'',
+                'num'=>'',
+                'mark'=>''
+            );
+        }else{
+            $pack = $pack->toArray();
+        }
+        return $pack;
+    }
+
+    public function postGoodsPack($id,$data){
+        $data['goods_id'] = $id;
+        $pack = OmGoodsPack::create($data);
+        if(!$pack){
+            return ['status'=>false,'msg'=>'包装细节添加失败'];
+        }
+        return ['status'=>true,'data'=>$pack];
+    }
+
+    public function putGoodsPack($id,$data){
+        $pack = OmGoodsPack::where('goods_id',$id)->update($data);
+        if(!$pack){
+            return ['status'=>false,'msg'=>'包装细节更新失败'];
+        }
+        return ['status'=>true,'data'=>$pack];
     }
 
     public function getGoodses($data){
@@ -189,7 +210,7 @@ class GoodsService extends BaseService {
         $limit = isset($data['limit']) ? $data['limit'] : 10;
         $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
-                        ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','om_goods.car_types','cat.name as cat_name','om_goods.fob_price')->where('om_goods.is_deleted',0);
+                        ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','cat.name as cat_name')->where('om_goods.is_deleted',0);
         if(isset($data['cn_name'])){
             $query->where('om_goods.cn_name', 'like', '%' . $data['cn_name'] . '%');
         }
@@ -210,7 +231,7 @@ class GoodsService extends BaseService {
             foreach ($result['data'] as &$v) {
                 $v['prop'] = OmGoodsSupplier::leftJoin('om_supplier as sup','sup.id','=','om_goods_supplier.supplier_id')
                                             ->select('sup.name','sup.supplier_sn','om_goods_supplier.*')
-                                            ->where(array('om_goods_supplier.goods_id'=>$v['id'],'om_goods_supplier.is_deleted'=>0))->orderBy('sort', 'DESC')->first();
+                                            ->where(array('om_goods_supplier.goods_id'=>$v['id'],'om_goods_supplier.is_deleted'=>0))->orderBy('sort', 'DESC')->take(3)->get();
                 if(!$v['prop']){
                     $v['prop'] = '';
                 }
@@ -218,7 +239,7 @@ class GoodsService extends BaseService {
                 if(!$v['mfrs']){
                     $v['mfrs'] = '';
                 }
-                $v['car_type'] = OmCarType::where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->pluck('car_type');
+                $v['car_type'] = OmCarType::where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->take(3)->select('brand','car_type')->get();
                 if(!$v['car_type']){
                     $v['car_type'] = '';
                 }
@@ -400,7 +421,7 @@ class GoodsService extends BaseService {
     }
 
     public function deleteGoodsImg($goods_id,$img){
-        OmGoodsImg::where(['goods_id'=>$goods_id,'img'=>$img])->delete();
+        OmGoodsImg::where(['goods_id'=>$goods_id,'getGoodsPack'=>$img])->delete();
         $first_img = OmGoodsImg::where('goods_id',$goods_id)->orderBy('sort','DESC')->first();
         if($first_img){
             OmGoods::where('id',$goods_id)->update(['img'=>$first_img['img']]);

@@ -43,7 +43,7 @@
                         <tbody v-if="all > 0">
                         <tr v-for="supplier in suppliers" @click="goToInfo($event, supplier.id)">
                             <td><input type="checkbox" value="{{supplier.id}}" v-model="ids"></td>
-                            <td><img class="goods_img" v-bind:src="supplier.img"/></td>
+                            <td><div class="goods_list_img"><img v-if="supplier.img" class="goods_img" v-bind:src="supplier.img"/></div></td>
                             <td>{{supplier.name}}</td>
                             <td>{{supplier.supplier_sn}}</td>
                             <td>{{supplier.contacts}}</td>

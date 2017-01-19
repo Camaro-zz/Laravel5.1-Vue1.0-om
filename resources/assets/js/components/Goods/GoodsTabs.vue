@@ -1,12 +1,12 @@
 <template>
     <div class="clients-list">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-cubes"></i> 图片</a></li>
-            <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> 原厂编号</a></li>
-            <li class=""><a data-toggle="tab" href="#tab-3"><i class="fa fa-briefcase"></i> 供应商</a></li>
-            <li class=""><a data-toggle="tab" href="#tab-4"><i class="fa fa-briefcase"></i> 适用车型</a></li>
+            <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-photo"></i> 图片</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-cubes"></i> 原厂编号</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-3"><i class="fa fa-magnet"></i> 供应商</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-4"><i class="fa fa-car"></i> 适用车型</a></li>
             <li class=""><a data-toggle="tab" href="#tab-5"><i class="fa fa-briefcase"></i> 报价记录</a></li>
-            <li class=""><a data-toggle="tab" href="#tab-6"><i class="fa fa-briefcase"></i> 包装细节</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-6"><i class="fa fa-inbox"></i> 包装细节</a></li>
         </ul>
         <div class="tab-content">
             <div id="tab-1" class="tab-pane active">
@@ -47,34 +47,7 @@
                 </div>
             </div>
             <div id="tab-6" class="tab-pane">
-                <div class="full-height-scroll">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                            <th>长</th>
-                            <th>宽</th>
-                            <th>高</th>
-                            <th>毛重</th>
-                            <th>净重</th>
-                            <th>装箱数</th>
-                            <th>包装类型</th>
-                            <th>备注</th>
-                            </thead>
-                            <tbody class="sortable-list connectList">
-                            <tr>
-                                <td>{{goods.length}}</td>
-                                <td>{{goods.width}}</td>
-                                <td>{{goods.height}}</td>
-                                <td>{{goods.gw}}</td>
-                                <td>{{goods.nw}}</td>
-                                <td>{{goods.num}}</td>
-                                <td>{{goods.gw}}</td>
-                                <td>{{goods.gw}}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <Goodspack :goods_id="goods_id" :goods="goods"></Goodspack>
             </div>
         </div>
     </div>
@@ -87,6 +60,7 @@
     import Goodsmfrs from './GoodsTabsMfrs.vue'
     import Goodssuppliers from './GoodsTabsSuppliers.vue'
     import Goodscartypes from './GoodsTabsCartypes.vue'
+    import Goodspack from './GoodsTabsPack.vue'
     export default{
         props: ['goods_id','goods'],
         ready(){
@@ -101,7 +75,8 @@
             Goodsimgs,
             Goodsmfrs,
             Goodssuppliers,
-            Goodscartypes
+            Goodscartypes,
+            Goodspack
         },
         methods:{
             getMfrs(){

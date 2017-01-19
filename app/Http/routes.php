@@ -72,6 +72,10 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::post('car_type/{id}.json', 'Goods\GoodsController@postGoodsCarType');//添加车型
     Route::put('car_type/sort/{id}.json', 'Goods\GoodsController@sortGoodsCarType');//车型排序
     Route::put('car_type/{id}.json', 'Goods\GoodsController@putGoodsCarType');//编辑车型
+
+    Route::get('pack/{id}.json', 'Goods\GoodsController@getGoodsPack');//获取包装细节
+    Route::post('pack/{id}.json', 'Goods\GoodsController@postGoodsPack');//添加包装细节
+    Route::put('pack/{id}.json', 'Goods\GoodsController@putGoodsPack');//修改包装细节
 });
 
 //供应商模块
