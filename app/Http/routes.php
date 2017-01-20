@@ -81,9 +81,11 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
 //供应商模块
 Route::group(['prefix' => 'supplier','middleware'=>$authApiMiddleware],function(){
     Route::post('add.json', 'Supplier\SupplierController@postSupplier');//添加供应商
+    Route::post('add/{goods_id}.json', 'Supplier\SupplierController@postSupplierByGoods');//在产品界面添加供应商
     Route::put('sort/{id}.json', 'Supplier\SupplierController@putSupplierSort');//修改供应商排序
     Route::put('{id}.json', 'Supplier\SupplierController@putSupplier');//修改供应商
     Route::get('{id}.json', 'Supplier\SupplierController@getSupplier');//供应商详情
+    Route::get('/max/id.json', 'Supplier\SupplierController@getSupplierMaxId');//获取供应商最大id
     Route::get('goods/{id}.json', 'Supplier\SupplierController@getSupplierGoods');//供应商供应的产品列表
     Route::post('goods/{id}.json', 'Supplier\SupplierController@postSupplierGoods');//供应商供应的产品添加
     Route::put('goods/{id}.json', 'Supplier\SupplierController@putSupplierGoods');//供应商供应的产品

@@ -23,28 +23,28 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">中文品名：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.cn_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">英文品名：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.en_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">产品类目：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.cat_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">原厂编号：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.mfrs_sn}}</p>
                                     </div>
                                 </div>
@@ -53,28 +53,28 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">适用车型：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.car_type.brand}} {{goods.car_type.car_type}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">供应商名称：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.supplier.name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">采购价(含)：</label>
 
-                                    <div class="col-sm-4">
-                                        <p>${{(parseFloat(goods.supplier.price) + parseFloat(goods.supplier.tax)).toFixed(2)}}</p>
+                                    <div class="col-sm-5">
+                                        <p>${{(parseFloat(goods.supplier.tax_price)).toFixed(2)}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">采购价(不含)：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>${{(parseFloat(goods.supplier.price)).toFixed(2)}}</p>
                                     </div>
                                 </div>
@@ -83,35 +83,35 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">HS编码：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.hs_code}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">出货状态：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.fyi_status}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">退税率：</label>
 
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-5">
                                         <p>{{goods.tax_rate}}%</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">报关要素：</label>
 
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-5">
                                         <p>{{goods.report_key}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">备注：</label>
 
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-5">
                                         <p>{{goods.mark}}</p>
                                     </div>
                                 </div>
@@ -188,6 +188,10 @@
                                         </textarea>
                                     </div>
                                 </div>
+                                <div class="form-group" style="text-align:center">
+                                    <a @click="putGoods()" class="btn btn-primary btn-sm" style="margin-right:10px">保存产品</a>
+                                    <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
+                                </div>
                             </div>
                             <div class="col-sm-3">
                                 <template v-if="goods.img != ''">
@@ -222,7 +226,10 @@
         },
         data(){
             return{
-                goods: {},
+                goods: {
+                    supplier: {},
+                    car_type: {}
+                },
                 goods_id: 0,
                 cats: {},
                 type: 0

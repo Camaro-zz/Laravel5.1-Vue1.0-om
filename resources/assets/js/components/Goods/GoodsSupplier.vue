@@ -34,10 +34,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">税</label>
+                            <label class="col-sm-2 control-label">含税采购价</label>
 
                             <div class="col-sm-4">
-                                <input type="text" v-model="supplier.tax" class="form-control">
+                                <input type="text" v-model="supplier.tax_price" class="form-control">
                             </div>
                         </div>
                         <div class="form-group">

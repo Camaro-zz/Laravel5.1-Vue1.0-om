@@ -7,24 +7,19 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="m-b-md">
-                                    <div class="goods_info_show">
-                                        <a @click="showEditInfo()" class="btn btn-info btn-xs pull-right">编辑供应商</a>
-                                    </div>
-                                    <div class="goods_info_edit" style="display:none !important;">
-                                        <a @click="cancelEditInfo()" class="btn btn-xs btn-warning pull-right">取消编辑</a>
-                                        <a @click="putSupplier()" class="btn btn-primary btn-xs pull-right" style="margin-right:10px">保存供应商</a>
-                                    </div>
-                                    <h2>供应商编号：{{supplier.supplier_sn}}</h2>
+                                    <h2 style="display:inline-block">供应商编号：{{supplier.supplier_sn}}</h2>
+                                    <span class="goods_info_show">
+                                        <a @click="showEditInfo()" class="btn btn-info btn-sm">编辑供应商</a>
+                                    </span>
+                                    <span class="goods_info_edit" style="display:none !important;">
+                                        <a @click="putSupplier()" class="btn btn-primary btn-sm" style="margin-right:10px">保存供应商</a>
+                                        <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4 goods_info_show">
-                                <template v-if="supplier.img != ''">
-                                    <img alt="image" class="img-responsive info_bigimg" v-bind:src="supplier.img">
-                                </template>
-                            </div>
-                            <div class="col-sm-7 form-horizontal goods_info_show">
+                            <div class="col-sm-4 form-horizontal goods_info_show">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">供应商名称：</label>
 
@@ -40,17 +35,26 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">QQ：</label>
-
-                                    <div class="col-sm-4">
-                                        <p>{{supplier.qq}}</p>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-sm-3 control-label">地址：</label>
 
                                     <div class="col-sm-6">
                                         <p>{{supplier.address}}</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机：</label>
+
+                                    <div class="col-sm-6">
+                                        <p>{{supplier.mobile}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 form-horizontal goods_info_show">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">QQ：</label>
+
+                                    <div class="col-sm-4">
+                                        <p>{{supplier.qq}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -68,13 +72,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">手机：</label>
-
-                                    <div class="col-sm-6">
-                                        <p>{{supplier.mobile}}</p>
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-sm-3 control-label">备注：</label>
 
                                     <div class="col-sm-6">
@@ -82,10 +79,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4 goods_info_edit" style="display:none !important;">
-                                <a id="dropz" class=" btn btn-info btn-xs pull-right">重新上传</a>
+                            <div class="col-sm-4 goods_info_show">
                                 <template v-if="supplier.img != ''">
-                                    <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="supplier.img">
+                                    <img alt="image" class="img-responsive info_bigimg" v-bind:src="supplier.img">
                                 </template>
                             </div>
                             <div class="col-sm-7 form-horizontal goods_info_edit" style="display:none !important;">
@@ -104,17 +100,24 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">QQ：</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" v-model="supplier.qq" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-sm-3 control-label">地址：</label>
 
                                     <div class="col-sm-4">
                                         <input type="text" v-model="supplier.address" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机：</label>
+
+                                    <div class="col-sm-4">
+                                        <input type="text" v-model="supplier.mobile" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">QQ：</label>
+
+                                    <div class="col-sm-4">
+                                        <input type="text" v-model="supplier.qq" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -132,13 +135,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">手机：</label>
-
-                                    <div class="col-sm-4">
-                                        <input type="text" v-model="supplier.mobile" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
                                     <label class="col-sm-3 control-label">备注：</label>
 
                                     <div class="col-sm-6">
@@ -147,6 +143,16 @@
                                         </textarea>
                                     </div>
                                 </div>
+                                <div class="form-group" style="text-align:center">
+                                    <a @click="putSupplier()" class="btn btn-primary btn-sm" style="margin-right:10px">保存供应商</a>
+                                    <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 goods_info_edit" style="display:none !important;">
+                                <a id="dropz" class=" btn btn-info btn-sm">重新上传</a>
+                                <template v-if="supplier.img != ''">
+                                    <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="supplier.img">
+                                </template>
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

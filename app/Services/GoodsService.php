@@ -17,9 +17,10 @@ use Illuminate\Support\Facades\Validator;
 
 class GoodsService extends BaseService {
 
-    public function __construct(OmGoods $omGoods){
+    public function __construct(OmGoods $omGoods,SupplierService $supplierService){
         $this->uid = Auth::user()->id;
         $this->model = $omGoods;
+        $this->supplierService = $supplierService;
     }
 
     /**
@@ -138,17 +139,33 @@ class GoodsService extends BaseService {
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
-        $v = $this->supplierGoodsValidator($data,$id);
-        if(!$v['status']){
-            return $v;
+        $sup_data['name'] = isset($data['name']) ? $data['name'] : '';
+        $sup_data['contacts'] = isset($data['contacts']) ? $data['contacts'] : '';
+        $sup_data['tel'] = isset($data['tel']) ? $data['tel'] : '';
+        $sup_data['mobile'] = isset($data['mobile']) ? $data['mobile'] : '';
+        $sup_data['qq'] = isset($data['qq']) ? $data['qq'] : '';
+        $sup_data['mark'] = isset($data['mark']) ? $data['mark'] : '';
+
+        $res = $this->supplierService->supplierValidator($sup_data);
+        if(!$res['status']){
+            return $res['status'];
         }
-        $goods = OmGoodsSupplier::where(array('id'=>$id,'is_deleted'=>0))->update($data);
+
+        $goods_sup_data['tax_price'] = isset($data['tax_price']) ? $data['tax_price'] : 0;
+        $goods_sup_data['price'] = isset($data['price']) ? $data['price'] : 0;
+
+        $res_g = $this->supplierGoodsValidator($goods_sup_data);
+        if(!$res_g['status']){
+            return $res_g['status'];
+        }
+        $sup = OmSupplier::where('id',$goods['supplier_id'])->update($sup_data);
+        $goods = OmGoodsSupplier::where(array('id'=>$id,'is_deleted'=>0))->update($goods_sup_data);
         //dd($data);
         if($goods){
             $goods = OmGoodsSupplier::where('id',$id)->first();
             return ['status'=>true, 'data'=>$goods];
         }else{
-            return ['status'=>false, 'msg'=>'产品更新失败'];
+            return ['status'=>false, 'msg'=>'更新失败'];
         }
     }
 
@@ -161,7 +178,7 @@ class GoodsService extends BaseService {
         $goods['mfrs_sn'] = OmGoodsMfrs::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->pluck('mfrs_sn');
         $goods['car_type'] = OmCarType::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->select('brand','car_type')->first();
         $goods['supplier'] = OmGoodsSupplier::leftJoin('om_supplier as sup','sup.id','=','om_goods_supplier.supplier_id')
-                                            ->select('sup.name','sup.supplier_sn','om_goods_supplier.price','om_goods_supplier.tax')
+                                            ->select('sup.name','sup.supplier_sn','om_goods_supplier.price','om_goods_supplier.tax_price')
                                             ->where(['om_goods_supplier.goods_id'=>$id,'om_goods_supplier.is_deleted'=>0])
                                             ->orderBy('om_goods_supplier.sort', 'DESC')->first();
         //dd($goods);
@@ -309,13 +326,13 @@ class GoodsService extends BaseService {
         $message = [
             'price.required' => '采购价不能为空',
             'price.numeric' => '采购价只能为数值',
-            'tax.required' => '税不能为空',
-            'tax.numeric' => '税只能为数值',
+            'tax_price.required' => '含税采购价不能为空',
+            'tax_price.numeric' => '含税采购价只能为数值',
         ];
 
         $rule = [
             'price' => 'required|numeric',
-            'tax' => 'required|numeric',
+            'tax_price' => 'required|numeric',
         ];
 
         $res = $this->doValidate($data,$rule,$message);
@@ -377,17 +394,20 @@ class GoodsService extends BaseService {
 
     public function getSuppliersByGoods($goods_id){
         $suppliers = OmGoodsSupplier::leftJoin('om_supplier as sup', 'sup.id', '=', 'om_goods_supplier.supplier_id')
-                                    ->select('sup.supplier_sn','sup.name','sup.contacts','sup.mobile','om_goods_supplier.*')
+                                    ->select('sup.mark','sup.qq','sup.tel','sup.supplier_sn','sup.name','sup.contacts','sup.mobile','om_goods_supplier.*')
                                     ->where(array('om_goods_supplier.goods_id'=>$goods_id,'om_goods_supplier.is_deleted'=>0))
                                     ->orderBy('om_goods_supplier.sort', 'DESC')->get();
         if(!$suppliers){
             $suppliers = '';
         }
+        foreach ($suppliers as $k=>$v){
+            $suppliers[$k]['edit'] = false;
+        }
 
         return $suppliers;
     }
     public function getSupplierByGoods($id){
-        $supplier = OmGoodsSupplier::where('id',$id)->select('goods_id','price','supplier_id','tax','num','length','width','height','gw','nw')->first();
+        $supplier = OmGoodsSupplier::where('id',$id)->select('goods_id','price','supplier_id','tax_price','num','length','width','height','gw','nw')->first();
         if(!$supplier || !$id){
             return ['status'=>false, 'msg'=>'参数错误'];
         }

@@ -32,9 +32,10 @@ class SupplierService extends BaseService {
      */
     public function addSupplier(){
         $data['uid'] = $this->uid;
-        $data['supplier_sn'] = $this->makeSn(2);
         $supplier = $this->model->create($data);
         if($supplier->id){
+            $supplier->supplier_sn = 'G'.$supplier->id;
+            $supplier->update();
             return ['status'=>true, 'data'=>$supplier];
         }else{
             return ['status'=>false, 'msg'=>'供应商添加失败'];
@@ -76,7 +77,6 @@ class SupplierService extends BaseService {
             'mobile.required' => '供货商手机不能为空',
             'tel.between' => '供货商电话长度必须在9-20位之间',
             'mobile.regex' => '供货商手机格式不正确',
-            'address.required' => '供货商地址不能为空'
         ];
 
         $rule = [
@@ -84,7 +84,24 @@ class SupplierService extends BaseService {
             'contacts' => 'required',
             'tel' => 'required|between:9,20',
             'mobile' => 'required|regex:/^1[34578][0-9]{9}$/',
-            'address' => 'required',
+        ];
+
+        $res = $this->doValidate($data,$rule,$message);
+        return $res;
+    }
+
+    //验证规则
+    public function supplierGoodsValidator($data){
+        $message = [
+            'price.required' => '采购价不能为空',
+            'price.numeric' => '采购价只能为数值',
+            'tax_price.required' => '含税采购价不能为空',
+            'tax_price.numeric' => '含税采购价只能为数值',
+        ];
+
+        $rule = [
+            'price' => 'required|numeric',
+            'tax_price' => 'required|numeric',
         ];
 
         $res = $this->doValidate($data,$rule,$message);
@@ -139,7 +156,8 @@ class SupplierService extends BaseService {
 
     public function getSupplierGoods($id){
         $goods = OmGoodsSupplier::leftJoin('om_goods as goods', 'goods.id', '=', 'om_goods_supplier.goods_id')
-                                ->select('om_goods_supplier.*','goods.cn_name','goods.en_name','goods.img','goods.product_sn','goods.num','goods.length','goods.height','goods.width','goods.gw','goods.nw')
+                                ->leftJoin('om_goods_pack as pack', 'pack.goods_id','=','om_goods_supplier.goods_id')
+                                ->select('om_goods_supplier.*','goods.cn_name','goods.en_name','goods.img','goods.product_sn','pack.num','pack.length','pack.height','pack.width','pack.gw','pack.nw')
                                 ->where('goods.is_deleted',0)
                                 ->where('om_goods_supplier.supplier_id',$id)
                                 ->get();
@@ -162,6 +180,47 @@ class SupplierService extends BaseService {
         $goods_data['height'] = $data['height'];
         $goods_data['gw'] = $data['gw'];
         $goods_data['nw'] = $data['nw'];
+    }
+
+    public function getSupplierMaxId(){
+        $max_id = OmSupplier::max('id');
+        if(!$max_id){
+            $max_id = 0;
+        }
+        return $max_id+1;
+    }
+
+    public function postSupplierByGoods($goods_id, $data){
+        $sup_data['name'] = isset($data['name']) ? $data['name'] : '';
+        $sup_data['contacts'] = isset($data['contacts']) ? $data['contacts'] : '';
+        $sup_data['tel'] = isset($data['tel']) ? $data['tel'] : '';
+        $sup_data['mobile'] = isset($data['mobile']) ? $data['mobile'] : '';
+        $sup_data['qq'] = isset($data['qq']) ? $data['qq'] : '';
+        $sup_data['mark'] = isset($data['mark']) ? $data['mark'] : '';
+
+        $res = $this->supplierValidator($sup_data);
+        if(!$res['status']){
+            return $res['status'];
+        }
+
+        $goods_sup_data['tax_price'] = isset($data['tax_price']) ? $data['tax_price'] : 0;
+        $goods_sup_data['price'] = isset($data['price']) ? $data['price'] : 0;
+
+        $res_g = $this->supplierGoodsValidator($goods_sup_data);
+        if(!$res_g['status']){
+            return $res_g['status'];
+        }
+        $supplier = OmSupplier::create($sup_data);
+        if($supplier->id){
+            $supplier->supplier_sn = 'G'.$supplier->id;
+            $supplier->update();
+            $goods_sup_data['goods_id'] = $goods_id;
+            $goods_sup_data['supplier_id'] = $supplier->id;
+            OmGoodsSupplier::create($goods_sup_data);
+            return ['status'=>true, 'data'=>$supplier];
+        }else{
+            return ['status'=>false, 'msg'=>'供应商添加失败'];
+        }
     }
 
 }

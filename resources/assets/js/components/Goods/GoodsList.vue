@@ -47,6 +47,7 @@
                                 <th>不含税采购价</th>
                                 <th>适用车型</th>
                                 <th>供应商</th>
+                                <th>出货状态</th>
                                 <th>备注</th>
                             </tr>
                             </thead>
@@ -61,7 +62,7 @@
                                 <td v-else>暂无</td>
                                 <td>{{goods.cn_name}}</td>
                                 <td>{{goods.en_name}}</td>
-                                <td v-if="goods.prop != ''">${{(parseFloat(goods.prop[0].price) + parseFloat(goods.prop[0].tax)).toFixed(2)}}</td>
+                                <td v-if="goods.prop != ''">${{goods.prop[0].tax_price}}</td>
                                 <td v-else>暂无</td>
                                 <td v-if="goods.prop != ''">${{goods.prop[0].price}}</td>
                                 <td v-else>暂无</td>
@@ -76,6 +77,7 @@
                                     </template>
                                 </td>
                                 <td v-else>暂无</td>
+                                <td>{{goods.fyi_status}}</td>
                                 <td>{{goods.mark}}</td>
                             </tr>
                             </tbody>
