@@ -49,6 +49,9 @@ class GoodsService extends BaseService {
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
+        if(!$data['supplier_id']){
+            return ['status'=>false, 'msg'=>'请选择供应商'];
+        }
         $v = $this->supplierGoodsValidator($data);
         if(!$v['status']){
             return $v;

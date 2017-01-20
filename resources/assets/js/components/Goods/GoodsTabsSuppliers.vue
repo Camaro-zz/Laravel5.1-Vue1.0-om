@@ -15,7 +15,7 @@
                 <th>
                     <a @click="addSupplier()" class="btn btn-info btn-xs">添加供应商</a>
                     <span class="delimiter">|</span>
-                    <a @click="connectSupplier()" class="btn btn-info btn-xs">关联供应商</a></th>
+                    <a v-link="{name:'goods_supplier_add', params:{goods_id:goods_id}}" class="btn btn-info btn-xs">关联供应商</a></th>
                 </thead>
                 <tbody class="supplier-sortable-list connectList">
                 <tr id="supplier_{{s.id}}" v-for="s in suppliers">
@@ -148,9 +148,6 @@
                         }
                     });
                 }
-            },
-            connectSupplier(){
-
             }
         }
     }
