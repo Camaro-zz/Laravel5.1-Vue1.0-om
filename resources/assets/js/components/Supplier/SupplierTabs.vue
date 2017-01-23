@@ -18,12 +18,16 @@
                                 <th>L W H</th>
                                 <th>G.W</th>
                                 <th>N.W</th>
-                                <th><a @click="addGoods()" class="btn btn-info btn-xs">添加产品</a></th>
+                                <th>
+                                    <a @click="addGoods()" class="btn btn-info btn-xs">添加产品</a>
+                                    <span class="delimiter">|</span>
+                                    <a @click="connectGoods()" class="btn btn-info btn-xs">关联产品</a>
+                                </th>
                             </thead>
                             <tbody class="xj-sortable-list connectList">
                                 <tr id="goods_{{g.id}}" v-for="g in goodses">
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.product_sn"></td><td v-else>{{g.product_sn}}</td>
-                                    <td><img class="goods_img" v-if="g.img" v-bind:src="g.img"></td>
+                                    <td><div class="goods_list_img"><img class="goods_img" v-if="g.img" v-bind:src="g.img"></div></td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.mfrs_sn"></td><td v-else>{{g.mfrs_sn}}</td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.cn_name"></td><td v-else>{{g.cn_name}}</td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.en_name"></td><td v-else>{{g.en_name}}</td>
@@ -124,6 +128,9 @@
             editGoods(goods){
                 goods.edit = true;
             },
+            connectGoods(){
+
+            }
         }
     }
 </script>
