@@ -8,17 +8,17 @@
                             <div class="col-sm-12">
                                 <div class="m-b-md">
                                     <h2 style="display:inline-block">客户编号：{{customer.customer_sn}}</h2>
-                                    <span class="goods_info_show">
+                                    <span class="goods_info_show" v-if="!edit">
                                         <a @click="showEditInfo()" class="btn btn-info btn-sm">编辑客户</a>
                                     </span>
-                                    <span class="goods_info_edit" style="display:none !important;">
+                                    <span class="goods_info_edit" v-if="edit">
                                         <a @click="putCustomer()" class="btn btn-primary btn-sm" style="margin-right:10px">保存客户</a>
                                         <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" v-if="!edit">
                             <div class="col-sm-4 form-horizontal goods_info_show">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">客户名称：</label>
@@ -82,7 +82,9 @@
                             <div class="col-sm-4 goods_info_show">
                                 <img alt="image" class="img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
                             </div>
-                            <div class="col-sm-4 form-horizontal goods_info_edit" style="display:none !important;">
+                        </div>
+                        <div class="row" v-if="edit">
+                            <div class="col-sm-4 form-horizontal goods_info_edit">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">客户名称：</label>
 
@@ -112,7 +114,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4 form-horizontal goods_info_edit" style="display:none !important;">
+                            <div class="col-sm-4 form-horizontal goods_info_edit">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">邮箱：</label>
 
@@ -144,7 +146,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4 goods_info_edit" style="display:none !important;">
+                            <div class="col-sm-4 goods_info_edit">
                                 <a id="dropz" class=" btn btn-info btn-sm">上传图片</a>
                                 <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
                             </div>
@@ -174,24 +176,13 @@
             if(this.type == 1){
                 this.showEditInfo();
             }
-            $("#dropz").dropzone({
-                url: "/upload.json",
-                maxFiles: 10,
-                maxFilesize: 512,
-                acceptedFiles: ".png,.jpg,.jpeg,.gif",
-                previewTemplate: '<div></div>',
-                success:function (file, response, e) {
-                    if(response.status == true){
-                        _this.$set('customer.img',response.path);
-                    }
-                }
-            });
         },
         data(){
             return{
                 customer: {},
                 customer_id: 0,
-                old_img: ''
+                old_img: '',
+                edit: false
             }
         },
         components:{
@@ -233,20 +224,36 @@
                 });
             },
             showEditInfo(){
-                $('.goods_info_show').hide();
-                $('.goods_info_edit').show();
+                this.edit = true;
             },
             hideEditInfo(){
-                $('.goods_info_show').show();
-                $('.goods_info_edit').hide();
+                this.edit = false;
             },
             cancelEditInfo(){
                 this.getCustomer();
-                this.hideEditInfo();
+                this.edit = false;
                 this.$set('customer.img',this.old_img);
             }
         },
         watch:{
+            'edit': function (val) {
+                if(val){
+                    var _this = this;
+
+                    $("#dropz").dropzone({
+                        url: "/upload.json",
+                        maxFiles: 10,
+                        maxFilesize: 512,
+                        acceptedFiles: ".png,.jpg,.jpeg,.gif",
+                        previewTemplate: '<div></div>',
+                        success:function (file, response, e) {
+                            if(response.status == true){
+                                _this.$set('customer.img',response.path);
+                            }
+                        }
+                    });
+                }
+            }
         },
     }
 </script>

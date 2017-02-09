@@ -1,11 +1,12 @@
 <template>
-    <div class="full-height-scroll">
+    <div class="full-height-scroll" v-if="edit">
         <div class="table-responsive" style="margin-top:10px">
-            <a @click="updateGoodsImgs()" class="btn btn-info" style="float:right">保存图片</a>
+            <a @click="cancelGoodsImgs()" class="btn btn-warning" style="float:right">取消编辑</a>
+            <a @click="updateGoodsImgs()" class="btn btn-info" style="float:right;margin-right:15px">保存图片</a>
         </div>
         <div class="table-responsive imgs-sortable-list" style="margin-top:10px;display:inline-block">
             <template v-for="img in imgs">
-                <div id="{{img}}" class="fancybox-box ui-sortable-handle" @mouseenter="showPanel($event)" @mouseleave="hidePanel($event)">
+                <div id="{{img}}_edit" class="fancybox-box ui-sortable-handle" @mouseenter="showPanel($event)" @mouseleave="hidePanel($event)">
                     <div class="file-panel">
                         <span class="cancel" @click="removeImg($index,img)">删除</span>
                     </div>
@@ -15,6 +16,20 @@
                 </div>
             </template>
             <a class="add-imgs" id="dropz"></a>
+        </div>
+    </div>
+    <div class="full-height-scroll" v-if="!edit">
+        <div class="table-responsive" style="margin-top:10px">
+            <a @click="editGoodsImgs()" class="btn btn-info" style="float:right">编辑图片</a>
+        </div>
+        <div class="table-responsive imgs-sortable-list" style="margin-top:10px;display:inline-block">
+            <template v-for="img in imgs">
+                <div id="{{img}}" class="fancybox-box ui-sortable-handle">
+                    <a class="fancybox" href="{{img}}">
+                        <img  alt="image" v-bind:src="img" />
+                    </a>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -39,27 +54,12 @@
                 openEffect: 'none',
                 closeEffect: 'none'
             });
-            $("#dropz").dropzone({
-                url: "/upload.json",
-                //maxFiles: 10,
-                maxFilesize: 512,
-                acceptedFiles: ".png,.jpg,.jpeg,.gif",
-                previewTemplate: '<div></div>',
-                success:function (file, response, e) {
-                    if(response.status == true){
-                        _this.imgs.push(response.path);
-                        _this.goods.img = _this.imgs[0]
-                    }
-                },
-                dictFileTooBig: function () {
-                    alert('图片太大了');
-                }
-            });
         },
         data(){
             return{
                 imgs:{},
-                imgs_sort:[]
+                imgs_sort:[],
+                edit: false
             }
         },
         methods:{
@@ -70,7 +70,8 @@
             },
             updateGoodsImgs(){
                 this.$http.post('/goods/imgs/'+this.goods_id+'.json',this.imgs).then(function(response){
-
+                    toastr.success('图片上传成功');
+                    this.edit = false
                 });
             },
             removeImg(index,img){
@@ -103,6 +104,35 @@
             hidePanel(event){
                 $(event.target).find('.file-panel').stop().animate({height: 0});
 
+            },
+            editGoodsImgs(){
+                this.edit = true
+            },
+            cancelGoodsImgs(){
+                this.edit = false
+            }
+        },
+        watch:{
+            'edit': function (val) {
+                if(val){
+                    var _this = this;
+                    $("#dropz").dropzone({
+                        url: "/upload.json",
+                        //maxFiles: 10,
+                        maxFilesize: 512,
+                        acceptedFiles: ".png,.jpg,.jpeg,.gif",
+                        previewTemplate: '<div></div>',
+                        success:function (file, response, e) {
+                            if(response.status == true){
+                                _this.imgs.push(response.path);
+                                _this.goods.img = _this.imgs[0]
+                            }
+                        },
+                        dictFileTooBig: function () {
+                            alert('图片太大了');
+                        }
+                    });
+                }
             }
         }
     }

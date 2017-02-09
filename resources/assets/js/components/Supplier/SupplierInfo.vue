@@ -8,17 +8,17 @@
                             <div class="col-sm-12">
                                 <div class="m-b-md">
                                     <h2 style="display:inline-block">供应商编号：{{supplier.supplier_sn}}</h2>
-                                    <span class="goods_info_show">
+                                    <span class="goods_info_show" v-if="!edit">
                                         <a @click="showEditInfo()" class="btn btn-info btn-sm">编辑供应商</a>
                                     </span>
-                                    <span class="goods_info_edit" style="display:none !important;">
+                                    <span class="goods_info_edit" v-if="edit">
                                         <a @click="putSupplier()" class="btn btn-primary btn-sm" style="margin-right:10px">保存供应商</a>
                                         <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
                                     </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" v-if="!edit">
                             <div class="col-sm-4 form-horizontal goods_info_show">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">供应商名称：</label>
@@ -84,7 +84,9 @@
                                     <img alt="image" class="img-responsive info_bigimg" v-bind:src="supplier.img">
                                 </template>
                             </div>
-                            <div class="col-sm-7 form-horizontal goods_info_edit" style="display:none !important;">
+                        </div>
+                        <div class="row" v-if="edit">
+                            <div class="col-sm-7 form-horizontal goods_info_edit">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">供应商名称：</label>
 
@@ -148,8 +150,8 @@
                                     <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
                                 </div>
                             </div>
-                            <div class="col-sm-4 goods_info_edit" style="display:none !important;">
-                                <a id="dropz" class=" btn btn-info btn-sm">重新上传</a>
+                            <div class="col-sm-4 goods_info_edit">
+                                <a id="dropz" class=" btn btn-info btn-sm">上传图片</a>
                                 <template v-if="supplier.img != ''">
                                     <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="supplier.img">
                                 </template>
@@ -197,7 +199,8 @@
             return{
                 supplier: {},
                 supplier_id: 0,
-                old_img: ''
+                old_img: '',
+                edit: false
             }
         },
         components:{
@@ -240,12 +243,10 @@
                 });
             },
             showEditInfo(){
-                $('.goods_info_show').hide();
-                $('.goods_info_edit').show();
+                this.edit = true;
             },
             hideEditInfo(){
-                $('.goods_info_show').show();
-                $('.goods_info_edit').hide();
+                this.edit = false;
             },
             cancelEditInfo(){
                 this.getSupplier();
@@ -254,6 +255,24 @@
             }
         },
         watch:{
+            'edit': function (val) {
+                if(val){
+                    var _this = this;
+
+                    $("#dropz").dropzone({
+                        url: "/upload.json",
+                        maxFiles: 10,
+                        maxFilesize: 512,
+                        acceptedFiles: ".png,.jpg,.jpeg,.gif",
+                        previewTemplate: '<div></div>',
+                        success:function (file, response, e) {
+                            if(response.status == true){
+                                _this.$set('supplier.img',response.path);
+                            }
+                        }
+                    });
+                }
+            }
         },
     }
 </script>
