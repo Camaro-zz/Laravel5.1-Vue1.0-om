@@ -40,9 +40,9 @@
                         </tr>
                         </thead>
                         <tbody v-if="all > 0">
-                        <tr v-for="customer in customers" @click="goToInfo($event, customer.id)">
-                            <td><input type="checkbox" value="{{customer.id}}" v-model="ids"></td>
-                            <td><div class="goods_list_img"><img v-if="customer.img" class="goods_img" v-bind:src="customer.img"/></div></td>
+                        <tr class="goods_list_css" v-for="customer in customers">
+                            <td class="goods_list_css_jump"><input type="checkbox" value="{{customer.id}}" v-model="ids"></td>
+                            <td class="goods_list_css_jump" @click="goToInfo($event, customer.id)"><div class="goods_list_img"><img v-if="customer.img" class="goods_img" v-bind:src="customer.img"/></div></td>
                             <td>{{customer.name}}</td>
                             <td>{{customer.customer_sn}}</td>
                             <td>{{customer.contact}}</td>
@@ -161,9 +161,9 @@
                 }
             },
             goToInfo(event, customer_id){
-                if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
+                /*if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
                     return false;
-                }
+                }*/
                 this.$route.router.go({path: '/customer/info/'+customer_id})
             },
             addCustomer(){

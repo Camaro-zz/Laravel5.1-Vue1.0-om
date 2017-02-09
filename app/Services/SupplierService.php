@@ -72,18 +72,18 @@ class SupplierService extends BaseService {
     public function supplierValidator($data){
         $message = [
             'name.required' => '供货商名称不能为空',
-            'contacts.required' => '供货商联系人不能为空',
-            'tel.required' => '供货商电话不能为空',
-            'mobile.required' => '供货商手机不能为空',
+            //'contacts.required' => '供货商联系人不能为空',
+            //'tel.required' => '供货商电话不能为空',
+            //'mobile.required' => '供货商手机不能为空',
             'tel.between' => '供货商电话长度必须在9-20位之间',
             'mobile.regex' => '供货商手机格式不正确',
         ];
 
         $rule = [
             'name' => 'required',
-            'contacts' => 'required',
-            'tel' => 'required|between:9,20',
-            'mobile' => 'required|regex:/^1[34578][0-9]{9}$/',
+            //'contacts' => 'required',
+            'tel' => 'between:9,20',
+            'mobile' => 'regex:/^1[34578][0-9]{9}$/',
         ];
 
         $res = $this->doValidate($data,$rule,$message);
@@ -152,6 +152,9 @@ class SupplierService extends BaseService {
             $sup = explode('_',$v['id']);
             OmGoodsSupplier::where(array('id'=>$sup[1],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
         }
+        $first_supplier = OmGoodsSupplier::where('goods_id',$goods_id)->orderBy('sort','DESC')->first();
+        $first_supplier['name'] = OmSupplier::where('id',$first_supplier['supplier_id'])->value('name');
+        return $first_supplier;
     }
 
     public function getSupplierGoods($id){
@@ -200,7 +203,7 @@ class SupplierService extends BaseService {
 
         $res = $this->supplierValidator($sup_data);
         if(!$res['status']){
-            return $res['status'];
+            return $res;
         }
 
         $goods_sup_data['tax_price'] = isset($data['tax_price']) ? $data['tax_price'] : 0;
@@ -208,7 +211,7 @@ class SupplierService extends BaseService {
 
         $res_g = $this->supplierGoodsValidator($goods_sup_data);
         if(!$res_g['status']){
-            return $res_g['status'];
+            return $res_g;
         }
         $supplier = OmSupplier::create($sup_data);
         if($supplier->id){

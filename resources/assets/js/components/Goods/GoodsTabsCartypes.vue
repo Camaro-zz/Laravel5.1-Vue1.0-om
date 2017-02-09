@@ -76,6 +76,7 @@
             getCarTypes(){
                 this.$http.get('/goods/car_type/'+this.goods_id+'.json').then(function(response){
                     this.$set('car_types',response.data);
+                    this.goods.car_type = this.car_types.length > 0 ? this.car_types[0] : '';
                 });
             },
             submitCarType(car_type){
@@ -86,6 +87,7 @@
                         }else{
                             car_type.id = response.data.data.id;
                             this.getCarTypes();
+                            this.goods.car_type = this.car_types[0];
                         }
                     });
                 }else{
@@ -116,7 +118,6 @@
             sortCartypes(sort){
                 var sort_length = this.car_types.length;
                 var _this = this;
-                console.log(this.car_types_sort);
                 $.each(sort,function (n, i) {
                     var c = {};
                     c.sort = sort_length - n;
@@ -125,6 +126,7 @@
                 });
                 this.$http.put('/goods/car_type/sort/'+this.goods_id+'.json', this.car_types_sort).then(function(response){
                     this.$set('car_types_sort',[]);
+                    this.goods.car_type = response.data;
                 });
             }
         }

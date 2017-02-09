@@ -16,6 +16,9 @@
                                 <th>英文品名</th>
                                 <th>适用车型</th>
                                 <th>FOB</th>
+                                <th>采购价(含)</th>
+                                <th>采购价(不含)</th>
+                                <th>FOB</th>
                                 <th>供应商</th>
                                 <th><a @click="addXj()" class="btn btn-info btn-xs">添加询价记录</a></th>
                             </thead>
@@ -27,6 +30,8 @@
                                     <td>{{x.en_name}}</td>
                                     <td>{{x.car_type}}</td>
                                     <td>{{x.fob_price}}</td>
+                                    <td>{{x.tax_price}}</td>
+                                    <td>{{x.price}}</td>
                                     <td>{{x.supplier}}</td>
                                     <td>
                                         <a @click="editXj(x)"><i class="fa fa-edit"></i> 编辑</a>
@@ -114,6 +119,7 @@
             },
             addXj(){
                 var _this = this;
+                this.$root.type = 0;
                 layer.open({
                     type: 1,
                     title: '选择产品', //不显示标题
@@ -130,6 +136,7 @@
                     },
                     cancel: function () {
                         _this.$root.popup = false;
+                        console.log(_this.$root.popup);
                     }
                 });
             }

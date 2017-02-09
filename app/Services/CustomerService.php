@@ -15,9 +15,10 @@ class CustomerService extends BaseService {
     //添加客户
     public function addCustomer(){
         $data['uid'] = $this->uid;
-        $data['customer_sn'] = $this->makeSn(3);
         $customer = $this->model->create($data);
         if($customer->id){
+            $customer->customer_sn = 'B'.$customer->id;
+            $customer->update();
             return ['status'=>true, 'data'=>$customer];
         }else{
             return ['status'=>false, 'msg'=>'客户添加失败'];
@@ -30,7 +31,7 @@ class CustomerService extends BaseService {
         if(!$customer){
             return ['status'=>false, 'msg'=>'客户不存在'];
         }
-        $v = $this->CustomerValidator($data);
+        $v = $this->CustomerValidator($data,$id);
         if(!$v['status']){
             return $v;
         }
@@ -90,21 +91,25 @@ class CustomerService extends BaseService {
     }
 
     //验证规则
-    public function CustomerValidator($data){
+    public function CustomerValidator($data,$id){
         $message = [
-            'contact.required' => '联系人不能为空',
+            //'contact.required' => '联系人不能为空',
+            'name.required' => '客户名称不能为空',
             'tel.between' => '联系人电话长度必须在9-20位之间',
             'mobile.regex' => '联系人手机格式不正确',
-            'tel.required' => '客户电话不能为空',
-            'mobile.required' => '客户手机不能为空',
-            'address.required' => '客户地址不能为空'
+            'email.unique' => '邮箱已存在',
+            //'tel.required' => '客户电话不能为空',
+            //'mobile.required' => '客户手机不能为空',
+            //'address.required' => '客户地址不能为空'
         ];
 
         $rule = [
-            'contact' => 'required',
-            'tel' => 'required|between:9,20',
-            'mobile' => 'required|regex:/^1[34578][0-9]{9}$/',
-            'address' => 'required',
+            //'contact' => 'required',
+            'name' => 'required',
+            'tel' => 'between:9,20',
+            'mobile' => 'regex:/^1[34578][0-9]{9}$/',
+            'email' => 'unique:om_customer,email,'.$id,
+            //'address' => 'required',
         ];
 
         $res = $this->doValidate($data,$rule,$message);

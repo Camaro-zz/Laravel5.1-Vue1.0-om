@@ -52,6 +52,7 @@
             getMfrses(){
                 this.$http.get('/goods/mfrs/goods/'+this.goods_id+'.json').then(function (response) {
                     this.$set('mfrs', response.data);
+                    this.goods.mfrs_sn = this.mfrs.length > 0 ? this.mfrs[0].mfrs_sn : '';
                 });
             },
             sortMfrses(sort){
@@ -65,6 +66,7 @@
                 });
                 this.$http.put('/mfrs/sort/'+this.goods_id+'.json', this.mfrs_sort).then(function(response){
                     this.$set('mfrs_sort',[]);
+                    this.goods.mfrs_sn = response.data;
                 });
             },
             deleteMfrs(id){
@@ -74,7 +76,7 @@
                 }, function(index){
                     _this.$http.delete('/mfrs/'+id+'.json').then(function(response){
                         if(response.data.status == true){
-                            this.getMfrses();
+                            _this.getMfrses();
                             layer.close(index);
                         }else{
                             toastr.error(response.data.msg);
@@ -108,6 +110,7 @@
                         }else{
                             mfrs.id = response.data.data.id;
                             this.getMfrses();
+                            this.goods.mfrs_sn = this.mfrs[0].mfrs_sn;
                         }
                     });
                 }else{

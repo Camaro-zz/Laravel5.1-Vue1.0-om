@@ -100,7 +100,7 @@
                 this.login.text = '登录中...'
                 this.login.disable = true
                 this.$http.post('/auth/login.json', this.auth).then(function(response){
-                    this.changeCaptcha()
+                    //this.changeCaptcha()
                     if(!response.data.error){//登录成功
                         //this.$route.router.go({path: '/'})
                         //location.reload()

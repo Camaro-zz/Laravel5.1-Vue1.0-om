@@ -24,9 +24,9 @@
 		<!--mini聊天窗口开始-->
 		<Minichat></Minichat>
 		<!--mini聊天窗口结束-->
-	</div>
-	<div id="goods_list_popup">
-		<Goodslistpop v-if="popup"></Goodslistpop>
+		<div id="goods_list_popup">
+			<Goodslistpop v-if="popup" :type="type"></Goodslistpop>
+		</div>
 	</div>
 </template>
 <script>
@@ -39,7 +39,7 @@
 
     export default {
 		ready(){
-			this.route = this.$route.path
+			this.route = this.$route.path,
 			toastr.options = {
 				"closeButton": true,
 				"debug": false,
@@ -66,8 +66,10 @@
         },
         data(){
 			return{
+				route: '',
 				popup: false,
-				goods_ids: []
+				goods_ids: [],
+				type: 0  //0添加询价记录，1添加采购记录
 			}
         },
         replace: false

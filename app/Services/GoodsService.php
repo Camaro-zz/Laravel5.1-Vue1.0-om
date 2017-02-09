@@ -178,7 +178,7 @@ class GoodsService extends BaseService {
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
         $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->value('name');
-        $goods['mfrs_sn'] = OmGoodsMfrs::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->pluck('mfrs_sn');
+        $goods['mfrs_sn'] = OmGoodsMfrs::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->value('mfrs_sn');
         $goods['car_type'] = OmCarType::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->select('brand','car_type')->first();
         $goods['supplier'] = OmGoodsSupplier::leftJoin('om_supplier as sup','sup.id','=','om_goods_supplier.supplier_id')
                                             ->select('sup.name','sup.supplier_sn','om_goods_supplier.price','om_goods_supplier.tax_price')
@@ -230,7 +230,7 @@ class GoodsService extends BaseService {
         $limit = isset($data['limit']) ? $data['limit'] : 10;
         $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
-                        ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','cat.name as cat_name')->where('om_goods.is_deleted',0);
+                        ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','cat.name as cat_name','om_goods.fyi_status','om_goods.mark')->where('om_goods.is_deleted',0);
         if(isset($data['cn_name'])){
             $query->where('om_goods.cn_name', 'like', '%' . $data['cn_name'] . '%');
         }
@@ -282,7 +282,7 @@ class GoodsService extends BaseService {
         if(!isset($data['mfrs_name']) || !$data['mfrs_name']){
             return ['status'=>false,'msg'=>'生产商名称不能为空'];
         }
-        if(OmGoodsMfrs::where('mfrs_sn',$data['mfrs_sn'])->first()){
+        if(OmGoodsMfrs::where(['mfrs_sn'=>$data['mfrs_sn'],'is_deleted'=>0])->first()){
             return ['status'=>false,'msg'=>'原厂编号已存在'];
         }
         unset($data['id']);
@@ -444,7 +444,7 @@ class GoodsService extends BaseService {
     }
 
     public function deleteGoodsImg($goods_id,$img){
-        OmGoodsImg::where(['goods_id'=>$goods_id,'getGoodsPack'=>$img])->delete();
+        OmGoodsImg::where(['goods_id'=>$goods_id,'img'=>$img])->delete();
         $first_img = OmGoodsImg::where('goods_id',$goods_id)->orderBy('sort','DESC')->first();
         if($first_img){
             OmGoods::where('id',$goods_id)->update(['img'=>$first_img['img']]);
@@ -515,5 +515,7 @@ class GoodsService extends BaseService {
             $c = explode('_',$v['id']);
             OmCarType::where(array('id'=>$c[1],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
         }
+        $first_cartype = OmCarType::where('goods_id',$goods_id)->orderBy('sort', 'DESC')->first();
+        return $first_cartype;
     }
 }

@@ -69,6 +69,7 @@
             getGoodsSuppliers(){
                 this.$http.get('/goods/suppliers/'+this.goods_id+'.json').then(function (response) {
                     this.$set('suppliers', response.data);
+                    this.goods.supplier = this.suppliers.length > 0 ? this.suppliers[0] : '';
                 });
             },
             sortSuppliers(sort){
@@ -82,6 +83,7 @@
                 });
                 this.$http.put('/supplier/sort/'+this.goods_id+'.json', this.sup_sort).then(function(response){
                     this.$set('sup_sort',[]);
+                    this.goods.supplier = response.data;
                 });
             },
             addSupplier(){
@@ -101,7 +103,6 @@
                 this.$http.get('/supplier/max/id.json').then(function (response) {
                     new_sup.supplier_sn = 'G'+response.data
                 });
-                console.log(new_sup);
                 this.suppliers.push(new_sup);
             },
             editSupplier(sup){

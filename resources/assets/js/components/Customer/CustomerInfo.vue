@@ -7,22 +7,19 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="m-b-md">
-                                    <div class="goods_info_show">
-                                        <a @click="showEditInfo()" class="btn btn-info btn-xs pull-right">编辑客户</a>
-                                    </div>
-                                    <div class="goods_info_edit" style="display:none !important;">
-                                        <a @click="cancelEditInfo()" class="btn btn-xs btn-warning pull-right">取消编辑</a>
-                                        <a @click="putCustomer()" class="btn btn-primary btn-xs pull-right" style="margin-right:10px">保存客户</a>
-                                    </div>
-                                    <h2>客户编号：{{customer.customer_sn}}</h2>
+                                    <h2 style="display:inline-block">客户编号：{{customer.customer_sn}}</h2>
+                                    <span class="goods_info_show">
+                                        <a @click="showEditInfo()" class="btn btn-info btn-sm">编辑客户</a>
+                                    </span>
+                                    <span class="goods_info_edit" style="display:none !important;">
+                                        <a @click="putCustomer()" class="btn btn-primary btn-sm" style="margin-right:10px">保存客户</a>
+                                        <a @click="cancelEditInfo()" class="btn btn-sm btn-warning">取消编辑</a>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-4 goods_info_show">
-                                <img alt="image" class="img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
-                            </div>
-                            <div class="col-sm-7 form-horizontal goods_info_show">
+                            <div class="col-sm-4 form-horizontal goods_info_show">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">客户名称：</label>
 
@@ -51,6 +48,8 @@
                                         <p>{{customer.address}}</p>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-sm-4 form-horizontal goods_info_show">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">邮箱：</label>
 
@@ -80,11 +79,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4 goods_info_edit" style="display:none !important;">
-                                <a id="dropz" class=" btn btn-info btn-xs pull-right">重新上传</a>
-                                <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
+                            <div class="col-sm-4 goods_info_show">
+                                <img alt="image" class="img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
                             </div>
-                            <div class="col-sm-7 form-horizontal goods_info_edit" style="display:none !important;">
+                            <div class="col-sm-4 form-horizontal goods_info_edit" style="display:none !important;">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">客户名称：</label>
 
@@ -113,6 +111,8 @@
                                         <input type="text" v-model="customer.address" class="form-control">
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-sm-4 form-horizontal goods_info_edit" style="display:none !important;">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">邮箱：</label>
 
@@ -143,6 +143,10 @@
                                         </textarea>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-sm-4 goods_info_edit" style="display:none !important;">
+                                <a id="dropz" class=" btn btn-info btn-sm">上传图片</a>
+                                <img alt="image" class="dropzone-previews img-responsive info_bigimg" v-bind:src="customer.img" v-if="customer.img">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>

@@ -20,6 +20,8 @@ class MfrsService extends BaseService {
             $mfrs = explode('_',$v['id']);
             OmGoodsMfrs::where(array('id'=>$mfrs[1],'goods_id'=>$goods_id))->update(['sort'=>$v['sort']]);
         }
+        $first_mfrs = OmGoodsMfrs::where('goods_id',$goods_id)->orderBy('sort','DESC')->value('mfrs_sn');
+        return $first_mfrs;
     }
 
     public function getMfrs($id){

@@ -142,7 +142,7 @@ class OrderService extends BaseService {
 
     public function getXjs($customer_id){
         $xjs = OmOrderGoods::leftJoin('om_goods','om_goods.id','=','om_order_goods.goods_id')
-                           ->select('om_goods.img','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.fob_price','om_order_goods.*')
+                           ->select('om_goods.img','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_order_goods.*')
                            ->where('om_order_goods.customer_id',$customer_id)
                            ->where('om_order_goods.is_deleted',0)
                            ->where('om_order_goods.customer_id',0)

@@ -52,10 +52,10 @@
                             </tr>
                             </thead>
                             <tbody v-if="all > 0">
-                            <tr class="goods_list_css" v-for="goods in goodses" @click="goToInfo($event, goods.id)">
-                                <td><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
-                                <td><div class="goods_list_img"><img v-if="goods.img" class="goods_img" v-bind:src="goods.img"/></div></td>
-                                <td>{{goods.product_sn}}</td>
+                            <tr class="goods_list_css" v-for="goods in goodses">
+                                <td  class="goods_list_css_jump"><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
+                                <td  class="goods_list_css_jump" @click="goToInfo($event, goods.id)"><div class="goods_list_img"><img v-if="goods.img" class="goods_img" v-bind:src="goods.img"/></div></td>
+                                <td  class="goods_list_css_jump" @click="goToInfo($event, goods.id)">{{goods.product_sn}}</td>
                                 <td v-if="goods.mfrs != ''">
                                     {{goods.mfrs.mfrs_sn}}
                                 </td>
@@ -68,7 +68,7 @@
                                 <td v-else>暂无</td>
                                 <td>
                                     <template v-for="c in goods.car_type">
-                                        {{c.brand}}-{{c.car_type}}<br>
+                                        {{c.brand}}&nbsp;&nbsp;{{c.car_type}}<br>
                                     </template>
                                 </td>
                                 <td v-if="goods.prop != ''">
@@ -202,9 +202,9 @@ export default{
             }
         },
         goToInfo(event, goods_id){
-            if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
+            /*if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
                 return false;
-            }
+            }*/
             this.$route.router.go({path: '/goods/info/'+goods_id})
         },
         getCats(){

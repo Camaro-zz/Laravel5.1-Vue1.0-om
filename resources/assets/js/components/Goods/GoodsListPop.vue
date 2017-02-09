@@ -23,22 +23,20 @@
                 <table class="table table-striped" >
                     <thead>
                     <tr>
-                        <th></th>
+                        <th>{{ids}}</th>
                         <th>图片</th>
                         <th>产品编号</th>
                         <th>中文品名</th>
                         <th>英文品名</th>
-                        <th>操作</th>
                     </tr>
                     </thead>
                     <tbody v-if="all > 0">
-                    <tr class="goods_list_css" v-for="goods in goodses" @click="goToInfo($event, goods.id)">
+                    <tr class="goods_list_css" v-for="goods in goodses">
                         <td><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
                         <td><img class="goods_img_pop" v-bind:src="goods.img"/></td>
                         <td>{{goods.product_sn}}</td>
                         <td>{{goods.cn_name}}</td>
                         <td>{{goods.en_name}}</td>
-                        <td></td>
                     </tr>
                     </tbody>
                     <tbody v-else>
@@ -75,10 +73,22 @@
                     </tfoot>
                 </table>
             </div>
+            <div>
+                <form method="get" class="form-horizontal">
+                    <div class="hr-line-dashed"></div>
+                    <div class="table-responsive">
+                        <div class="col-sm-12" style="text-align:center;margin-bottom:15px">
+                            <button class="btn btn-w-m btn-primary" type="button" @click="postChoose()">选取</button>
+                            <button class="btn btn-w-m btn-white" type="button" @click="cancelChoose()">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 </template>
 <script>
 export default{
+    props: ['type'],
     ready(){
         this.getGoodses()
         this.getCats()
@@ -150,6 +160,24 @@ export default{
                 this.$set('cats', response.data.data);
             });
         },
+        postChoose(){
+            if(this.type == 0){
+                this.postXj();
+            }else{
+                this.postOrder();
+            }
+        },
+        postXj(){
+            /*this.$http.post('/customer/xjs.json',{ids:this.ids}).then(function (response) {
+
+            });*/
+        },
+        postOrder(){
+
+        },
+        cancelChoose(){
+            layer.closeAll();
+        }
     },
     watch:{
         'goodses':function () {},

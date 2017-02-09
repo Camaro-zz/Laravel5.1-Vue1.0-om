@@ -38,14 +38,14 @@
                                     <label class="col-sm-3 control-label title_width">产品类目：</label>
 
                                     <div class="col-sm-5">
-                                        <p>{{goods.cat_name}}</p>
+                                        <p v-if="goods.cat_name">{{goods.cat_name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">原厂编号：</label>
 
                                     <div class="col-sm-5">
-                                        <p>{{goods.mfrs_sn}}</p>
+                                        <p v-if="goods.mfrs_sn">{{goods.mfrs_sn}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -54,28 +54,28 @@
                                     <label class="col-sm-3 control-label title_width">适用车型：</label>
 
                                     <div class="col-sm-5">
-                                        <p>{{goods.car_type.brand}} {{goods.car_type.car_type}}</p>
+                                        <p v-if="goods.car_type">{{goods.car_type.brand}} {{goods.car_type.car_type}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">供应商名称：</label>
 
                                     <div class="col-sm-5">
-                                        <p>{{goods.supplier.name}}</p>
+                                        <p v-if="goods.supplier">{{goods.supplier.name}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">采购价(含)：</label>
 
                                     <div class="col-sm-5">
-                                        <p>${{(parseFloat(goods.supplier.tax_price)).toFixed(2)}}</p>
+                                        <p v-if="goods.supplier">${{(parseFloat(goods.supplier.tax_price)).toFixed(2)}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">采购价(不含)：</label>
 
                                     <div class="col-sm-5">
-                                        <p>${{(parseFloat(goods.supplier.price)).toFixed(2)}}</p>
+                                        <p v-if="goods.supplier">${{(parseFloat(goods.supplier.price)).toFixed(2)}}</p>
                                     </div>
                                 </div>
                             </div>

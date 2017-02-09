@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                    <table class="footable table table-stripped toggle-arrow-tiny" v-bind:data-page-size="page_size" v-bind:data-navigation="page_count">
+                    <table class="table table-stripped">
                         <thead>
                         <tr>
                             <th></th>
@@ -41,9 +41,9 @@
                         </tr>
                         </thead>
                         <tbody v-if="all > 0">
-                        <tr v-for="supplier in suppliers" @click="goToInfo($event, supplier.id)">
-                            <td><input type="checkbox" value="{{supplier.id}}" v-model="ids"></td>
-                            <td><div class="goods_list_img"><img v-if="supplier.img" class="goods_img" v-bind:src="supplier.img"/></div></td>
+                        <tr class="goods_list_css" v-for="supplier in suppliers">
+                            <td class="goods_list_css_jump"><input type="checkbox" value="{{supplier.id}}" v-model="ids"></td>
+                            <td class="goods_list_css_jump" @click="goToInfo($event, supplier.id)"><div class="goods_list_img"><img v-if="supplier.img" class="goods_img" v-bind:src="supplier.img"/></div></td>
                             <td>{{supplier.name}}</td>
                             <td>{{supplier.supplier_sn}}</td>
                             <td>{{supplier.contacts}}</td>
@@ -164,9 +164,9 @@
                 }
             },
             goToInfo(event, supplier_id){
-                if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
+                /*if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
                     return false;
-                }
+                }*/
                 this.$route.router.go({path: '/supplier/info/'+supplier_id})
             },
             addSupplier(){

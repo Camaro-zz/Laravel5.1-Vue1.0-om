@@ -51,7 +51,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()){
-            $this->clearCaptcha();//验证失败的话清除验证码的session
+            //$this->clearCaptcha();//验证失败的话清除验证码的session
             return Response::json(['error' => ['message'=>['login'=>false,'captcha'=>true], 'type'=>'Auth', 'code'=>401]]);
         }else{
             //认证凭证
@@ -83,7 +83,7 @@ class AuthController extends Controller
                             return Response::json(['success'=>true], 200);
                         }
                     }
-                    $this->clearCaptcha();
+                    //$this->clearCaptcha();
                     return Response::json(['error'=>['message'=>['login'=>'“登录失败，请重新登录！','captcha'=>false], 'type'=>'Auth', 'code'=>401]]);
                 } else {
                     $this->clearCaptcha();
