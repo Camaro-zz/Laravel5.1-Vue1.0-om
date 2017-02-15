@@ -3,10 +3,14 @@ namespace App\Services;
 
 
 use App\Models\OmCarType;
+use App\Models\OmCustomer;
 use App\Models\OmGoods;
+use App\Models\OmGoodsMfrs;
+use App\Models\OmGoodsSupplier;
 use App\Models\OmOrder;
 use App\Models\OmOrderGoods;
 use App\Models\OmSupplier;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class OrderService extends BaseService {
@@ -15,15 +19,14 @@ class OrderService extends BaseService {
     }
 
     //添加订单
-    public function addOrder($data){
-        $v = $this->OrderValidator($data);
-        if(!$v['status']){
-            return $v;
-        }
-        $data['uid'] = $this->uid;
-        $order = OmOrder::create($data);
+    public function addOrder($customer_id,$data){
+        $save_data['uid'] = $this->uid;
+        $save_data['customer_id'] = $customer_id;
+        $save_data['contract_sn'] = $data['contract_sn'];
+        $save_data['price'] = $data['price'];
+        $save_data['mark'] = $data['mark'];
+        $order = OmOrder::create($save_data);
         if($order->id){
-            isset($data['order_goods']) && $this->setOrderGoods($order, $data['order_goods']);
             return ['status'=>true, 'data'=>$order];
         }else{
             return ['status'=>false, 'msg'=>'订单添加失败'];
@@ -48,14 +51,10 @@ class OrderService extends BaseService {
         if(!$order){
             return ['status'=>false, 'msg'=>'订单不存在'];
         }
-        $v = $this->OrderValidator($data);
-        if(!$v['status']){
-            return $v;
-        }
-        $order_id = OmOrder::where('id',$id)->update($data);
+        $update_data['price'] = $data['price'];
+        $update_data['mark'] = $data['mark'];
+        $order_id = OmOrder::where('id',$id)->update($update_data);
         if($order_id){
-            isset($data['order_goods']) && $this->setOrderGoods($order, $data['order_goods']);
-            $order = OmOrder::where('id',$order_id)->first();
             return ['status'=>true, 'data'=>$order];
         }else{
             return ['status'=>false, 'msg'=>'订单更新失败'];
@@ -145,24 +144,81 @@ class OrderService extends BaseService {
                            ->select('om_goods.img','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_order_goods.*')
                            ->where('om_order_goods.customer_id',$customer_id)
                            ->where('om_order_goods.is_deleted',0)
-                           ->where('om_order_goods.customer_id',0)
+                           ->where('om_order_goods.type',0)
                            ->get();
         foreach ($xjs as $k=>$v){
-            $car_types = OmCarType::where('goods_id',$v['goods_id'])->lists('car_type');
-            if($car_types){
-                $car_types = $car_types->toArray();
-                $xjs[$k]['car_type'] = implode(',',$car_types);
+            $car_type = OmCarType::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->first();
+            if($car_type){
+                $xjs[$k]['car_type'] = $car_type['brand'].' '.$car_type['car_type'];
             }else{
                 $xjs[$k]['car_type'] = '';
             }
-            $xjs[$k]['supplier'] = OmSupplier::where('id',$v['supplier_id'])->pluck('name');
+            $supplier_id = OmGoodsSupplier::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->value('supplier_id');
+            if($supplier_id){
+                $xjs[$k]['supplier'] = OmSupplier::where('id',$supplier_id)->value('name');
+            }else{
+                $xjs[$k]['supplier'] = '';
+            }
+            $xjs[$k]['mfrs_sn'] = OmGoodsMfrs::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->value('mfrs_sn');
+            $xjs[$k]['edit'] = false;
         }
         return $xjs;
     }
 
+    public function postXjs($customer_id,$ids){
+        $customer = OmCustomer::where('id',$customer_id)->first();
+        if(!$customer){
+            return ['status'=>false,'msg'=>'客户不存在'];
+        }
+        foreach ($ids as $k=>$v){
+            $xj_data[$k]['customer_id'] = $customer_id;
+            $xj_data[$k]['goods_id'] = $v;
+            $xj_data[$k]['type'] = 0;
+            $xj_data[$k]['created_at'] = Carbon::now();
+        }
+        $res = OmOrderGoods::insert($xj_data);
+        if($res){
+            return ['status'=>true];
+        }else{
+            return ['status'=>false,'msg'=>'询价记录添加失败'];
+        }
+    }
+
+    public function putXj($id, $data){
+        $save['fob_price'] = $data['fob_price'];
+        $save['tax_price'] = $data['tax_price'];
+        $save['price'] = $data['price'];
+
+        $update = OmOrderGoods::where('id',$id)->update($save);
+        if($update){
+            return ['status'=>true];
+        }else{
+            return ['status'=>false,'msg'=>'询价记录操作失败'];
+        }
+    }
+
+    public function deleteXj($id){
+        $delete = OmOrderGoods::where('id',$id)->update(['is_deleted'=>1]);
+        if(!$delete){
+            return ['status'=>false,'msg'=>'询价记录删除失败'];
+        }else{
+            return ['status'=>true];
+        }
+    }
+
     public function getCustomerOrders($customer_id){
-        $orders = OmOrder::select('customer_id','contract_sn','price','manager','mark')->where(['customer_id'=>$customer_id,'is_deleted'=>0])->get();
+        $orders = OmOrder::select('id','customer_id','contract_sn','price','manager','mark')->where(['customer_id'=>$customer_id,'is_deleted'=>0])->get();
+        foreach ($orders as $k=>$v){
+            $orders[$k]['edit'] = false;
+        }
         return $orders;
+    }
+
+    public function getContractSn($customer_id){
+        $carbon = new Carbon();
+        $max_id = OmOrder::max('id');
+        $contract_sn = 'BK'.substr($carbon->year,-2).($max_id + 1);
+        return $contract_sn;
     }
 
 }

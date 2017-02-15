@@ -15,13 +15,13 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
-    public function postOrder(Request $request){
-        $res = $this->orderService->addOrder($request->all());
+    public function postOrder($id, Request $request){
+        $res = $this->orderService->addOrder($id,$request->all());
         return Response::json($res,200);
     }
 
     public function putOrder(Request $request, $id){
-        $res = $this->orderService->editOrder($request->all($id, $request->all()));
+        $res = $this->orderService->editOrder($id, $request->all());
         return Response::json($res,200);
     }
 
@@ -40,8 +40,30 @@ class OrderController extends Controller
         return Response::json($res,200);
     }
 
+    public function postXjs($id, Request $request){
+        $data = $request->all();
+        $ids = $data['ids'];
+        $res = $this->orderService->postXjs($id,$ids);
+        return Response::json($res,200);
+    }
+
+    public function putXj($id, Request $request){
+        $res = $this->orderService->putXj($id,$request->all());
+        return Response::json($res,200);
+    }
+
+    public function deleteXj($id){
+        $res = $this->orderService->deleteXj($id);
+        return Response::json($res,200);
+    }
+
     public function getCustomerOrders($id){
         $res = $this->orderService->getCustomerOrders($id);
+        return Response::json($res,200);
+    }
+
+    public function getContractSn($id){
+        $res = $this->orderService->getContractSn($id);
         return Response::json($res,200);
     }
 }

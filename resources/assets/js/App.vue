@@ -69,6 +69,7 @@
 				route: '',
 				popup: false,
 				goods_ids: [],
+				tag_id: 0,//所有要用到弹窗产品列表的都使用这个id
 				type: 0  //0添加询价记录，1添加采购记录
 			}
         },

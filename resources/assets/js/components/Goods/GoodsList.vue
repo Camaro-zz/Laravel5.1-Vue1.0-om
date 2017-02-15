@@ -86,33 +86,33 @@
                             </tbody>
                             <tfoot>
                             <tr>
-                                <td colspan="3">
+                                <td colspan="12">
                                     <button type="button" v-on:click="deleteGoods(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
-                                </td>
-                                <td colspan="8" v-if="all > 1">
-                                    <ul class="pagination pull-right">
-                                        <li class="footable-page-arrow">
-                                            <input type="text" class="go_page_class" v-model="go_page_class" number>
-                                            <a data-page="last" class="go_page_class_a" v-on:click="btnClick(go_page_class)">跳转</a>
-                                        </li>
-                                    </ul>
-                                    <ul class="pagination pull-right">
-                                        <li class="footable-page-arrow">
-                                            <a data-page="first" v-on:click="goPage(2)">«</a>
-                                        </li>
-                                        <li class="footable-page-arrow">
-                                            <a data-page="prev" v-on:click="goPage(0)">‹</a>
-                                        </li>
-                                        <li class="footable-page" v-for="index in indexs" v-bind:class="{ 'active': cur == index}">
-                                            <a v-on:click="btnClick(index)">{{ index }}</a>
-                                        </li>
-                                        <li class="footable-page-arrow">
-                                            <a data-page="next" v-on:click="goPage(1)">›</a>
-                                        </li>
-                                        <li class="footable-page-arrow">
-                                            <a data-page="last" v-on:click="goPage(3)">»</a>
-                                        </li>
-                                    </ul>
+                                    <template  v-if="all > 1">
+                                        <ul class="pagination pull-right">
+                                            <li class="footable-page-arrow">
+                                                <input type="text" class="go_page_class" v-model="go_page_class" number>
+                                                <a data-page="last" class="go_page_class_a" v-on:click="btnClick(go_page_class)">跳转</a>
+                                            </li>
+                                        </ul>
+                                        <ul class="pagination pull-right">
+                                            <li class="footable-page-arrow">
+                                                <a data-page="first" v-on:click="goPage(2)">«</a>
+                                            </li>
+                                            <li class="footable-page-arrow">
+                                                <a data-page="prev" v-on:click="goPage(0)">‹</a>
+                                            </li>
+                                            <li class="footable-page" v-for="index in indexs" v-bind:class="{ 'active': cur == index}">
+                                                <a v-on:click="btnClick(index)">{{ index }}</a>
+                                            </li>
+                                            <li class="footable-page-arrow">
+                                                <a data-page="next" v-on:click="goPage(1)">›</a>
+                                            </li>
+                                            <li class="footable-page-arrow">
+                                                <a data-page="last" v-on:click="goPage(3)">»</a>
+                                            </li>
+                                        </ul>
+                                    </template>
                                 </td>
                             </tr>
                             </tfoot>

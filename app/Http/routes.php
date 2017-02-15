@@ -100,7 +100,12 @@ Route::group(['prefix' => 'customer','middleware'=>$authApiMiddleware],function(
     Route::get('{id}.json', 'Customer\CustomerController@getCustomer');//客户详情
     Route::delete('batch.json', 'Customer\CustomerController@deleteCustomer');//客户删除
     Route::get('xjs/{id}.json', 'Order\OrderController@getXjs');//单个客户询价记录
+    Route::post('xjs/{id}.json', 'Order\OrderController@postXjs');//添加客户询价记录
+    Route::put('xjs/{id}.json', 'Order\OrderController@putXj');//编辑客户询价记录
+    Route::delete('xjs/{id}.json', 'Order\OrderController@deleteXj');//删除客户询价记录
     Route::get('orders/{id}.json', 'Order\OrderController@getCustomerOrders');//单个客户采购记录
+
+    Route::get('contract_sn/{id}.json', 'Order\OrderController@getContractSn');//获取最新订单sn
 });
 
 //生产商模块
@@ -114,7 +119,7 @@ Route::group(['prefix' => 'mfrs','middleware'=>$authApiMiddleware],function(){
 
 //订单模块
 Route::group(['prefix' => 'order','middleware'=>$authApiMiddleware],function(){
-    Route::post('add.json', 'Order\OrderController@postOrder');//添加订单
+    Route::post('add/{id}.json', 'Order\OrderController@postOrder');//添加订单
     Route::put('{id}.json', 'Order\OrderController@putOrder');//修改订单
     Route::get('{id}.json', 'Order\OrderController@getOrder');//订单详情
 });

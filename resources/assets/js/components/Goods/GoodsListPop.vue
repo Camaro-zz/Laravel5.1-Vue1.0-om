@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-striped" >
+                <table class="table table-striped" style="margin-bottom:0px !important">
                     <thead>
                     <tr>
                         <th>{{ids}}</th>
@@ -75,7 +75,7 @@
             </div>
             <div>
                 <form method="get" class="form-horizontal">
-                    <div class="hr-line-dashed"></div>
+                    <div class="hr-line-dashed" style="margin-top:0px !important"></div>
                     <div class="table-responsive">
                         <div class="col-sm-12" style="text-align:center;margin-bottom:15px">
                             <button class="btn btn-w-m btn-primary" type="button" @click="postChoose()">选取</button>
@@ -168,12 +168,13 @@ export default{
             }
         },
         postXj(){
-            /*this.$http.post('/customer/xjs.json',{ids:this.ids}).then(function (response) {
+            var id = this.$root.tag_id;
+            this.$http.post('/customer/xjs/'+id+'.json',{ids:this.ids}).then(function (response) {
 
-            });*/
+            });
         },
         postOrder(){
-
+            alert('order');
         },
         cancelChoose(){
             layer.closeAll();
