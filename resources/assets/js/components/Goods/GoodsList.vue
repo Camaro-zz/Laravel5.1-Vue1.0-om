@@ -54,10 +54,12 @@
                             <tbody v-if="all > 0">
                             <tr class="goods_list_css" v-for="goods in goodses">
                                 <td  class="goods_list_css_jump"><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
-                                <td  class="goods_list_css_jump" @click="goToInfo($event, goods.id)"><div class="goods_list_img"><img v-if="goods.img" class="goods_img" v-bind:src="goods.img"/></div></td>
+                                <td  class="goods_list_css_jump"><div class="goods_list_img fancybox-box"><a class="fancybox" href="{{goods.img}}"><img v-if="goods.img" class="goods_img" v-bind:src="goods.img"/></a></div></td>
                                 <td  class="goods_list_css_jump" @click="goToInfo($event, goods.id)">{{goods.product_sn}}</td>
                                 <td v-if="goods.mfrs != ''">
-                                    {{goods.mfrs.mfrs_sn}}
+                                    <template v-for="m in goods.mfrs">
+                                        {{m.mfrs_sn}}<br>
+                                    </template>
                                 </td>
                                 <td v-else>暂无</td>
                                 <td>{{goods.cn_name}}</td>
@@ -130,6 +132,10 @@ export default{
         this.cat_id = this.$route.query.cat_id;
         this.getGoodses()
         this.getCats()
+        $('.fancybox').fancybox({
+            openEffect: 'none',
+            closeEffect: 'none'
+        });
     },
     data(){
         return{

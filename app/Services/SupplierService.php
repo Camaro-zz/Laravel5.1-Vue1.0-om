@@ -143,7 +143,7 @@ class SupplierService extends BaseService {
     }
 
     public function deleteSupplier($ids){
-        $delete = $this->model->whereIn('id',$ids)->update(array('is_deleted'=>1));
+        $delete = $this->model->whereIn('id',$ids)->delete();
         return ['status'=>true];
     }
 

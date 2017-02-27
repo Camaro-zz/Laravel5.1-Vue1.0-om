@@ -177,7 +177,12 @@ class GoodsService extends BaseService {
         if(!$goods){
             return ['status'=>false, 'msg'=>'产品不存在'];
         }
-        $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->value('name');
+        if($goods['cat_id'] > 0){
+            $goods['cat_name'] = OmGoodsCat::where('id',$goods['cat_id'])->value('name');
+        }else{
+            $goods['cat_name'] = '未分类';
+        }
+
         $goods['mfrs_sn'] = OmGoodsMfrs::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->value('mfrs_sn');
         $goods['car_type'] = OmCarType::where(['goods_id'=>$id,'is_deleted'=>0])->orderBy('sort','DESC')->select('brand','car_type')->first();
         $goods['supplier'] = OmGoodsSupplier::leftJoin('om_supplier as sup','sup.id','=','om_goods_supplier.supplier_id')
@@ -255,7 +260,7 @@ class GoodsService extends BaseService {
                 if(!$v['prop']){
                     $v['prop'] = '';
                 }
-                $v['mfrs'] = OmGoodsMfrs::select('mfrs_sn','mfrs_name','sort')->where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->first();
+                $v['mfrs'] = OmGoodsMfrs::select('mfrs_sn','mfrs_name','sort')->where(array('goods_id'=>$v['id'],'is_deleted'=>0))->orderBy('sort', 'DESC')->take(3)->get();
                 if(!$v['mfrs']){
                     $v['mfrs'] = '';
                 }
@@ -263,6 +268,8 @@ class GoodsService extends BaseService {
                 if(!$v['car_type']){
                     $v['car_type'] = '';
                 }
+
+                $v['mark'] = mb_substr($v['mark'],0,10).'...';
             }
         }
 
@@ -271,7 +278,7 @@ class GoodsService extends BaseService {
 
     public function deleteGoodses($ids){
         $ids = explode(',',$ids);
-        $delete = OmGoods::whereIn('id',$ids)->update(array('is_deleted'=>1));
+        $delete = OmGoods::whereIn('id',$ids)->delete();
         return ['status'=>true];
     }
 

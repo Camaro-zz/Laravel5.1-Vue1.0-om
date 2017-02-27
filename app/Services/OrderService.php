@@ -198,7 +198,7 @@ class OrderService extends BaseService {
     }
 
     public function deleteXj($id){
-        $delete = OmOrderGoods::where('id',$id)->update(['is_deleted'=>1]);
+        $delete = OmOrderGoods::where('id',$id)->delete();
         if(!$delete){
             return ['status'=>false,'msg'=>'询价记录删除失败'];
         }else{

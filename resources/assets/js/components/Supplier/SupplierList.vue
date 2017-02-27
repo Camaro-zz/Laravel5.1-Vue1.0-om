@@ -58,10 +58,9 @@
                         </tbody>
                         <tfoot >
                         <tr>
-                            <td colspan="3">
+                            <td colspan="11">
                                 <button type="button" v-on:click="deleteSupplier(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
-                            </td>
-                            <td colspan="8" v-if="all > 1">
+                                <template  v-if="all > 1">
                                 <ul class="pagination pull-right">
                                     <li class="footable-page-arrow">
                                         <input type="text" class="go_page_class" v-model="go_page_class" number>
@@ -85,6 +84,7 @@
                                         <a data-page="last" v-on:click="goPage(3)">»</a>
                                     </li>
                                 </ul>
+                                </template>
                             </td>
                         </tr>
                         </tfoot>

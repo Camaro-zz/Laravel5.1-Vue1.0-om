@@ -68,14 +68,14 @@
                                     <label class="col-sm-3 control-label title_width">采购价(含)：</label>
 
                                     <div class="col-sm-5">
-                                        <p v-if="goods.supplier">${{(parseFloat(goods.supplier.tax_price)).toFixed(2)}}</p>
+                                        <p v-if="goods.supplier">￥{{(parseFloat(goods.supplier.tax_price)).toFixed(2)}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">采购价(不含)：</label>
 
                                     <div class="col-sm-5">
-                                        <p v-if="goods.supplier">${{(parseFloat(goods.supplier.price)).toFixed(2)}}</p>
+                                        <p v-if="goods.supplier">￥{{(parseFloat(goods.supplier.price)).toFixed(2)}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -105,16 +105,21 @@
                                     <label class="col-sm-3 control-label title_width">报关要素：</label>
 
                                     <div class="col-sm-5">
-                                        <p>{{goods.report_key}}</p>
+                                        <p style="word-break:break-all">{{goods.report_key}}</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label title_width">备注：</label>
 
                                     <div class="col-sm-5">
-                                        <p>{{goods.mark}}</p>
+                                        <p style="word-break:break-all">{{goods.mark}}</p>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <template v-if="goods.img != ''">
+                                    <img alt="image" class="img-responsive info_bigimg" v-bind:src="goods.img">
+                                </template>
                             </div>
                         </div>
                         <div class="row" v-if="edit">

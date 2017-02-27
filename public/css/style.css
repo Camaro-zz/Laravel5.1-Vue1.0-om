@@ -8319,7 +8319,7 @@ span.delimiter {
     line-height: 31px;
 }
 .goods_img{
-    width: 60px;
+    width: 60px !important;
     position: absolute;
     top: 0;
     bottom: 0;
