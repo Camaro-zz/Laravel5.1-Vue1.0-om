@@ -64,9 +64,9 @@
                                 <td v-else>暂无</td>
                                 <td>{{goods.cn_name}}</td>
                                 <td>{{goods.en_name}}</td>
-                                <td v-if="goods.prop != ''">${{goods.prop[0].tax_price}}</td>
+                                <td v-if="goods.prop != ''">￥{{goods.prop[0].tax_price}}</td>
                                 <td v-else>暂无</td>
-                                <td v-if="goods.prop != ''">${{goods.prop[0].price}}</td>
+                                <td v-if="goods.prop != ''">￥{{goods.prop[0].price}}</td>
                                 <td v-else>暂无</td>
                                 <td>
                                     <template v-for="c in goods.car_type">

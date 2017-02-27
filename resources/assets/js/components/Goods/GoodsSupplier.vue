@@ -27,7 +27,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">采购价</label>
+                            <label class="col-sm-2 control-label">不含税采购价</label>
 
                             <div class="col-sm-4">
                                 <input type="number" v-model="supplier.price" class="form-control">
@@ -38,13 +38,6 @@
 
                             <div class="col-sm-4">
                                 <input type="number" v-model="supplier.tax_price" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">生产商名称</label>
-
-                            <div class="col-sm-4">
-                                <input type="text" v-model="supplier.mfrs_name" class="form-control">
                             </div>
                         </div>
                         <div class="hr-line-dashed"></div>
