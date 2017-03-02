@@ -92,12 +92,12 @@
                 });
             },
             getSuppliers(){
-                this.$http.get('/suppliers.json').then(function(response){
+                this.$http.get('/suppliers.json?type=1').then(function(response){
                         this.$set('suppliers',response.data.data);
                 });
             },
             getGoodsSupplier(){
-                this.$http.get('/goods/supplier/'+this.id+'.json?type=1').then(function(response){
+                this.$http.get('/goods/supplier/'+this.id+'.json').then(function(response){
                     if(response.data.status == true){
                         this.$set('supplier', response.data.data);
                         this.$set('goods_name', response.data.goods_name);
