@@ -19,6 +19,7 @@
                                 <select class=" input-sm form-control col-md-3" style="width:20% !important;float:right;" v-model="search_data.type" number>
                                     <option value="0">中文品名</option>
                                     <option value="1">英文品名</option>
+                                    <option value="2">原厂编号</option>
                                 </select>
 
                                 <select class=" input-sm form-control col-md-3" style="width:20% !important;" v-model="search_data.cat_id" number>
@@ -163,14 +164,17 @@ export default{
             var serch_data = this.search_data;
             var en_name = '';
             var cn_name = '';
+            var mfrs_sn = '';
             var cat_id = this.cat_id;
             if(serch_data.type == 0){//按中文名搜索
                 cn_name = serch_data.keywords
-            }else{
+            }else if(serch_datat.type == 1){//英文名
                 en_name = serch_data.keywords
+            }else{//原厂编号
+                 mfrs_sn = serch_data.keywords
             }
             var page = this.cur ? this.cur : 1;
-            this.$http.get('/goods.json?en_name='+en_name+'&cn_name='+cn_name+'&cat_id='+cat_id+'&page='+page).then(function(response){
+            this.$http.get('/goods.json?en_name='+en_name+'&cn_name='+cn_name+'&cat_id='+cat_id+'&page='+page+'&mfrs_sn='+mfrs_sn).then(function(response){
                 this.$set('goodses',response.data.data);
                 this.$set('all',response.data.all_page);
                 this.$set('cur', page)

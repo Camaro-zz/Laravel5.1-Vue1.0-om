@@ -245,6 +245,11 @@ class GoodsService extends BaseService {
         if(isset($data['cat_id']) && $data['cat_id'] > 0){
             $query->where('om_goods.cat_id', '=', $data['cat_id']);
         }
+        if(isset($data['mfrs_sn'])){
+            $ids = OmGoodsMfrs::where('mfrs_sn', 'like', '%' . $data['mfrs_sn'] . '%')->lists('goods_id')->toArray();
+            $ids = array_unique($ids);
+            $query->whereIn('id', $ids);
+        }
         $result['_count'] = $query->count();
         $result['all_page'] = ceil($result['_count'] / $limit);
         $query->skip($offset);
