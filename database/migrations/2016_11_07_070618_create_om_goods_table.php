@@ -21,7 +21,7 @@ class CreateOmGoodsTable extends Migration
             $table->string('en_name',50)->comment('英文品名')->default('');
             $table->string('cn_name',50)->comment('中文品名')->default('');
             $table->string('hs_code',50)->comment('HS编码')->default('');
-            $table->string('fyi_status',10)->comment('出货状态')->default('');
+            $table->tinyInteger('fyi_status')->comment('出货状态')->default(0);
             $table->decimal('tax_rate',10,2)->comment('退税率')->default(0);
             $table->text('report_key')->comment('报关要素')->default('');
             $table->text('mark')->comment('备注');

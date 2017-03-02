@@ -91,7 +91,9 @@
                                     <label class="col-sm-3 control-label title_width">出货状态：</label>
 
                                     <div class="col-sm-5">
-                                        <p>{{goods.fyi_status}}</p>
+                                        <p v-if="goods.fyi_status == 0">正常</p>
+                                        <p v-if="goods.fyi_status == 1">待开发</p>
+                                        <p v-if="goods.fyi_status == 2">开发中</p>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -174,7 +176,11 @@
                                     <label class="col-sm-3 control-label">出货状态：</label>
 
                                     <div class="col-sm-4">
-                                        <input type="text" v-model="goods.fyi_status" class="form-control">
+                                        <select v-model="goods.fyi_status"  style="width:100%;" class="form-control">
+                                            <option value="0" selected>正常</option>
+                                            <option value="1">待开发</option>
+                                            <option value="2">开发中</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">

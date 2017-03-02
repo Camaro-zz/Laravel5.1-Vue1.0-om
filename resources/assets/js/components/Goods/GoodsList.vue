@@ -73,7 +73,9 @@
                                     </template>
                                 </td>
                                 <td v-else>暂无</td>
-                                <td>{{goods.fyi_status}}</td>
+                                <td v-if="goods.fyi_status == 0">正常</td>
+                                <td v-if="goods.fyi_status == 1">待开发</td>
+                                <td v-if="goods.fyi_status == 2">开发中</td>
                                 <td>{{goods.mark}}</td>
                             </tr>
                             </tbody>
