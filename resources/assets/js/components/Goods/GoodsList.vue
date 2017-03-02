@@ -109,6 +109,11 @@
                                             </li>
                                         </ul>
                                     </template>
+                                    <ul class="pagination pull-right">
+                                        <li class="footable-page-arrow">
+                                            共{{count}}条
+                                        </li>
+                                    </ul>
                                 </td>
                             </tr>
                             </tfoot>
@@ -146,7 +151,8 @@ export default{
             go_page_class: '',
             ids: [],
             cats: {},
-            cat_id: ''
+            cat_id: '',
+            count: 0
         }
     },
     components:{
@@ -171,6 +177,7 @@ export default{
                 this.$set('goodses',response.data.data);
                 this.$set('all',response.data.all_page);
                 this.$set('cur', page)
+                this.$set('count', response.data._count)
             });
         },
         goodsSerch(){
