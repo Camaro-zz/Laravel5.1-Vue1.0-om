@@ -17,9 +17,9 @@
                             <div class="input-group">
                                 <input type="text" v-model="search_data.keywords" style="width:50% !important;float:right;" placeholder="请输入产品名称" class="input-sm form-control col-md-5">
                                 <select class=" input-sm form-control col-md-3" style="width:20% !important;float:right;" v-model="search_data.type" number>
+                                    <option value="2">原厂编号</option>
                                     <option value="0">中文品名</option>
                                     <option value="1">英文品名</option>
-                                    <option value="2">原厂编号</option>
                                 </select>
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-sm btn-primary" v-on:click="goodsSerch()"> 搜索</button>
