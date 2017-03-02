@@ -334,15 +334,13 @@ class GoodsService extends BaseService {
     //验证规则
     public function supplierGoodsValidator($data){
         $message = [
-            'price.required' => '采购价不能为空',
             'price.numeric' => '采购价只能为数值',
-            'tax_price.required' => '含税采购价不能为空',
             'tax_price.numeric' => '含税采购价只能为数值',
         ];
 
         $rule = [
-            'price' => 'required|numeric',
-            'tax_price' => 'required|numeric',
+            'price' => 'numeric',
+            'tax_price' => 'numeric',
         ];
 
         $res = $this->doValidate($data,$rule,$message);
