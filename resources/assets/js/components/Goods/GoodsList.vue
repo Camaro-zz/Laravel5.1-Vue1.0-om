@@ -167,7 +167,7 @@ export default{
             var cat_id = this.cat_id;
             if(serch_data.type == 0){//按中文名搜索
                 cn_name = serch_data.keywords
-            }else if(serch_datat.type == 1){//英文名
+            }else if(serch_data.type == 1){//英文名
                 en_name = serch_data.keywords
             }else{//原厂编号
                  mfrs_sn = serch_data.keywords
