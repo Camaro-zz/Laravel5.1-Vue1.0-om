@@ -112,6 +112,7 @@ class SupplierService extends BaseService {
     public function getSuppliers($data){
         $page = isset($data['page']) ? $data['page'] : 1;
         $limit = isset($data['limit']) ? $data['limit'] : 10;
+        $type = isset($data['type']) ? $data['type'] : 0;
         $offset = ($page-1)*$limit;
         $query = $this->model->select('id','supplier_sn','name','contacts','sort','tel','mobile','qq','website','img');
         $query->where('is_deleted',0);
@@ -125,8 +126,10 @@ class SupplierService extends BaseService {
         }
         $result['_count'] = $query->count();
         $result['all_page'] = ceil($result['_count'] / $limit);
-        $query->skip($offset);
-        $query->take($limit);
+        if($type == 0){
+            $query->skip($offset);
+            $query->take($limit);
+        }
         $result['data'] = $query->orderBy('sort','DESC')->get();
 
         return $result;
