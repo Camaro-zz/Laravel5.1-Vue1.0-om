@@ -236,16 +236,16 @@ class GoodsService extends BaseService {
         $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
                         ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','cat.name as cat_name','om_goods.fyi_status','om_goods.mark')->where('om_goods.is_deleted',0);
-        if(isset($data['cn_name']) && $data['cn_name']){
+        if(isset($data['cn_name']) && str_replace(' ','',$data['cn_name'])){
             $query->where('om_goods.cn_name', 'like', '%' . $data['cn_name'] . '%');
         }
-        if(isset($data['en_name']) && $data['en_name']){
+        if(isset($data['en_name']) && str_replace(' ','',$data['en_name'])){
             $query->where('om_goods.en_name', 'like', '%' . $data['en_name'] . '%');
         }
         if(isset($data['cat_id']) && $data['cat_id'] > 0){
             $query->where('om_goods.cat_id', '=', $data['cat_id']);
         }
-        if(isset($data['mfrs_sn']) && $data['mfrs_sn']){
+        if(isset($data['mfrs_sn']) && str_replace(' ','',$data['mfrs_sn'])){
             $ids = OmGoodsMfrs::where('mfrs_sn', 'like', '%' . $data['mfrs_sn'] . '%')->lists('goods_id')->toArray();
             $ids = array_unique($ids);
             $query->whereIn('om_goods.id', $ids);
@@ -299,6 +299,7 @@ class GoodsService extends BaseService {
         }
         unset($data['id']);
         unset($data['edit']);
+        $data['mfrs_sn'] = str_replace(' ','',$data['mfrs_sn']);
         $data['goods_id'] = $id;
         $data['uid'] = $this->uid;
         $mfrs = OmGoodsMfrs::create($data);
