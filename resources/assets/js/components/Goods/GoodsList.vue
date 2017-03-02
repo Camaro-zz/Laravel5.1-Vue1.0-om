@@ -21,13 +21,6 @@
                                     <option value="1">英文品名</option>
                                     <option value="2">原厂编号</option>
                                 </select>
-
-                                <select class=" input-sm form-control col-md-3" style="width:20% !important;" v-model="search_data.cat_id" number>
-                                    <option value="">请选择类目</option>
-                                    <template v-for="cat in cats">
-                                    <option value="{{cat.id}}">{{cat.name}}</option>
-                                    </template>
-                                </select>
                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-sm btn-primary" v-on:click="goodsSerch()"> 搜索</button>
                                 </span>
