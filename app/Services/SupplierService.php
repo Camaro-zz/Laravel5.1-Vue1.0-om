@@ -52,7 +52,7 @@ class SupplierService extends BaseService {
         if(!$supplier){
             return ['status'=>false, 'msg'=>'供应商不存在'];
         }
-        $v = $this->supplierValidator($data);
+        $v = $this->supplierValidator($data,$id);
         if(!$v['status']){
             return $v;
         }
@@ -69,9 +69,10 @@ class SupplierService extends BaseService {
     }
 
     //验证规则
-    public function supplierValidator($data){
+    public function supplierValidator($data,$id=''){
         $message = [
             'name.required' => '供货商名称不能为空',
+            'name.unique' => '供货商名称已存在',
             //'contacts.required' => '供货商联系人不能为空',
             //'tel.required' => '供货商电话不能为空',
             //'mobile.required' => '供货商手机不能为空',
@@ -80,7 +81,7 @@ class SupplierService extends BaseService {
         ];
 
         $rule = [
-            'name' => 'required',
+            'name' => 'required|unique:om_supplier,name,'.$id,
             //'contacts' => 'required',
             'tel' => 'between:9,20',
             'mobile' => 'regex:/^1[34578][0-9]{9}$/',
@@ -111,6 +112,7 @@ class SupplierService extends BaseService {
         $page = isset($data['page']) ? $data['page'] : 1;
         $limit = isset($data['limit']) ? $data['limit'] : 10;
         $type = isset($data['type']) ? $data['type'] : 0;
+        $goods_id = isset($data['goods_id']) ? $data['goods_id'] : 0;
         $offset = ($page-1)*$limit;
         $query = $this->model->select('id','supplier_sn','name','contacts','sort','tel','mobile','qq','website','img');
         $query->where('is_deleted',0);
@@ -121,6 +123,10 @@ class SupplierService extends BaseService {
 
         if(isset($data['supplier_sn']) && $data['supplier_sn']){
             $query->where('supplier_sn','like','%'.$data['supplier_sn'].'%');
+        }
+        if($goods_id > 0){
+            $exist_supids = OmGoodsSupplier::where(['goods_id'=>$goods_id])->lists('supplier_id');
+            $query->whereNotIn('id',$exist_supids);
         }
         $result['_count'] = $query->count();
         $result['all_page'] = ceil($result['_count'] / $limit);

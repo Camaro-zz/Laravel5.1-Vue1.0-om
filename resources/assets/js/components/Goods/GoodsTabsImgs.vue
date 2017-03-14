@@ -123,14 +123,14 @@
                         acceptedFiles: ".png,.jpg,.jpeg,.gif",
                         previewTemplate: '<div></div>',
                         success:function (file, response, e) {
+                            console.log(file);
                             if(response.status == true){
                                 _this.imgs.push(response.path);
                                 _this.goods.img = _this.imgs[0]
                             }
                         },
-                        dictFileTooBig: function () {
-                            alert('图片太大了');
-                        }
+                        dictFileTooBig: '图片太大了',
+                        dictInvalidInputType: '类型不对'
                     });
                 }
             }

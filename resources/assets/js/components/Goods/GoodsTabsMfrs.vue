@@ -20,6 +20,8 @@
                         <a @click="editMfrs(m)"><i class="fa fa-edit"></i> 编辑</a>
                         <span class="delimiter">|</span>
                         <a @click="deleteMfrs(m.id)"><i class="fa fa-remove"></i>   删除</a>
+                        <span class="delimiter">|</span>
+                        <a class="portlet-header"><i class="fa fa-arrows"></i>   拖动</a>
                     </td>
                 </tr>
                 </tbody>
@@ -37,10 +39,11 @@
             this.getMfrses();
             var _this = this;
             $(".mfrs-sortable-list").sortable({
+                handle: ".portlet-header",
                 update: function (event, ui) {
                     _this.sortMfrses($(this).sortable("toArray"));
                 }
-            }).disableSelection();
+            });
         },
         data(){
             return{

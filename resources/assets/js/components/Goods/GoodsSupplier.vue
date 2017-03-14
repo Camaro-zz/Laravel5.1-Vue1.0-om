@@ -40,6 +40,13 @@
                                 <input type="number" v-model="supplier.tax_price" class="form-control">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">起订量</label>
+
+                            <div class="col-sm-4">
+                                <input type="number" v-model="supplier.moq" class="form-control">
+                            </div>
+                        </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
                             <div class="col-sm-4 col-sm-offset-2">
@@ -92,7 +99,7 @@
                 });
             },
             getSuppliers(){
-                this.$http.get('/suppliers.json?type=1').then(function(response){
+                this.$http.get('/suppliers.json?type=1&goods_id='+this.goods_id).then(function(response){
                         this.$set('suppliers',response.data.data);
                 });
             },

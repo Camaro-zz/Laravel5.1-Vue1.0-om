@@ -23,7 +23,7 @@
                 <table class="table table-striped" style="margin-bottom:0px !important">
                     <thead>
                     <tr>
-                        <th>{{ids}}</th>
+                        <th></th>
                         <th>图片</th>
                         <th>产品编号</th>
                         <th>中文品名</th>

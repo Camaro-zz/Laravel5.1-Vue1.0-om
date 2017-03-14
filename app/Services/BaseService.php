@@ -213,4 +213,10 @@ abstract class BaseService {
         return $this->makeSn($type);
 
     }
+
+    public function delSpace($str){
+        $qian=array(" ","　","\t","\n","\r");
+
+        return str_replace($qian,'',$str);
+    }
 }

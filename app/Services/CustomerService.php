@@ -31,6 +31,7 @@ class CustomerService extends BaseService {
         if(!$customer){
             return ['status'=>false, 'msg'=>'客户不存在'];
         }
+        $data['email'] = $this->delSpace($data['email']);
         $v = $this->CustomerValidator($data,$id);
         if(!$v['status']){
             return $v;

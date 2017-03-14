@@ -18,6 +18,10 @@
                                 <th>L W H</th>
                                 <th>G.W</th>
                                 <th>N.W</th>
+                                <th>起订量</th>
+                                <th>采购价(含税)</th>
+                                <th>采购价(不含税)</th>
+                                <th>备注</th>
                                 <th>
                                     <a @click="addGoods()" class="btn btn-info btn-xs">添加产品</a>
                                     <span class="delimiter">|</span>
@@ -26,15 +30,19 @@
                             </thead>
                             <tbody class="xj-sortable-list connectList">
                                 <tr id="goods_{{g.id}}" v-for="g in goodses">
-                                    <td v-if="g.edit"><input type="text" class="form-control" v-model="g.product_sn"></td><td v-else>{{g.product_sn}}</td>
+                                    <td class="goods_list_css_jump" @click="goToInfo(g.id)" v-else>{{g.product_sn}}</td>
                                     <td><div class="goods_list_img"><img class="goods_img" v-if="g.img" v-bind:src="g.img"></div></td>
-                                    <td v-if="g.edit"><input type="text" class="form-control" v-model="g.mfrs_sn"></td><td v-else>{{g.mfrs_sn}}</td>
+                                    <td>{{g.mfrs_sn}}</td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.cn_name"></td><td v-else>{{g.cn_name}}</td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.en_name"></td><td v-else>{{g.en_name}}</td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.num"></td><td v-else>{{g.num}}</td>
                                     <td v-if="g.edit">L:<input type="text" class="form-control" v-model="g.length"><br>W:<input type="text" class="form-control" v-model="g.width"><br>H:<input type="text" class="form-control" v-model="g.height"></td><td v-else>L:{{g.length}}<br>W:{{g.width}}<br>H:{{g.height}}</td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.gw"></td><td v-else>{{g.gw}}</td>
                                     <td v-if="g.edit"><input type="text" class="form-control" v-model="g.nw"></td><td v-else>{{g.nw}}</td>
+                                    <td v-if="g.edit"><input type="text" class="form-control" v-model="g.moq"></td><td v-else>{{g.moq}}</td>
+                                    <td v-if="g.edit"><input type="text" class="form-control" v-model="g.tax_price"></td><td v-else>{{g.tax_price}}</td>
+                                    <td v-if="g.edit"><input type="text" class="form-control" v-model="g.price"></td><td v-else>{{g.price}}</td>
+                                    <td v-if="g.edit"><input type="text" class="form-control" v-model="g.mark"></td><td v-else>{{g.mark}}</td>
                                     <td v-if="g.edit">
                                         <a @click="submitGoods(g)" class="btn btn-info btn-xs">保存</a>
                                         <span class="delimiter">|</span>
@@ -93,6 +101,10 @@
                 new_goods.length = '';
                 new_goods.width = '';
                 new_goods.height = '';
+                new_goods.tax_price = '';
+                new_goods.price = '';
+                new_goods.mark = '';
+                new_goods.moq = '';
                 new_goods.gw = '';
                 new_goods.nw = '';
                 new_goods.edit = true;
@@ -109,7 +121,7 @@
                         }
                     });
                 }else{
-                    this.$http.put('/mfrs/'+mfrs.id+'.json', mfrs).then(function(response){
+                    this.$http.put('/supplier/goods/'+this.supplier_id+'.json', goods).then(function(response){
                         if(response.data.status == false){
                             toastr.error(response.data.msg);
                         }else{
@@ -130,7 +142,13 @@
             },
             connectGoods(){
 
-            }
+            },
+            goToInfo(goods_id){
+                /*if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
+                 return false;
+                 }*/
+                this.$route.router.go({path: '/goods/info/'+goods_id})
+            },
         }
     }
 </script>

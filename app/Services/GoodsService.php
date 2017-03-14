@@ -147,11 +147,13 @@ class GoodsService extends BaseService {
         $sup_data['tel'] = isset($data['tel']) ? $data['tel'] : '';
         $sup_data['mobile'] = isset($data['mobile']) ? $data['mobile'] : '';
         $sup_data['qq'] = isset($data['qq']) ? $data['qq'] : '';
-        $sup_data['mark'] = isset($data['mark']) ? $data['mark'] : '';
+        $goods_sup_data['mark'] = isset($data['mark']) ? $data['mark'] : '';
+        $goods_sup_data['moq'] = isset($data['moq']) ? $data['moq'] : '';
 
-        $res = $this->supplierService->supplierValidator($sup_data);
+        $res = $this->supplierService->supplierValidator($sup_data,$goods['supplier_id']);
+        //dd($res);
         if(!$res['status']){
-            return $res['status'];
+            return $res;
         }
 
         $goods_sup_data['tax_price'] = isset($data['tax_price']) ? $data['tax_price'] : 0;
@@ -159,7 +161,7 @@ class GoodsService extends BaseService {
 
         $res_g = $this->supplierGoodsValidator($goods_sup_data);
         if(!$res_g['status']){
-            return $res_g['status'];
+            return $res_g;
         }
         $sup = OmSupplier::where('id',$goods['supplier_id'])->update($sup_data);
         $goods = OmGoodsSupplier::where(array('id'=>$id,'is_deleted'=>0))->update($goods_sup_data);
@@ -294,12 +296,12 @@ class GoodsService extends BaseService {
         if(!isset($data['mfrs_name']) || !$data['mfrs_name']){
             return ['status'=>false,'msg'=>'生产商名称不能为空'];
         }
+        $data['mfrs_sn'] = $this->delSpace($data['mfrs_sn']);
         if(OmGoodsMfrs::where(['mfrs_sn'=>$data['mfrs_sn'],'is_deleted'=>0])->first()){
             return ['status'=>false,'msg'=>'原厂编号已存在'];
         }
         unset($data['id']);
         unset($data['edit']);
-        $data['mfrs_sn'] = str_replace(' ','',$data['mfrs_sn']);
         $data['goods_id'] = $id;
         $data['uid'] = $this->uid;
         $mfrs = OmGoodsMfrs::create($data);
@@ -408,7 +410,7 @@ class GoodsService extends BaseService {
 
     public function getSuppliersByGoods($goods_id){
         $suppliers = OmGoodsSupplier::leftJoin('om_supplier as sup', 'sup.id', '=', 'om_goods_supplier.supplier_id')
-                                    ->select('sup.mark','sup.qq','sup.tel','sup.supplier_sn','sup.name','sup.contacts','sup.mobile','om_goods_supplier.*')
+                                    ->select('sup.qq','sup.tel','sup.supplier_sn','sup.name','sup.contacts','sup.mobile','om_goods_supplier.*')
                                     ->where(array('om_goods_supplier.goods_id'=>$goods_id,'om_goods_supplier.is_deleted'=>0))
                                     ->orderBy('om_goods_supplier.sort', 'DESC')->get();
         if(!$suppliers){

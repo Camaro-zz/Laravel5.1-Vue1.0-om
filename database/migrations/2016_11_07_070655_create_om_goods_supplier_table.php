@@ -19,9 +19,11 @@ class CreateOmGoodsSupplierTable extends Migration
             $table->integer('supplier_id')->comment('供应商id')->default(0);
             $table->decimal('price',10,2)->comment('采购价')->default(0);
             $table->decimal('tax_price',10,2)->comment('含税采购价')->default(0);
+            $table->integer('moq')->comment('起订量')->default(0);
             $table->string('mfrs_name',50)->comment('生产商名称')->default('');
             $table->tinyInteger('sort')->comment('排序，数值越大越靠前')->default(0);
             $table->tinyInteger('is_deleted')->comment('是否删除,1是删除')->default(0);
+            $table->text('mark')->comment('供应商对产品的备注');
             $table->timestamps();
             $table->index('goods_id');
             $table->index('supplier_id');

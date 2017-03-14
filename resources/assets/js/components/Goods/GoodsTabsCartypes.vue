@@ -24,6 +24,8 @@
                         <a @click="editCarType(c)"><i class="fa fa-edit"></i> 编辑</a>
                         <span class="delimiter">|</span>
                         <a @click="deleteCartype(c.id)"><i class="fa fa-remove"></i>   删除</a>
+                        <span class="delimiter">|</span>
+                        <a class="portlet-header"><i class="fa fa-arrows"></i>   拖动</a>
                     </td>
                 </tr>
                 </tbody>
@@ -41,10 +43,11 @@
             this.getCarTypes();
             var _this = this;
             $(".car-type-sortable-list").sortable({
+                handle: ".portlet-header",
                 update: function (event, ui) {
                     _this.sortCartypes($(this).sortable("toArray"));
                 }
-            }).disableSelection();
+            });
         },
         data(){
             return{

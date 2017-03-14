@@ -8,6 +8,7 @@
                 <th>联系人</th>
                 <th>采购价(含税)</th>
                 <th>采购价(不含税)</th>
+                <th>起订量</th>
                 <th>QQ</th>
                 <th>手机</th>
                 <th>电话</th>
@@ -24,6 +25,7 @@
                     <td v-if="s.edit"><input type="text" class="form-control" v-model="s.contacts"></td><td v-else>{{s.contacts}}</td>
                     <td v-if="s.edit"><input type="number" class="form-control" v-model="s.tax_price"></td><td v-else>{{s.tax_price}}</td>
                     <td v-if="s.edit"><input type="number" class="form-control" v-model="s.price"></td><td v-else>{{s.price}}</td>
+                    <td v-if="s.edit"><input type="number" class="form-control" v-model="s.moq"></td><td v-else>{{s.moq}}</td>
                     <td v-if="s.edit"><input type="text" class="form-control" v-model="s.qq"></td><td v-else>{{s.qq}}</td>
                     <td v-if="s.edit"><input type="text" class="form-control" v-model="s.mobile"></td><td v-else>{{s.mobile}}</td>
                     <td v-if="s.edit"><input type="text" class="form-control" v-model="s.tel"></td><td v-else>{{s.tel}}</td>
@@ -37,6 +39,8 @@
                         <a @click="editSupplier(s)"><i class="fa fa-edit"></i> 编辑</a>
                         <span class="delimiter">|</span>
                         <a @click="deleteSupplier(s.id)"><i class="fa fa-remove"></i>   删除</a>
+                        <span class="delimiter">|</span>
+                        <a class="portlet-header"><i class="fa fa-arrows"></i>   拖动</a>
                     </td>
                 </tr>
                 </tbody>
@@ -54,10 +58,11 @@
             this.getGoodsSuppliers();
             var _this = this;
             $(".supplier-sortable-list").sortable({
+                handle: ".portlet-header",
                 update: function (event, ui) {
                     _this.sortSuppliers($(this).sortable("toArray"));
                 }
-            }).disableSelection();
+            });
         },
         data(){
             return{
@@ -93,6 +98,7 @@
                 new_sup.contacts = '';
                 new_sup.tax_price = '';
                 new_sup.price = '';
+                new_sup.moq = '';
                 new_sup.qq = '';
                 new_sup.mobile = '';
                 new_sup.contacts = '';
