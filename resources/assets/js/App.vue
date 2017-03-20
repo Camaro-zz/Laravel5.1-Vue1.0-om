@@ -25,7 +25,7 @@
 		<Minichat></Minichat>
 		<!--mini聊天窗口结束-->
 		<div id="goods_list_popup">
-			<Goodslistpop v-if="popup" :type="type"></Goodslistpop>
+			<Goodslistpop v-if="popup" :type="type" :customer_id="customer_id"></Goodslistpop>
 		</div>
 	</div>
 </template>
@@ -70,7 +70,8 @@
 				popup: false,
 				goods_ids: [],
 				tag_id: 0,//所有要用到弹窗产品列表的都使用这个id
-				type: 0  //0添加询价记录，1添加采购记录
+				type: 0,  //0添加询价记录，1添加采购记录
+				customer_id: 0
 			}
         },
         replace: false

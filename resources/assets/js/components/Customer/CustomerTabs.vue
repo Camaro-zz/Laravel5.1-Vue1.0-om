@@ -136,6 +136,7 @@
                         _this.$root.popup = false;
                     },
                     end: function () {
+                        _this.$root.popup = false;
                         _this.getXjs();
                     }
                 });

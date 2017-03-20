@@ -22,29 +22,8 @@
                 <Goodscartypes :goods_id="goods_id" :goods="goods"></Goodscartypes>
             </div>
             <div id="tab-5" class="tab-pane">
-                <div class="full-height-scroll">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                            <th>客户编号</th>
-                            <th>公司名</th>
-                            <th>联系人</th>
-                            <th>邮箱</th>
-                            <th>FOB</th>
-                            <th></th>
-                            </thead>
-                            <tbody class="sortable-list connectList">
-                            <tr id="offer_{{o.id}}" v-for="o in offers">
-                                <td>{{o.customer_sn}}</td>
-                                <td>广州</td>
-                                <td><i class="fa fa-flag"></i> 中国</td>
-                                <td class="client-status"><span class="label label-primary">已验证</span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <Goodsxjs :goods_id="goods_id" :goods="goods"></Goodsxjs>
+
             </div>
             <div id="tab-6" class="tab-pane">
                 <Goodspack :goods_id="goods_id" :goods="goods"></Goodspack>
@@ -61,6 +40,7 @@
     import Goodssuppliers from './GoodsTabsSuppliers.vue'
     import Goodscartypes from './GoodsTabsCartypes.vue'
     import Goodspack from './GoodsTabsPack.vue'
+    import Goodsxjs from './GoodsTabsXjs.vue'
     export default{
         props: ['goods_id','goods'],
         ready(){
@@ -76,7 +56,8 @@
             Goodsmfrs,
             Goodssuppliers,
             Goodscartypes,
-            Goodspack
+            Goodspack,
+            Goodsxjs
         },
         methods:{
             getMfrs(){

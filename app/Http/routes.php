@@ -76,6 +76,8 @@ Route::group(['prefix' => 'goods','middleware'=>$authApiMiddleware], function(){
     Route::get('pack/{id}.json', 'Goods\GoodsController@getGoodsPack');//获取包装细节
     Route::post('pack/{id}.json', 'Goods\GoodsController@postGoodsPack');//添加包装细节
     Route::put('pack/{id}.json', 'Goods\GoodsController@putGoodsPack');//修改包装细节
+
+    Route::get('xjs/{id}.json', 'Goods\GoodsController@getGoodsXjs');//获取报价记录
 });
 
 //供应商模块

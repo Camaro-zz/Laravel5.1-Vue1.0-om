@@ -84,6 +84,10 @@ class CustomerService extends BaseService {
     //客户删除
     public function deleteCustomer($data){
         $ids = isset($data['ids']) ? $data['ids'] : 0;
+        if(!$ids){
+            return ['status'=>false];
+        }
+        $ids = explode(',',$ids);
         $del = $this->model->whereIn('id', $ids)->delete();
         if(!$del){
             return ['status'=>false];

@@ -9,6 +9,7 @@ use App\Models\OmGoodsImg;
 use App\Models\OmGoodsMfrs;
 use App\Models\OmGoodsPack;
 use App\Models\OmGoodsSupplier;
+use App\Models\OmOrderGoods;
 use App\Models\OmSupplier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -231,10 +232,19 @@ class GoodsService extends BaseService {
         return ['status'=>true,'data'=>$pack];
     }
 
+    public function getGoodsXjs($id){
+        $xjs = OmOrderGoods::leftJoin('om_customer as c','c.id','=','om_order_goods.customer_id')
+                           ->where(['om_order_goods.goods_id'=>$id,'om_order_goods.type'=>0,'om_order_goods.is_deleted'=>0])
+                           ->select('om_order_goods.*','c.name','c.customer_sn','c.contact','c.email')
+                           ->get();
+       return $xjs;
+    }
+
     public function getGoodses($data){
         //$offset = isset($data['offset']) ? $data['offset'] : 0;
         $page = isset($data['page']) ? $data['page'] : 1;
         $limit = isset($data['limit']) ? $data['limit'] : 10;
+        $customer_id = isset($data['customer_id']) ? $data['customer_id'] : 0;
         $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
                         ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','cat.name as cat_name','om_goods.fyi_status','om_goods.mark')->where('om_goods.is_deleted',0);
@@ -248,9 +258,17 @@ class GoodsService extends BaseService {
             $query->where('om_goods.cat_id', '=', $data['cat_id']);
         }
         if(isset($data['mfrs_sn']) && str_replace(' ','',$data['mfrs_sn'])){
+            $data['mfrs_sn'] = str_replace('-','',$data['mfrs_sn']);
+            $data['mfrs_sn'] = str_replace('.','',$data['mfrs_sn']);
+            $data['mfrs_sn'] = str_replace('　','',$data['mfrs_sn']);
             $ids = OmGoodsMfrs::where('mfrs_sn', 'like', '%' . $data['mfrs_sn'] . '%')->lists('goods_id')->toArray();
             $ids = array_unique($ids);
             $query->whereIn('om_goods.id', $ids);
+        }
+        if($customer_id){
+            $list_type = isset($data['list_type']) ? $data['list_type'] : 0;
+            $not_in_ids = OmOrderGoods::where(['customer_id'=>$customer_id,'type'=>$list_type,'is_deleted'=>0])->lists('goods_id')->toArray();
+            $query->whereNotIn('om_goods.id', $not_in_ids);
         }
         $result['_count'] = $query->count();
         $result['all_page'] = ceil($result['_count'] / $limit);

@@ -8290,7 +8290,8 @@ span.delimiter {
 }
 .fancybox-box img{
     margin: auto;
-    width: 150px;
+    max-width: 150px;
+    max-height: 150px;
     position: absolute;
     left: 0;
     right: 0;
@@ -8319,7 +8320,8 @@ span.delimiter {
     line-height: 31px;
 }
 .goods_img{
-    width: 60px !important;
+    max-width: 60px !important;
+    max-height: 60px !important;
     position: absolute;
     top: 0;
     bottom: 0;

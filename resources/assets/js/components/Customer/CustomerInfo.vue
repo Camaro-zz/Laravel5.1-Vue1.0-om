@@ -167,7 +167,7 @@
     import Customertabs from './CustomerTabs.vue'
     export default{
         created(){
-            this.customer_id = this.$route.params.id;
+            this.$root.customer_id = this.customer_id = this.$route.params.id;
         },
         ready(){
             this.getCustomer();

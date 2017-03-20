@@ -31,8 +31,8 @@
                         <tr>
                             <th></th>
                             <th>供应商名片</th>
-                            <th>供应商名称</th>
                             <th>供应商编号</th>
+                            <th>供应商名称</th>
                             <th>联系人</th>
                             <th>电话</th>
                             <th>手机</th>
@@ -43,9 +43,9 @@
                         <tbody v-if="all > 0">
                         <tr class="goods_list_css" v-for="supplier in suppliers">
                             <td class="goods_list_css_jump"><input type="checkbox" value="{{supplier.id}}" v-model="ids"></td>
-                            <td class="goods_list_css_jump" @click="goToInfo($event, supplier.id)"><div class="goods_list_img"><img v-if="supplier.img" class="goods_img" v-bind:src="supplier.img"/></div></td>
+                            <td class="goods_list_css_jump"><div class="goods_list_img fancybox-box"><a class="fancybox" href="{{supplier.img}}"><img v-if="supplier.img" class="goods_img" v-bind:src="supplier.img"/></a></div></td>
+                            <td class="goods_list_css_jump"><a href="/supplier/info/{{supplier.id}}" target="_blank">{{supplier.supplier_sn}}</a></td>
                             <td>{{supplier.name}}</td>
-                            <td>{{supplier.supplier_sn}}</td>
                             <td>{{supplier.contacts}}</td>
                             <td>{{supplier.tel}}</td>
                             <td>{{supplier.mobile}}</td>
@@ -98,6 +98,10 @@
     export default{
         ready(){
             this.getSuppliers()
+            $('.fancybox').fancybox({
+                openEffect: 'none',
+                closeEffect: 'none'
+            });
         },
         data(){
             return{

@@ -170,6 +170,9 @@ class OrderService extends BaseService {
         if(!$customer){
             return ['status'=>false,'msg'=>'客户不存在'];
         }
+        if(!$ids){
+            return ['status'=>false,'msg'=>'请选择产品'];
+        }
         foreach ($ids as $k=>$v){
             $xj_data[$k]['customer_id'] = $customer_id;
             $xj_data[$k]['goods_id'] = $v;

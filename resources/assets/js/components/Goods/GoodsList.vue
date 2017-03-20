@@ -49,7 +49,7 @@
                             <tr class="goods_list_css" v-for="goods in goodses">
                                 <td  class="goods_list_css_jump"><input type="checkbox" value="{{goods.id}}" v-model="ids"></td>
                                 <td  class="goods_list_css_jump"><div class="goods_list_img fancybox-box"><a class="fancybox" href="{{goods.img}}"><img v-if="goods.img" class="goods_img" v-bind:src="goods.img"/></a></div></td>
-                                <td  class="goods_list_css_jump" @click="goToInfo($event, goods.id)">{{goods.product_sn}}</td>
+                                <td  class="goods_list_css_jump"><a href="/goods/info/{{goods.id}}" target="_blank">{{goods.product_sn}}</a></td>
                                 <td v-if="goods.mfrs != ''">
                                     <template v-for="m in goods.mfrs">
                                         {{m.mfrs_sn}}<br>
@@ -154,7 +154,7 @@ export default{
             ids: [],
             cats: {},
             cat_id: '',
-            count: 0
+            count: 0,
         }
     },
     components:{
@@ -208,7 +208,6 @@ export default{
         },
         btnClick(data){
             if(data != this.cur){
-                this.cur = data
                 this.$dispatch('btn-click',data)
                 this.getGoodses()
             }
@@ -217,7 +216,7 @@ export default{
             /*if(event.target.tagName === 'INPUT' || event.target.lastChild.tagName === 'INPUT'){
                 return false;
             }*/
-            this.$route.router.go({path: '/goods/info/'+goods_id})
+            this.$route.router.go({path: '/goods/info/'+goods_id,target: _blank})
         },
         getCats(){
             this.$http.get('/cats.json').then(function (response) {

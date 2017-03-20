@@ -31,8 +31,8 @@
                         <tr>
                             <th></th>
                             <th>客户名片</th>
-                            <th>客户名称</th>
                             <th>客户编号</th>
+                            <th>客户名称</th>
                             <th>联系人</th>
                             <th>电话</th>
                             <th>手机</th>
@@ -42,9 +42,9 @@
                         <tbody v-if="all > 0">
                         <tr class="goods_list_css" v-for="customer in customers">
                             <td class="goods_list_css_jump"><input type="checkbox" value="{{customer.id}}" v-model="ids"></td>
-                            <td class="goods_list_css_jump" @click="goToInfo($event, customer.id)"><div class="goods_list_img"><img v-if="customer.img" class="goods_img" v-bind:src="customer.img"/></div></td>
+                            <td class="goods_list_css_jump"><div class="goods_list_img fancybox-box"><a class="fancybox" href="{{customer.img}}"><img v-if="customer.img" class="goods_img" v-bind:src="customer.img"/></a></div></td>
+                            <td class="goods_list_css_jump"><a href="/customer/info/{{customer.id}}" target="_blank">{{customer.customer_sn}}</a></td>
                             <td>{{customer.name}}</td>
-                            <td>{{customer.customer_sn}}</td>
                             <td>{{customer.contact}}</td>
                             <td>{{customer.tel}}</td>
                             <td>{{customer.mobile}}</td>
@@ -52,14 +52,13 @@
                         </tr>
                         </tbody>
                         <tbody v-else>
-                        <tr class="no-records-found"><td colspan="4">没有找到匹配的记录</td></tr>
+                        <tr class="no-records-found"><td colspan="8">没有找到匹配的记录</td></tr>
                         </tbody>
                         <tfoot>
                         <tr>
-                            <td colspan="3">
+                            <td colspan="8">
                                 <button type="button" v-on:click="deleteCustomer(ids)" class="btn btn-white btn-sm"><i class="fa fa-trash-o"></i> 删除</button>
-                            </td>
-                            <td colspan="5" v-if="all > 1">
+                            <template  v-if="all > 1">
                                 <ul class="pagination pull-right">
                                     <li class="footable-page-arrow">
                                         <input type="text" class="go_page_class" v-model="go_page_class" number>
@@ -83,6 +82,7 @@
                                         <a data-page="last" v-on:click="goPage(3)">»</a>
                                     </li>
                                 </ul>
+                            </template>
                             </td>
                         </tr>
                         </tfoot>
@@ -96,6 +96,10 @@
     export default{
         ready(){
             this.getCustomers()
+            $('.fancybox').fancybox({
+                openEffect: 'none',
+                closeEffect: 'none'
+            });
         },
         data(){
             return{
@@ -109,6 +113,7 @@
                 cur: 1,
                 all: 1,
                 go_page_class: '',
+                ids: [],
                 search_tag: '请输入客户名称'
             }
         },

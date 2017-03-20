@@ -149,5 +149,10 @@ class GoodsController extends Controller
         $data = $this->goodsService->putGoodsPack($id, $request->all());
         return Response::json($data,200);
     }
+
+    public function getGoodsXjs($id){
+        $data = $this->goodsService->getGoodsXjs($id);
+        return Response::json($data,200);
+    }
     
 }
