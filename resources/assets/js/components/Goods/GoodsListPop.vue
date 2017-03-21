@@ -88,7 +88,7 @@
 </template>
 <script>
 export default{
-    props: ['type','customer_id'],
+    props: ['type','tag_id'],
     ready(){
         this.getGoodses()
         this.getCats()
@@ -123,8 +123,8 @@ export default{
                 en_name = serch_data.keywords
             }
             var page = this.cur ? this.cur : 1;
-            var customer_id = this.customer_id ? this.customer_id : 0;
-            this.$http.get('/goods.json?en_name='+en_name+'&cn_name='+cn_name+'&cat_id='+cat_id+'&page='+page+'&limit=5&customer_id='+customer_id+'&list_type='+this.type).then(function(response){
+            //var customer_id = this.type == 0 ? this.tag_id;
+            this.$http.get('/goods.json?en_name='+en_name+'&cn_name='+cn_name+'&cat_id='+cat_id+'&page='+page+'&limit=5&tag_id='+this.tag_id+'&list_type='+this.type).then(function(response){
                 this.$set('goodses',response.data.data);
                 this.$set('all',response.data.all_page);
                 this.$set('cur', page)
@@ -169,7 +169,7 @@ export default{
             }
         },
         postXj(){
-            var id = this.$root.tag_id;
+            var id = this.tag_id;
             var _this = this;
             this.$http.post('/customer/xjs/'+id+'.json',{ids:this.ids}).then(function (response) {
                 if(response.data.status == true){
@@ -180,7 +180,15 @@ export default{
             });
         },
         postOrder(){
-            alert('order');
+            var id = this.tag_id;
+            var _this = this;
+            this.$http.post('/customer/order_info/'+id+'.json',{ids:this.ids}).then(function (response) {
+                if(response.data.status == true){
+                    _this.cancelChoose();
+                }else{
+                    toastr.error(response.data.msg);
+                }
+            });
         },
         cancelChoose(){
             layer.closeAll();

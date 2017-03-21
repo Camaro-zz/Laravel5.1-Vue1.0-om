@@ -108,6 +108,9 @@ Route::group(['prefix' => 'customer','middleware'=>$authApiMiddleware],function(
     Route::get('orders/{id}.json', 'Order\OrderController@getCustomerOrders');//单个客户采购记录
 
     Route::get('contract_sn/{id}.json', 'Order\OrderController@getContractSn');//获取最新订单sn
+
+    Route::get('order_info/{id}.json', 'Order\OrderController@getOrderInfo');//获取订单详情
+    Route::post('order_info/{id}.json', 'Order\OrderController@postOrderInfo');//添加订单详情
 });
 
 //生产商模块

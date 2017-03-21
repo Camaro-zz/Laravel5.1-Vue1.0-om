@@ -1,11 +1,12 @@
 <template>
     <div class="clients-list">
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-cubes"></i> 询价记录</a></li>
-            <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> 采购记录</a></li>
+            <li v-bind:class="{active:active==0}"><a data-toggle="tab" href="#tab-1"><i class="fa fa-cubes"></i> 询价记录</a></li>
+            <li v-bind:class="{active:active==1}"><a data-toggle="tab" href="#tab-2"><i class="fa fa-briefcase"></i> 采购记录</a></li>
+            <li v-bind:class="{active:active==2}" v-if="show_new_tab"><a data-toggle="tab" href="#tab-3"><i class="fa fa-briefcase"></i> {{new_tab_name}}订单详情</a></li>
         </ul>
         <div class="tab-content">
-            <div id="tab-1" class="tab-pane active">
+            <div id="tab-1" class="tab-pane" v-bind:class="{active:active==0}">
                 <div class="full-height-scroll">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
@@ -48,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div id="tab-2" class="tab-pane">
+            <div id="tab-2" class="tab-pane" v-bind:class="{active:active==1}">
                 <div class="full-height-scroll">
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
@@ -72,9 +73,56 @@
                                     <td v-else>
                                         <a @click="editOrder(o)"><i class="fa fa-edit"></i> 编辑</a>
                                         <span class="delimiter">|</span>
-                                        <a @click="getOrderInfo()"><i class="fa fa-edit"></i> 查看详情</a>
+                                        <a @click="getOrderInfo(o.id, o.contract_sn)"><i class="fa fa-edit"></i> 查看详情</a>
                                     </td>
                                 </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-3" class="tab-pane" v-bind:class="{active:active==2}" v-if="show_new_tab">
+                <div class="full-height-scroll">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <th>产品编号</th>
+                            <th>图片</th>
+                            <th>原厂编号</th>
+                            <th>英文品名</th>
+                            <th>适用车型</th>
+                            <th>供应商</th>
+                            <th>FOB</th>
+                            <th>采购价(含)</th>
+                            <th>采购价(不含)</th>
+                            <th>
+                                <a @click="addOrderInfo()" class="btn btn-info btn-xs">添加订单商品</a>
+                                <span class="delimiter">|</span>
+                                <a @click="closeOrderInfoTab()" class="btn btn-info btn-xs">关闭</a>
+                            </th>
+                            </thead>
+                            <tbody class="xj-sortable-list connectList">
+                            <tr id="goods_{{x.id}}" v-for="x in goodses">
+                                <td>{{x.product_sn}}</td>
+                                <td><div class="goods_list_img"><img class="goods_img" v-if="x.img" v-bind:src="x.img"></div></td>
+                                <td>{{x.mfrs_sn}}</td>
+                                <td>{{x.en_name}}</td>
+                                <td>{{x.car_type}}</td>
+                                <td>{{x.supplier}}</td>
+                                <td v-if="x.edit"><input type="number" class="form-control" v-model="x.fob_price"></td><td v-else>{{x.fob_price}}</td>
+                                <td v-if="x.edit"><input type="number" class="form-control" v-model="x.tax_price"></td><td v-else>{{x.tax_price}}</td>
+                                <td v-if="x.edit"><input type="number" class="form-control" v-model="x.price"></td><td v-else>{{x.price}}</td>
+                                <td v-if="x.edit">
+                                    <a @click="submitOrderInfo(x)" class="btn btn-info btn-xs">保存</a>
+                                    <span class="delimiter">|</span>
+                                    <a @click="cancelOrder(x,$index)" class="btn btn-success btn-xs">   取消</a>
+                                </td>
+                                <td v-else>
+                                    <a @click="editXj(x)"><i class="fa fa-edit"></i> 编辑</a>
+                                    <span class="delimiter">|</span>
+                                    <a @click="deleteOrderInfo(x.id)"><i class="fa fa-remove"></i>   删除</a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -102,7 +150,13 @@
         data(){
             return{
                 xjs: {},
-                orders:{}
+                orders:{},
+                show_new_tab: false,
+                new_tab_name: '',
+                goodses: {},
+                tab_order_id: 0,
+                tab_contract_sn: '',
+                active: 0,
             }
         },
         components:{
@@ -115,9 +169,12 @@
                 });
             },
             addXj(){
-                var _this = this;
-                this.$root.type = 0;
                 this.$root.tag_id = this.customer_id;
+                this.goodsPop(0);
+            },
+            goodsPop(type){
+                var _this = this;
+                this.$root.type = type;
                 layer.open({
                     type: 1,
                     title: '选择产品', //不显示标题
@@ -137,7 +194,8 @@
                     },
                     end: function () {
                         _this.$root.popup = false;
-                        _this.getXjs();
+                        type==0 ? _this.getXjs() : _this.getOrderInfo(_this.tab_order_id,_this.tab_contract_sn);
+                        console.log(_this.active)
                     }
                 });
             },
@@ -152,15 +210,22 @@
                 }
             },
             submitXj(xj){
-                this.$http.put('/customer/xjs/'+xj.id+'.json', xj).then(function(response){
+                this.submitUse(xj,0);
+            },
+            submitUse(data,type){
+                var _this = this;
+                this.$http.put('/customer/xjs/'+data.id+'.json', data).then(function(response){
                     if(response.data.status == false){
                         toastr.error(response.data.msg);
                     }else{
-                        this.getXjs();
+                        type==0 ? _this.getXjs() : _this.getOrderInfo(_this.tab_order_id,_this.tab_contract_sn);
                     }
                 });
             },
             deleteXj(id){
+                this.deleteUse(id,0);
+            },
+            deleteUse(id,type){
                 var _this = this;
                 layer.confirm('确认删除？', {
                     btn: ['确认','取消'] //按钮
@@ -169,7 +234,7 @@
                         if(response.data.status == false){
                             toastr.error(response.data.msg);
                         }else{
-                            _this.getXjs();
+                            type==0 ? _this.getXjs() : _this.getOrderInfo(_this.tab_order_id,_this.tab_contract_sn);
                             layer.close(index);
                         }
                     });
@@ -220,7 +285,32 @@
                         }
                     });
                 }
-            }
+            },
+            getOrderInfo(order_id,contract_sn){
+                this.$http.get('/customer/order_info/'+order_id+'.json').then(function (response) {
+                    this.$set('goodses', response.data);
+                    this.active != 2 ? $('.active').removeClass('active') : '';
+                    this.show_new_tab = true;
+                    this.active = 2;
+                    this.tab_contract_sn = this.new_tab_name = contract_sn;
+                    this.tab_order_id = order_id
+                });
+            },
+            closeOrderInfoTab(){
+                this.show_new_tab = false;
+                this.active = 1;
+                //this.goodses = {}
+            },
+            addOrderInfo(){
+                this.$root.tag_id = this.tab_order_id;
+                this.goodsPop(1);
+            },
+            deleteOrderInfo(id){
+                this.deleteUse(id,1);
+            },
+            submitOrderInfo(info){
+                this.submitUse(info,1);
+            },
         }
     }
 </script>

@@ -66,4 +66,16 @@ class OrderController extends Controller
         $res = $this->orderService->getContractSn($id);
         return Response::json($res,200);
     }
+
+    public function getOrderInfo($id){
+        $res = $this->orderService->getOrderInfo($id);
+        return Response::json($res,200);
+    }
+
+    public function postOrderInfo($id, Request $request){
+        $data = $request->all();
+        $ids = $data['ids'];
+        $res = $this->orderService->postOrderInfo($id,$ids);
+        return Response::json($res,200);
+    }
 }

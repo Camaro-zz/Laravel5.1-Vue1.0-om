@@ -224,4 +224,53 @@ class OrderService extends BaseService {
         return $contract_sn;
     }
 
+    public function getOrderInfo($order_id){
+        $goodses = OmOrderGoods::leftJoin('om_goods as g','g.id','=','om_order_goods.goods_id')
+                               ->where(['om_order_goods.order_id'=>$order_id,'om_order_goods.is_deleted'=>0,'om_order_goods.type'=>1])
+                               ->select('g.product_sn','g.img','g.en_name','g.cn_name','om_order_goods.*')
+                               ->get();
+
+        foreach ($goodses as $k=>$v){
+            $car_type = OmCarType::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->first();
+            if($car_type){
+                $goodses[$k]['car_type'] = $car_type['brand'].' '.$car_type['car_type'];
+            }else{
+                $goodses[$k]['car_type'] = '';
+            }
+            $supplier_id = OmGoodsSupplier::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->value('supplier_id');
+            if($supplier_id){
+                $goodses[$k]['supplier'] = OmSupplier::where('id',$supplier_id)->value('name');
+            }else{
+                $goodses[$k]['supplier'] = '';
+            }
+            $goodses[$k]['mfrs_sn'] = OmGoodsMfrs::where(['goods_id'=>$v['goods_id'],'is_deleted'=>0])->orderBy('sort','DESC')->value('mfrs_sn');
+            $goodses[$k]['edit'] = false;
+
+        }
+        return $goodses;
+    }
+
+    public function postOrderInfo($order_id,$ids){
+        $order = OmOrder::where('id',$order_id)->first();
+        if(!$order){
+            return ['status'=>false,'msg'=>'订单不存在'];
+        }
+        if(!$ids){
+            return ['status'=>false,'msg'=>'请选择产品'];
+        }
+        foreach ($ids as $k=>$v){
+            $order_data[$k]['customer_id'] = $order['customer_id'];
+            $order_data[$k]['order_id'] = $order_id;
+            $order_data[$k]['goods_id'] = $v;
+            $order_data[$k]['type'] = 1;
+            $order_data[$k]['created_at'] = Carbon::now();
+        }
+        $res = OmOrderGoods::insert($order_data);
+        if($res){
+            return ['status'=>true];
+        }else{
+            return ['status'=>false,'msg'=>'采购记录添加失败'];
+        }
+    }
+
 }

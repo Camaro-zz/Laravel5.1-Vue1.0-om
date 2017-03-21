@@ -25,7 +25,7 @@
 		<Minichat></Minichat>
 		<!--mini聊天窗口结束-->
 		<div id="goods_list_popup">
-			<Goodslistpop v-if="popup" :type="type" :customer_id="customer_id"></Goodslistpop>
+			<Goodslistpop v-if="popup" :type="type" :tag_id="tag_id"></Goodslistpop>
 		</div>
 	</div>
 </template>

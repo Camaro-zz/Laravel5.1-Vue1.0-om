@@ -244,7 +244,8 @@ class GoodsService extends BaseService {
         //$offset = isset($data['offset']) ? $data['offset'] : 0;
         $page = isset($data['page']) ? $data['page'] : 1;
         $limit = isset($data['limit']) ? $data['limit'] : 10;
-        $customer_id = isset($data['customer_id']) ? $data['customer_id'] : 0;
+        $tag_id = isset($data['tag_id']) ? $data['tag_id'] : 0;
+        $list_type = isset($data['list_type']) ? $data['list_type'] : 0;
         $offset = ($page-1)*$limit;
         $query = OmGoods::leftJoin('om_goods_cat as cat','cat.id','=','om_goods.cat_id')
                         ->select('om_goods.id','om_goods.product_sn','om_goods.en_name','om_goods.cn_name','om_goods.img','cat.name as cat_name','om_goods.fyi_status','om_goods.mark')->where('om_goods.is_deleted',0);
@@ -265,9 +266,12 @@ class GoodsService extends BaseService {
             $ids = array_unique($ids);
             $query->whereIn('om_goods.id', $ids);
         }
-        if($customer_id){
-            $list_type = isset($data['list_type']) ? $data['list_type'] : 0;
-            $not_in_ids = OmOrderGoods::where(['customer_id'=>$customer_id,'type'=>$list_type,'is_deleted'=>0])->lists('goods_id')->toArray();
+        if($tag_id && $list_type==0){
+            $not_in_ids = OmOrderGoods::where(['customer_id'=>$tag_id,'type'=>$list_type,'is_deleted'=>0])->lists('goods_id')->toArray();
+            $query->whereNotIn('om_goods.id', $not_in_ids);
+        }
+        if($tag_id && $list_type==1){
+            $not_in_ids = OmOrderGoods::where(['order_id'=>$tag_id,'type'=>$list_type,'is_deleted'=>0])->lists('goods_id')->toArray();
             $query->whereNotIn('om_goods.id', $not_in_ids);
         }
         $result['_count'] = $query->count();
