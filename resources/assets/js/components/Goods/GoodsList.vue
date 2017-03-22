@@ -208,7 +208,8 @@ export default{
         },
         btnClick(data){
             if(data != this.cur){
-                this.$dispatch('btn-click',data)
+                this.$dispatch('btn-click',data);
+                this.cur = data;
                 this.getGoodses()
             }
         },
