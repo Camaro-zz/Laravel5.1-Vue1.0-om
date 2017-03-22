@@ -259,8 +259,8 @@ class GoodsService extends BaseService {
             $query->where('om_goods.cat_id', '=', $data['cat_id']);
         }
         if(isset($data['mfrs_sn']) && str_replace(' ','',$data['mfrs_sn'])){
-            $data['mfrs_sn'] = str_replace('-','',$data['mfrs_sn']);
-            $data['mfrs_sn'] = str_replace('.','',$data['mfrs_sn']);
+            /*$data['mfrs_sn'] = str_replace('-','',$data['mfrs_sn']);
+            $data['mfrs_sn'] = str_replace('.','',$data['mfrs_sn']);*/
             $data['mfrs_sn'] = str_replace('　','',$data['mfrs_sn']);
             $ids = OmGoodsMfrs::where('mfrs_sn', 'like', '%' . $data['mfrs_sn'] . '%')->lists('goods_id')->toArray();
             $ids = array_unique($ids);
